@@ -32,11 +32,12 @@ const userSchema = new mongoose.Schema({
 });
 
 // using methods creating 3 functions (generateAuthToken, comparePassword, hashPassword)
-userSchema.methods.generateAuthToken = function() {
-    // generateToken for current user._id
-    const token = jwt.sign({_id: this._id}, process.env.JWT_SECRET);
+userSchema.methods.generateAuthToken = function () {
+    const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: '1d',
+    });
     return token;
-}
+};
 
 userSchema.methods.comparePassword = async function(password) {
     // to verify password compare it with user's password
