@@ -8,10 +8,8 @@ const UserSignup = () => {
   const [lastname, setLastname] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [userdata, setUserdata] = React.useState({});
 
   const navigate = useNavigate();
-
   const { user, setUser } = React.useContext(UserDataContext);
 
   const handleSubmit = async (e) => { 
@@ -25,15 +23,13 @@ const UserSignup = () => {
       email: email,
       password: password
     }
-
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
-
     if(response.status === 201) {
       const data = await response.data;
       setUser(data.user);
+      localStorage.setItem('token', data.token);
       navigate('/home');
     }
-
     setFistname('');
     setLastname('');
     setEmail('');
@@ -86,7 +82,7 @@ const UserSignup = () => {
         <p className='text-center'>Already have an Account? <Link to='/users/login' className='text-blue-600'>Login here</Link></p>
       </div>
       <div>
-        <Link to='/captains/signup' className='flex align-center w-full border-rounded mb-7 bg-[#10b461] text-white font-semibold px-4 py-2 text-lg'>Sign-Up as Captain</Link>
+        <Link to='/captains/signup' className='flex align-center w-full border-rounded mb-7 bg-[#10b461] text-white font-semibold px-4 py-2 text-lg'>Register as Captain</Link>
       </div>
     </div>
   )

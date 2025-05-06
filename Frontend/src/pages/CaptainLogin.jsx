@@ -1,20 +1,31 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainLogin = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [captaindata, setCaptaindata] = useState({});
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const { captain, setCaptain } = useContext(CaptainDataContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setCaptaindata({
+    const captainData = {
       email: email,
       password: password
-    });
-    console.log(userdata);
+    }
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData);
+    if (response.status === 200) {
+      const data = await response.data;
+      setCaptain(data.captain);
+      localStorage.setItem('token', data.token);
+      navigate('/captain-home');
+    }
     setEmail('');
     setPassword('');
   }
@@ -23,7 +34,7 @@ const CaptainLogin = () => {
     <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
         <img className='w-28 mb-10' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber" />
-        <form onSubmit={(e) => handleSubmit} action="">
+        <form onSubmit={(e) => handleSubmit(e)} action="">
           <h3 className='text-xl mb-2'>What's Your Email</h3>
           <input
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
@@ -47,7 +58,7 @@ const CaptainLogin = () => {
         <p className='text-center'>New here? <Link to='/captains/signup' className='text-blue-600'>Create new Account</Link></p>
       </div>
       <div>
-        <Link to='/users/login' className='flex align-center w-full border-rounded mb-7 bg-black text-white font-semibold px-4 py-2 text-lg'>Sign-in as User</Link>
+        <Link to='/users/login' className='flex align-center w-full border-rounded mb-7 bg-black text-white font-semibold px-4 py-2 text-lg'>Login as User</Link>
       </div>
     </div>
   )
