@@ -42,7 +42,7 @@ const UserSignup = () => {
         <img className='w-28 mb-10' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber" />
         <form onSubmit={(e) => handleSubmit(e)} action="">
           
-          <h3 className='text-xl mb-2'>What's Your Name</h3>
+          <h3 className='text-xl mb-2'>Captain's Name</h3>
           <input
             className='border-rounded mt-5 mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
@@ -59,7 +59,7 @@ const UserSignup = () => {
             type="text"
             placeholder='lastname'
           />
-          <h3 className='text-xl mb-2'>Enter Your Email</h3>
+          <h3 className='text-xl mb-2'>Your Email</h3>
           <input
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
@@ -68,7 +68,7 @@ const UserSignup = () => {
             type="email"
             placeholder='email@example.com'
           />
-          <h3 className='text-xl mb-2'>Enter Password</h3>
+          <h3 className='text-xl mb-2'>Create Password</h3>
           <input
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required

@@ -14,6 +14,7 @@ import CaptainHome from './pages/CaptainHome'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
 import CaptainLogout from './pages/CaptainLogout'
 
+
 const App = () => {
   const ans = useContext(UserDataContext);
   console.log(ans.user);

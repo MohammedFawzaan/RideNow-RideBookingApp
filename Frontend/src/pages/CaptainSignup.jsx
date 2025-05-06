@@ -57,7 +57,7 @@ const CaptainSignup = () => {
         <img className='w-28 mb-10' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="Uber" />
         <form onSubmit={(e) => handleSubmit(e)} action="">
           <h2 className='text-center font-bold text-2xl mb-5'>Your Details</h2>
-          <h3 className='text-xl mb-2'>What's Our's Captains Name</h3>
+          <h3 className='text-xl mb-2'>Our Captain's Name</h3>
           <input
             className='border-rounded mt-5 mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
@@ -74,7 +74,7 @@ const CaptainSignup = () => {
             type="text"
             placeholder='lastname'
           />
-          <h3 className='text-xl mb-2'>Enter Your Email</h3>
+          <h3 className='text-xl mb-2'>Your Email</h3>
           <input
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
@@ -83,7 +83,7 @@ const CaptainSignup = () => {
             type="email"
             placeholder='email@example.com'
           />
-          <h3 className='text-xl mb-2'>Enter Password</h3>
+          <h3 className='text-xl mb-2'>Create Password</h3>
           <input
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
@@ -94,7 +94,7 @@ const CaptainSignup = () => {
           />
           <h2 className='text-center font-bold text-2xl mb-3'>Vehicle Details</h2>
           <h3 className='text-xl mb-2'>Vehicle Type</h3>
-          <select name="" id=""
+          <select name="type" id="type"
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
             value={vehicleType}
@@ -106,14 +106,18 @@ const CaptainSignup = () => {
             <option value="motor cycle">Motor Cycle</option>
           </select>
           <h3 className='text-xl mb-2'>Vehicle Capacity</h3>
-          <input
+          <select name="capacity" id="capacity"
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
             value={vehicleCapacity}
             onChange={(e) => setVehicleCapacity(e.target.value)}
-            type="text"
-            placeholder='which vehicle do you have'
-          />
+          >
+            <option value="" disabled>How Many Passengers</option>
+            <option value="1">1</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+          </select>
           <h3 className='text-xl mb-2'>Vehicle Color</h3>
           <input
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
@@ -130,14 +134,14 @@ const CaptainSignup = () => {
             value={vehiclePlate}
             onChange={(e) => setVehiclePlate(e.target.value)}
             type="text"
-            placeholder='plate number of your vehicle'
+            placeholder='vehicle number'
           />
           <button className='border-rounded mb-2 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Create Your Account</button>
         </form>
         <p className='text-center m'>Already have an Account? <Link to='/users/login' className='text-blue-600'>Login here</Link></p>
       </div>
       <div>
-        <Link to='/users/signup' className='flex align-center w-full border-rounded mb-7 mt-5 bg-green-700 text-white text-center font-semibold px-4 py-2 text-lg'>Register as User</Link>
+        <Link to='/users/signup' className='flex align-center w-full border-rounded mb-7 mt-5 bg-orange-500 text-white text-center font-semibold px-4 py-2 text-lg'>Register as User</Link>
       </div>
     </div>
   )
