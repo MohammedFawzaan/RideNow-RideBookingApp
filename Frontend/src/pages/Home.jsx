@@ -2,7 +2,8 @@ import React from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react';
 import 'remixicon/fonts/remixicon.css'
-import UberHome1 from '../assets/UberHome1.jpg'
+import UberHome from '../assets/UberHome.jpeg'
+import LogoImage from '../assets/logo.png'
 import LocationPanel from '../components/LocationPanel';
 
 const Home = () => {
@@ -17,50 +18,64 @@ const Home = () => {
   }
 
   useGSAP(function () {
-    if(panelOpen) {
+    if (panelOpen) {
       gsap.to(panelRef.current, {
-        height:'70%',
+        height: '70%',
         padding: 24
+        // opacity:1
       })
       gsap.to(panelCloseRef.current, {
-        opacity: 1,
+        opacity: 1
       })
     } else {
       gsap.to(panelRef.current, {
-        height:'0%',
+        height: '0%',
+        padding: 0
+        // opacity:0
       })
       gsap.to(panelCloseRef.current, {
-        opacity: 0,
+        opacity: 0
       })
     }
-  }, [panelOpen, panelCloseRef]);
+  }, [panelOpen])
 
   return (
-    <div className='h-screen relative'>
-      <img className='w-20 absolute top-5 left-5 ' src="https://download.logo.wine/logo/Uber/Uber-Logo.wine.png" alt="uber-logo" />
+    <div className='h-screen relative overflow-hidden'>
+      <img className='w-20 absolute top-5 left-5' src={LogoImage} alt="uber-logo" />
       <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover' src={UberHome1} alt="temporary-image" />
+        <img className='h-full w-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif' alt="temporary-image" />
       </div>
-      <div className='bg-white flex flex-col justify-end w-full'>
+      <div className='h-screen flex flex-col justify-end absolute top-0 w-full'>
         <div className='h-[30%] p-5 bg-white relative'>
-          <h5 ref={panelCloseRef} onClick={() => {
-            setPanelOpen(false)
-          }} className='absolute opacity-0 top-4 right-6 text-2xl'>
-          <i className="ri-arrow-down-wide-line"></i>
+          <h5 
+            ref={panelCloseRef} 
+            onClick={() => { setPanelOpen(false) }} 
+            className='absolute opacity-0 top-4 right-6 text-2xl'
+          >
+            <i className="ri-arrow-down-wide-line"></i>
           </h5>
           <h4 className='text-2xl font-bold'>Find Your Trip</h4>
           <form onSubmit={(e) => handleSubmit(e)}>
-            <div className="line absolute h-16 w-1 top-[45%] left-10 bg-gray-900 rounded-full"></div>
-            <input onClick={() => { setPanelOpen(true) }} value={pickup} onChange={(e) => {
-              setPickup(e.target.value)
-            }} className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' type="text" placeholder='add a pickup location' />
-            <input onClick={() => { setPanelOpen(true) }} value={destination} onChange={(e) => {
-              setDestination(e.target.value)
-            }} className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' type="text" placeholder='enter your destination' />
+            {/* <div className="line absolute h-16 w-1 top-[45%] left-10 bg-gray-900 rounded-full"></div> */}
+            <input
+              onClick={() => { setPanelOpen(true) }} 
+              value={pickup} 
+              onChange={(e) => { setPickup(e.target.value) }} 
+              className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' 
+              type="text" 
+              placeholder='add a pickup location'
+            />
+            <input 
+              onClick={() => { setPanelOpen(true) }} 
+              value={destination} onChange={(e) => { setDestination(e.target.value) }}
+              className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' 
+              type="text" 
+              placeholder='enter your destination'
+            />
           </form>
         </div>
         <div ref={panelRef} className='bg-white h-0'>
-            <LocationPanel />
+          <LocationPanel />
         </div>
       </div>
     </div>

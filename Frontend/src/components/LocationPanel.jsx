@@ -2,7 +2,9 @@ import React from 'react'
 
 const LocationPanel = () => {
   return (
-    <div>LocationPanel</div>
+    <div>
+      
+    </div>
   )
 }
 
