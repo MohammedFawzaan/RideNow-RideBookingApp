@@ -8,11 +8,13 @@ import CaptainLogin from './pages/CaptainLogin'
 import CaptainSignup from './pages/CaptainSignup'
 import UserLogout from './pages/UserLogout'
 import UserProtectedWrapper from './pages/UserProtectedWrapper'
-import { UserDataContext } from './context/UserContext'
-import { CaptainDataContext } from './context/CaptainContext'
 import CaptainHome from './pages/CaptainHome'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
 import CaptainLogout from './pages/CaptainLogout'
+import Riding from './components/Riding'
+import CaptainRiding from './pages/CaptainRiding'
+import { CaptainDataContext } from './context/CaptainContext'
+import { UserDataContext } from './context/UserContext'
 
 
 const App = () => {
@@ -36,6 +38,10 @@ const App = () => {
             <CaptainHome />
           </CaptainProtectedWrapper>
         } />
+
+        <Route path='/riding' element={<Riding />}/>
+        <Route path='/captain-riding' element={<CaptainRiding />}/>
+
         <Route path="/users/login" element={<UserLogin />} />
         <Route path="/users/signup" element={<UserSignup />} />
         <Route path="/captains/login" element={<CaptainLogin />} />

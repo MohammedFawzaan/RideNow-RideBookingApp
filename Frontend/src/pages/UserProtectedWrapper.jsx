@@ -33,7 +33,7 @@ const UserProtectedWrapper = ({ children }) => {
 
     if(isLoading) {
       return (
-        <div>Loading...</div>
+        <div className='text-xl font-semibold m-auto text-center'>Loading...</div>
       )
     }
 

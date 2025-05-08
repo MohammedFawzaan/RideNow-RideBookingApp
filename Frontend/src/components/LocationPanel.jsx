@@ -14,7 +14,7 @@ const LocationPanel = (props) => {
       {/* Sample data */}
       {
         locations.map((element, idx) => {
-          return <div key={idx} onClick={() => { props.setVehiclePanel(true); props.setPanelOpen(false); }} className='flex gap-4 active:border-black border-2 p-2 rounded-xl border-white  items-center my-4 justify-start'>
+          return <div key={idx} onClick={() => { props.setVehiclePanel(true); props.setPanelOpen(false); }} className='flex gap-4 active:border-black border-2 p-2 rounded-xl border-white  items-center justify-start'>
             <h2 className='bg-[#eee] h-10 w-15 flex items-center justify-center rounded-full'><i className="ri-map-pin-2-fill"></i></h2>
             <h4 className='font-medium'>{element}</h4>
           </div>
