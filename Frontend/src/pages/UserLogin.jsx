@@ -67,7 +67,7 @@ const UserLogin = () => {
                 <p className='text-center'>New here? <Link to='/users/signup' className='text-blue-600'>Create new Account</Link></p>
             </div>
             <div>
-                <Link to='/captains/login' className='flex align-center w-full border-rounded mb-7 bg-[#10b461] text-white font-semibold px-4 py-2 text-lg'>Login as Captain</Link>
+                <Link to='/captains/login' className='block text-center w-full border-rounded mb-7 bg-[#10b461] text-white font-semibold px-4 py-2 text-lg'>Login as Captain</Link>
             </div>
         </div>
     )
