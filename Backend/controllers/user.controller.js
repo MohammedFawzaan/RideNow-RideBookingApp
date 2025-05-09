@@ -31,7 +31,7 @@ module.exports.registerUser = async (req, res, next) => {
 
     // generating token
     const token = user.generateAuthToken();
-    res.status(201).json({ token, user }); // sending response
+    res.status(201).json({ token, user, role:'user' }); // sending response
 }
 
 // controller for loginUser.
@@ -63,7 +63,7 @@ module.exports.loginUser = async (req, res, next) => {
         maxAge: 24 * 60 * 60 * 1000 // 1 day
     }); // setting cookie
 
-    res.status(200).json({ token, user });
+    res.status(200).json({ token, user, role:'user' });
 }
 
 // controller for getUserProfile.

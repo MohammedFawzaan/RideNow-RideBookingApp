@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const ConfirmRidePopUp = (props) => {
+
+    const [otp, setOtp] = useState('')
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
     return (
         <div>
             <div className='flex items-center justify-between'>
@@ -39,7 +46,11 @@ const ConfirmRidePopUp = (props) => {
                 </div>
             </div>
             <div>
-                <Link to='/captain-riding' className='flex justify-center w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</Link>
+                <form onSubmit={(e) => { handleSubmit(e) }}>
+                    <input value={otp} onChange={() => { setOtp(e.target.value) }} className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' required type="text" placeholder='Enter OTP'/>
+                    <Link type="submit
+                    " to='/captain-riding' className='flex justify-center w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</Link>
+                </form>
                 <button onClick={() => { props.setConfirmRidePopUpPanel(false) }} className='w-full mt-5 text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Cancel</button>
             </div>
         </div>

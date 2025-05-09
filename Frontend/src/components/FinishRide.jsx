@@ -1,8 +1,44 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
-const FinishRide = () => {
+const FinishRide = (props) => {
   return (
-    <div>FinishRide</div>
+    <div>
+      <div>
+        <h3 className='text-2xl font-semibold mb-3'>Finish this Ride</h3>
+      </div>
+      <div className='flex flex-col justify-between items-center gap-2'>
+        {/* <img className='h-20 m-5' src={CarImage} alt="Car-Image" /> */}
+      </div>
+      <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-400'>
+        <div className='flex items-center justify-center gap-3'>
+          <img className='h-14 w-14 rounded-full object-cover' src="https://img.freepik.com/free-photo/close-up-portrait-curly-handsome-european-male_176532-8133.jpg?semt=ais_hybrid&w=740" alt="person-image" />
+          <h2 className='text-xl font-medium'>Passenger</h2>
+        </div>
+        <h5 className='text-lg font-semibold'>0km</h5>
+      </div>
+      <div className='w-full mt-5'>
+        <h3>Reached</h3>
+        <div className='flex items-center gap-5 p-3 border-b-2'>
+          <i className="text-lg ri-map-pin-fill"></i>
+          <div className=''>
+            <h3 className='text-lg font-medium'>314/C13</h3>
+            <p className='text-sm -mt-1 text-gray-600'>Agra ,Delhi</p>
+          </div>
+        </div>
+        <div className='flex items-center gap-5 p-3'>
+          <i className="ri-bank-card-2-line"></i>
+          <div className=''>
+            <h3 className='text-lg font-medium'>$193.20</h3>
+            <p className='text-sm -mt-1 text-gray-600'>Cash</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <Link to='/captain-home' onClick={() => { props.setFinishRidePanel(false) }} className='block text-center mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>End Ride</Link>
+        <p className='text-gray-600 font-semibold text-center text-sm my-2'>End the Ride if passenger has made the payment</p>
+      </div>
+    </div>
   )
 }
 

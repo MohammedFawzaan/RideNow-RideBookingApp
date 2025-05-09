@@ -1,13 +1,13 @@
 import React from 'react'
 import gsap from 'gsap'
-import { useGSAP } from '@gsap/react';
+import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
 import LogoImage from '../assets/logo.png'
-import LocationPanel from '../components/LocationPanel';
-import VehiclePanel from '../components/VehiclePanel';
-import ConfirmRide from '../components/ConfirmRide';
-import LookingForDriver from '../components/LookingForDriver';
-import WaitingForDriver from '../components/WaitingForDriver';
+import LocationPanel from '../components/LocationPanel'
+import VehiclePanel from '../components/VehiclePanel'
+import ConfirmRide from '../components/ConfirmRide'
+import LookingForDriver from '../components/LookingForDriver'
+import WaitingForDriver from '../components/WaitingForDriver'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -33,7 +33,6 @@ const Home = () => {
       gsap.to(panelRef.current, {
         height: '60%',
         padding: 15
-        // opacity:1
       })
       gsap.to(panelCloseRef.current, {
         opacity: 1
@@ -41,7 +40,6 @@ const Home = () => {
     } else {
       gsap.to(panelRef.current, {
         height: '0%'
-        // opacity:0
       })
       gsap.to(panelCloseRef.current, {
         opacity: 0

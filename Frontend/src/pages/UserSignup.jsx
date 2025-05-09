@@ -13,6 +13,15 @@ const UserSignup = () => {
   const navigate = useNavigate();
   const { user, setUser } = React.useContext(UserDataContext);
 
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    if (token) {
+      if (role === 'user') navigate('/home');
+      if (role === 'captain') navigate('/captain-home');
+    }
+  }, []);
+
   const handleSubmit = async (e) => { 
     e.preventDefault();
     
@@ -29,6 +38,7 @@ const UserSignup = () => {
       const data = await response.data;
       setUser(data.user);
       localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
       navigate('/home');
     }
     setFistname('');
@@ -43,7 +53,7 @@ const UserSignup = () => {
         <img className='w-28 mb-10' src={LogoImage} alt="Uber" />
         <form onSubmit={(e) => handleSubmit(e)} action="">
           
-          <h3 className='text-xl mb-2'>Captain's Name</h3>
+          <h3 className='text-xl mb-2'>Your Name</h3>
           <input
             className='border-rounded mt-5 mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required

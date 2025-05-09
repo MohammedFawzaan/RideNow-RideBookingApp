@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import LogoImage from '../assets/logo.png'
@@ -11,6 +11,15 @@ const UserLogin = () => {
     const navigate = useNavigate();
     const { user, setUser } = React.useContext(UserDataContext);
  
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        if(token) {
+            if(role === 'user') navigate('/home');
+            if(role === 'captain') navigate('/captain-home');
+        }
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const userData = {
@@ -20,8 +29,10 @@ const UserLogin = () => {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData);
         if (response.status === 200) {
             const data = await response.data;
+            const role = data.role;
             setUser(data.user);
             localStorage.setItem('token', data.token);
+            localStorage.setItem('role', role);
             navigate('/home');
         }
         setEmail('');

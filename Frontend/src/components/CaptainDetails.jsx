@@ -21,12 +21,12 @@ const CaptainDetails = () => {
           </div>
           <div className='text-center'>
             <i className="text-3xl font-thin ri-speed-up-line"></i>
-            <h5 className='text-lg font-medium'>10.2</h5>
-            <p className='text-sm text-gray-600'>Hours</p>
+            <h5 className='text-lg font-medium'>90</h5>
+            <p className='text-sm text-gray-600'>km</p>
           </div>
           <div className='text-center'>
             <i className="text-3xl font-thin ri-book-fill"></i>
-            <h5 className='text-lg font-medium'>10.2</h5>
+            <h5 className='text-lg font-medium'>11.3</h5>
             <p className='text-sm text-gray-600'>Hours</p>
           </div>
         </div>

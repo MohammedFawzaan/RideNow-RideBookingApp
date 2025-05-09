@@ -19,10 +19,10 @@ import { UserDataContext } from './context/UserContext'
 
 const App = () => {
   const ans = useContext(UserDataContext);
-  console.log(ans.user);
+  // console.log(ans.user);
 
   const ans1 = useContext(CaptainDataContext)
-  console.log(ans1.captain);
+  // console.log(ans1.captain);
   
   return (
     <div>

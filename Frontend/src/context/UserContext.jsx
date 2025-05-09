@@ -1,23 +1,41 @@
-import React from 'react'
-export const UserDataContext = React.createContext();
+import React, { useEffect, useState, createContext } from 'react';
 
-const UserContext = ({children}) => {
+export const UserDataContext = createContext();
 
-    const [user, setUser] = React.useState({
-        email:'',
-        fullName : {
-            firstname:'',
-            lastname:'',
-        }
+const UserContext = ({ children }) => {
+    const [user, setUser] = useState({
+        email: '',
+        fullName: {
+            firstname: '',
+            lastname: '',
+        },
+        token: null,
+        role: null,
     });
 
-  return (
-    <div>
-        <UserDataContext.Provider value={{user, setUser}}>
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        if (token) {
+            try {
+                setUser((prev) => ({
+                    ...prev,
+                    token: token,
+                    role: role,
+                }));
+            } catch (err) {
+                console.error('Invalid token');
+                localStorage.removeItem('token');
+                localStorage.removeItem('role');
+            }
+        }
+    }, []);
+
+    return (
+        <UserDataContext.Provider value={{ user, setUser }}>
             {children}
         </UserDataContext.Provider>
-    </div>
-  )
-}
+    );
+};
 
-export default UserContext
+export default UserContext;

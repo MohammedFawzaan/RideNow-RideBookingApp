@@ -1,12 +1,12 @@
 import React from 'react'
 import gsap from 'gsap'
-import { useGSAP } from '@gsap/react';
+import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
 import { Link } from 'react-router-dom'
 import LogoImage from '../assets/logo.png'
 import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
-import ConfirmRidePopUp from '../components/ConfirmRidePopUp';
+import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 
 const CaptainHome = () => {
 
@@ -48,11 +48,11 @@ const CaptainHome = () => {
         </Link>
       </div>
 
-      <div className='h-3/5'>
+      <div className='h-[70%]'>
         <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" />
       </div>
 
-      <div className='h-2/5 p-5'>
+      <div className='h-[30%] p-5'>
         <CaptainDetails />
       </div>
 
