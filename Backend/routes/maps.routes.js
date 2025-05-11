@@ -1,8 +1,26 @@
-import { Router } from 'express';
-const router = Router();
-import { authUser } from '../middlewares/auth.middleware.js';
-import { getCoordinates } from '../controllers/map.controller';
+const express = require('express');
+const router = express.Router();
+const { getCoordinates, getDistanceTime, getAutoCompleteSuggestions } = require('../controllers/map.controller');
+const { authUser } = require('../middlewares/auth.middleware');
+const { query } = require('express-validator');
 
-router.get('/get-coordinates', authUser, getCoordinates);
+router.get('/get-coordinates',
+    query('address').isString().isLength({ min: 3 }),
+    authUser,
+    getCoordinates
+);
 
-export default router;
+router.get('/get-distance-time',
+    query('origin').isString().isLength({ min: 3 }),
+    query('destination').isString().isLength({ min: 3 }),
+    authUser,
+    getDistanceTime
+);
+
+router.get('/get-suggestions',
+    query('input').isString().isLength({ min: 3 }),
+    authUser,
+    getAutoCompleteSuggestions
+);
+
+module.exports = router;
