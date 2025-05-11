@@ -7,7 +7,7 @@ module.exports.getAddressCoordinates = async (address) => {
             throw new Error('Google Maps API key is not set in environment variables.');
         }
         const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
-        
+
         const response = await axios.get(url);
         const data = response.data;
 
@@ -27,7 +27,7 @@ module.exports.getAddressCoordinates = async (address) => {
 }
 
 module.exports.getDistanceAndTime = async (origin, destination) => {
-    if(!origin || !destination) {
+    if (!origin || !destination) {
         throw new Error('Origin and destination are required');
     }
     const apiKey = process.env.GOOGLE_MAPS_API_KEY; // Ensure you have set this environment variable
@@ -38,12 +38,11 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
     try {
         const response = await axios.get(url);
         const data = response.data;
-
+        if (data.rows[0].elements[0].status === 'ZERO_RESULTS') {
+            throw new Error('No route found between the origin and destination.');
+        }
         if (data.status === 'OK') {
             const element = data.rows[0].elements[0];
-            if(element.status === 'ZERO_RESULTS') {
-                throw new Error('No route found between the origin and destination.');
-            }
             if (element.status === 'OK') {
                 return element;
             } else {
@@ -59,7 +58,7 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
 }
 
 module.exports.getAutoCompleteSuggestions = async (input) => {
-    if(!input) {
+    if (!input) {
         throw new Error('Query is required');
     }
     const apiKey = process.env.GOOGLE_MAPS_API_KEY; // Ensure you have set this environment variable
