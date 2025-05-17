@@ -46,6 +46,11 @@ const Home = () => {
     socket.emit("join", { userType: "user", userId: user._id });
   }, [ user ]);
 
+  socket.on('ride-confirmed',(ride) => {
+    setVehicleFound(false);
+    setWaitingForDriver(true);
+  });
+
   // Fetch suggestions from backend
   const fetchSuggestions = async (input) => {
     if (!input || input.length < 3) {

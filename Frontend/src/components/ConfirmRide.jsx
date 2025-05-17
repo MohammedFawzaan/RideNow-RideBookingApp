@@ -11,6 +11,14 @@ const ConfirmRide = (props) => {
         <img className='h-20 m-5' src={props.vehicleImage} alt="Car-Image" />
       </div>
       <div className='w-full mt-5'>
+        <div>
+          <button onClick={(e) => {
+            e.preventDefault();
+            props.setConfirmRidePanel(false);
+            props.setVehicleFound(true);
+            props.createRide();
+          }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
+        </div>
         <div className='flex items-center gap-5 p-3 border-b-2'>
           <i className="ri-map-pin-line"></i>
           <div className=''>
@@ -32,14 +40,6 @@ const ConfirmRide = (props) => {
             <p className='text-sm -mt-1 text-gray-600'>Cash</p>
           </div>
         </div>
-      </div>
-      <div>
-        <button onClick={(e) => {
-          e.preventDefault();
-          props.setConfirmRidePanel(false);
-          props.setVehicleFound(true);
-          props.createRide();
-        }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
       </div>
     </div>
   )
