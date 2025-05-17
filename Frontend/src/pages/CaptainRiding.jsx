@@ -43,7 +43,7 @@ const CaptainRiding = () => {
             <i className="mr-2 ri-map-pin-line"></i>
             <h4 className='text-xl font-semibold'>Some kms Away</h4>
         </div>
-        <button onClick={ () => { setFinishRidePanel(true) } } className='mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>Complete Ride</button>
+        <button onClick={ () => { setFinishRidePanel(true) } } className='flex items-center justify-center mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>Complete Ride</button>
       </div>
 
       <div ref={finishRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>

@@ -38,7 +38,7 @@ const RidePopUp = (props) => {
                 </div>
             </div>
             <div className='flex items-center gap-2'>
-                <button onClick={() => { props.setConfirmRidePopUpPanel(true); props.setRidePopUpPanel(false); props.confirmRide() }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
+                <button onClick={() => { props.confirmRide(); props.setConfirmRidePopUpPanel(true); props.setRidePopUpPanel(false); }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
                 <button onClick={() => { props.setRidePopUpPanel(false) }} className='w-full mt-5 text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Ignore</button>
             </div>
         </div>

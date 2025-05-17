@@ -18,7 +18,8 @@ const ConfirmRidePopUp = (props) => {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
-        });
+        })
+
         if (response.status === 200) {
             props.setRidePopUpPanel(false);
             props.setConfirmRidePopUpPanel(false);
@@ -35,9 +36,8 @@ const ConfirmRidePopUp = (props) => {
             <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-400'>
                 <div className='flex items-center justify-center gap-3'>
                     <img className='h-14 w-14 rounded-full object-cover' src="https://img.freepik.com/free-photo/close-up-portrait-curly-handsome-european-male_176532-8133.jpg?semt=ais_hybrid&w=740" alt="person-image" />
-                    <h2 className='text-xl capitalize font-medium'>{props.ride?.user.fullname.firstname}</h2>
+                    <h2 className='text-lg capitalize font-medium'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
                 </div>
-                <h5 className='text-lg font-semibold'>Some kms Away</h5>
             </div>
             <div className='w-full mt-5'>
                 <div className='flex items-center gap-5 p-3 border-b-2'>
@@ -64,7 +64,7 @@ const ConfirmRidePopUp = (props) => {
             </div>
             <div>
                 <form onSubmit={(e) => { handleSubmit(e) }}>
-                    <input value={otp} onChange={() => { setOtp(e.target.value) }} className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' required type="text" placeholder='Enter OTP' />
+                    <input value={otp} onChange={(e) => { setOtp(e.target.value) }} className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' required type="text" placeholder='Enter OTP' />
                     <button className='flex justify-center w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
                 </form>
                 <button onClick={() => { props.setConfirmRidePopUpPanel(false) }} className='w-full mt-5 text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Cancel</button>

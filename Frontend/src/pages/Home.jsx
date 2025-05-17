@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
 import LogoImage from '../assets/logo.png'
+import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import LocationPanel from '../components/LocationPanel'
 import VehiclePanel from '../components/VehiclePanel'
@@ -49,9 +50,9 @@ const Home = () => {
   React.useEffect(() => {
     console.log(user);
     socket.emit("join", { userType: "user", userId: user._id });
-  }, [ user ]);
+  }, [user]);
 
-  socket.on('ride-confirmed',(ride) => {
+  socket.on('ride-confirmed', (ride) => {
     setVehicleFound(false);
     setWaitingForDriver(true);
     setRide(ride);
@@ -192,7 +193,12 @@ const Home = () => {
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img className='w-20 absolute top-5 left-5' src={LogoImage} alt="uber-logo" />
+      <div className='p-3 absolute top-0 flex items-center justify-between w-screen'>
+        <img className='w-20 absolute top-5 left-5' src={LogoImage} alt="uber-logo" />
+        <Link to='/users/logout' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+          <i className="ri-logout-box-r-line"></i>
+        </Link>
+      </div>
       <div className='h-screen w-screen'>
         <img className='h-full w-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif' alt="temporary-image" />
       </div>

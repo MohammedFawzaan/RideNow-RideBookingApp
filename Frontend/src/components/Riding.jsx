@@ -2,10 +2,19 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import CarImage from '../assets/CarImage.jpg'
 import LogoImage from '../assets/logo.png'
+import { SocketContext } from '../context/SocketContext'
+import { useNavigate } from 'react-router-dom'
 
 const Riding = () => {
     const location = useLocation();
     const { ride } = location.state || {};
+    const navigate = useNavigate();
+    const { socket } = React.useContext(SocketContext);
+
+    socket.on('ride-ended', () => {
+        navigate('/home');
+    });
+
     return (
         <div className='h-screen overflow-hidden'>
             <img className='w-20 absolute top-5 left-5' src={LogoImage} alt="uber-logo" />
