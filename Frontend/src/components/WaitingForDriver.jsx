@@ -4,9 +4,9 @@ import CarImage from '../assets/CarImage.jpg'
 const WaitingForDriver = (props) => {
   return (
     <div>
-      <div>
-        <i onClick={() => { props.setwaitingForDriver(true) }} className="text-3xl ri-arrow-down-wide-fill"></i>
+      <div className='flex items-center justify-between'>
         <h3 className='text-2xl font-semibold mb-3'>Meet At Pickup Point</h3>
+        <i onClick={() => { props.setWaitingForDriver(true) }} className="text-3xl ri-arrow-down-wide-fill"></i>
       </div>
 
       <div className='flex items-center justify-between'>

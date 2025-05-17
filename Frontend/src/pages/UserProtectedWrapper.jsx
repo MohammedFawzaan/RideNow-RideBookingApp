@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react'
 import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { UserDataContext } from '../context/UserContext';
 
 const UserProtectedWrapper = ({ children }) => {
@@ -21,7 +21,7 @@ const UserProtectedWrapper = ({ children }) => {
           }
         }).then(response => {
           if(response.status === 200) {
-            setUser(response.data.user);
+            setUser(response.data);
             setIsLoading(false);
           }
         }).catch(err => {

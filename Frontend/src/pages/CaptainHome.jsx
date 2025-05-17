@@ -7,6 +7,8 @@ import LogoImage from '../assets/logo.png'
 import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
+import { CaptainDataContext } from '../context/CaptainContext'
+import { SocketContext } from '../context/SocketContext'
 
 const CaptainHome = () => {
 
@@ -14,6 +16,14 @@ const CaptainHome = () => {
   const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = React.useState(false);
   const ridePopUpPanelRef = React.useRef(null);
   const confirmRidePopUpPanelRef = React.useRef(null);
+
+  const { socket } = React.useContext(SocketContext);
+  const { captain } = React.useContext(CaptainDataContext);
+
+  React.useEffect(() => {
+    console.log(captain);
+    socket.emit("join", { userType: "captain", userId: captain._id });
+  }, []);
 
   useGSAP(function () {
     if (ridePopUpPanel) {
