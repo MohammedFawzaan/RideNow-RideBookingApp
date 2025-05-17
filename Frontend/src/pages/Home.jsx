@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
 import LogoImage from '../assets/logo.png'
+import { useNavigate } from 'react-router-dom'
 import LocationPanel from '../components/LocationPanel'
 import VehiclePanel from '../components/VehiclePanel'
 import ConfirmRide from '../components/ConfirmRide'
@@ -41,6 +42,10 @@ const Home = () => {
   const { user } = React.useContext(UserDataContext);
   const { socket } = React.useContext(SocketContext);
 
+  const [ride, setRide] = React.useState(null);
+
+  const navigate = useNavigate();
+
   React.useEffect(() => {
     console.log(user);
     socket.emit("join", { userType: "user", userId: user._id });
@@ -49,6 +54,12 @@ const Home = () => {
   socket.on('ride-confirmed',(ride) => {
     setVehicleFound(false);
     setWaitingForDriver(true);
+    setRide(ride);
+  });
+
+  socket.on('ride-started', (ride) => {
+    setWaitingForDriver(false);
+    navigate('/riding', { state: { ride } });
   });
 
   // Fetch suggestions from backend
@@ -251,7 +262,7 @@ const Home = () => {
         <LookingForDriver pickup={pickup} vehicleImage={vehicleImage} destination={destination} fare={fare} vehicleType={vehicleType} setVehicleFound={setVehicleFound} setConfirmRidePanel={setConfirmRidePanel} />
       </div>
       <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 bg-white p-3'>
-        <WaitingForDriver setWaitingForDriver={setWaitingForDriver} />
+        <WaitingForDriver ride={ride} vehicleImage={vehicleImage} setWaitingForDriver={setWaitingForDriver} />
       </div>
     </div>
   )
