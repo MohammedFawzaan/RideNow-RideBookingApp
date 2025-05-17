@@ -4,6 +4,7 @@ import CarImage from '../assets/CarImage.jpg'
 import LogoImage from '../assets/logo.png'
 import { SocketContext } from '../context/SocketContext'
 import { useNavigate } from 'react-router-dom'
+import LiveTracking from './LiveTracking'
 
 const Riding = () => {
     const location = useLocation();
@@ -11,7 +12,7 @@ const Riding = () => {
     const navigate = useNavigate();
     const { socket } = React.useContext(SocketContext);
 
-    socket.on('ride-ended', () => {
+    socket.on('ride-ended',() => {
         navigate('/home');
     });
 
@@ -22,7 +23,8 @@ const Riding = () => {
                 <i className="text-lg font-medium ri-home-2-fill"></i>
             </Link>
             <div className='h-3/5'>
-                <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" />
+                <LiveTracking />
+                {/* <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" /> */}
             </div>
             <div className='p-5'>
                 {/* Current Ride Status */}

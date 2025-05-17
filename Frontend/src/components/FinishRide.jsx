@@ -51,7 +51,7 @@ const FinishRide = (props) => {
         </div>
       </div>
       <div>
-        <button onClick={() => { endRide() }} className='w-full text-center mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>End Ride</button>
+        <button onClick={endRide} className='w-full text-center mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>End Ride</button>
         <p className='text-gray-600 font-semibold text-center text-sm my-2'>End the Ride if passenger has made the payment</p>
       </div>
     </div>

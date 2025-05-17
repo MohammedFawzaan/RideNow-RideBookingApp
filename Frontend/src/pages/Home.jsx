@@ -13,6 +13,7 @@ import LookingForDriver from '../components/LookingForDriver'
 import WaitingForDriver from '../components/WaitingForDriver'
 import { UserDataContext } from '../context/UserContext'
 import { SocketContext } from '../context/SocketContext'
+import LiveTracking from '../components/LiveTracking'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -200,7 +201,8 @@ const Home = () => {
         </Link>
       </div>
       <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif' alt="temporary-image" />
+        {/* <img className='h-full w-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif' alt="temporary-image" /> */}
+        <LiveTracking />
       </div>
       <div className='h-screen flex flex-col justify-end absolute top-0 w-full'>
         <div className='p-5 bg-white relative'>
