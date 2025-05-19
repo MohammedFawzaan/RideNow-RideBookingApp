@@ -11,9 +11,9 @@ const WaitingForDriver = (props) => {
       <div className='flex items-center justify-between'>
         <img className='h-14' src={props.vehicleImage} alt="Car-Icon" />
         <div className='text-right'>
-          <h2 className='text-lg capitalize font-medium'>Passenger : {props.ride?.captain.fullname.firstname}</h2>
-          <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
-          <p className='text-sm text-gray-600'>OTP - {props.ride?.otp}</p>
+          <h2 className='text-lg capitalize font-medium'>Captain's Name - {props.ride?.captain.fullname.firstname}</h2>
+          <h4 className='text-lg font-medium -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
+          <p className='text-lg font-medium'>OTP - {props.ride?.otp}</p>
         </div>
       </div>
       

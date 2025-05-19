@@ -3,10 +3,12 @@ const { sendMessageToSocketId } = require('../socket');
 const mapsService = require('./maps.service');
 const crypto = require('crypto');
 
+// Function to calculate fare based on distance and time.
 async function getFare(pickup, destination) {
     if (!pickup || !destination) {
         throw new Error('Pickup and destination are required');
     }
+    // Get coordinates for pickup and destination so that fare can be calculated.
     const distanceTime = await mapsService.getDistanceAndTime(pickup, destination);
 
     // Example fare calculation logic (values can be adjusted)
@@ -36,6 +38,7 @@ async function getFare(pickup, destination) {
 }
 module.exports.getFare = getFare;
 
+// Function to generate a random OTP of specified length.
 function getOtp(num) {
     function generateOtp(num) {
         const otp = crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString();
@@ -44,12 +47,15 @@ function getOtp(num) {
     return generateOtp(num);
 }
 
+// Function to create a new ride.
 module.exports.createRide = async ({ user, pickup, destination, vehicleType }) => {
     if(!user || !pickup || !destination || !vehicleType) {
         throw new Error('User, pickup, destination, and vehicle type are required');
     }
+    // Getting fare amount based on distance and time.
     const fare = await getFare(pickup, destination);
 
+    // Creating a new ride in the database.
     const ride = rideModel.create({
         user,
         pickup,
@@ -60,11 +66,14 @@ module.exports.createRide = async ({ user, pickup, destination, vehicleType }) =
     return ride;
 };
 
+// Function to confirm a ride and assign a captain to it.
 module.exports.confirmRide = async ({rideId, captain}) => {
     if (!rideId) {
         throw new Error('Ride ID is required');
     }
+    // Updating its status to 'accepted' and assigning the captain to it.
     await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'accepted', captain: captain._id });
+    // Finding the ride and populating user and captain details.
     const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain').select('+otp');
     if (!ride) {
         throw new Error('Ride not found');
@@ -72,11 +81,12 @@ module.exports.confirmRide = async ({rideId, captain}) => {
     return ride;
 };
 
+// Function to start a ride and updating the status to accepted.
 module.exports.startRide = async ({ rideId, otp, captain }) => {
     if (!rideId || !otp) {
         throw new Error('Ride id and OTP are required');
     }
-
+    // Finding the ride.
     const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain').select('+otp');
 
     if (!ride) {
@@ -89,40 +99,31 @@ module.exports.startRide = async ({ rideId, otp, captain }) => {
         throw new Error('Invalid OTP');
     }
 
-    await rideModel.findOneAndUpdate({
-        _id: rideId
-    }, {
-        status: 'ongoing'
-    });
-
-
-    sendMessageToSocketId(ride.user.socketId, {
-        event: 'ride-started',
-        data: ride
-    });
+    // Updating the ride status to 'ongoing'.
+    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'ongoing'});
 
     return ride;
 }
 
+// Function to end a ride and updating the status to completed.
 module.exports.endRide = async ({ rideId, captain }) => {
     if (!rideId) {
         throw new Error('Ride id is required');
     }
+    // finding the ride.
     const ride = await rideModel.findOne({
         _id: rideId,
         captain: captain._id
     }).populate('user').populate('captain').select('+otp');
+
     if (!ride) {
         throw new Error('Ride not found');
     }
     if (ride.status !== 'ongoing') {
         throw new Error('Ride not ongoing');
     }
-    await rideModel.findOneAndUpdate({
-        _id: rideId
-    }, {
-        status: 'completed'
-    })
+    // Updating the ride status to 'completed'.
+    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'completed' });
 
     return ride;
 }

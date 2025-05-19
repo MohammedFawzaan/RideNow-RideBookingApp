@@ -3,7 +3,8 @@ import axios from 'axios'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
-import LogoImage from '../assets/logo.png'
+import RideNowIcon from '../assets/RideNowIcon.png'
+import Image from '../assets/Image.png'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import LocationPanel from '../components/LocationPanel'
@@ -49,7 +50,6 @@ const Home = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    console.log(user);
     socket.emit("join", { userType: "user", userId: user._id });
   }, [user]);
 
@@ -120,9 +120,7 @@ const Home = () => {
       vehicleType,
     }, {
       headers: { Authorization: `Bearer ${token}` }
-    }
-    );
-    console.log(response.data);
+    });
   }
 
   useGSAP(function () {
@@ -193,16 +191,17 @@ const Home = () => {
   }, [waitingForDriver])
 
   return (
-    <div className='h-screen relative overflow-hidden'>
-      <div className='p-3 absolute top-0 flex items-center justify-between w-screen'>
-        <img className='w-20 absolute top-5 left-5' src={LogoImage} alt="uber-logo" />
-        <Link to='/users/logout' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
-          <i className="ri-logout-box-r-line"></i>
-        </Link>
-      </div>
+    <div className='h-screen overflow-hidden'>
       <div className='h-screen w-screen'>
         {/* <img className='h-full w-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif' alt="temporary-image" /> */}
-        <LiveTracking />
+        <img className='h-full w-full object-cover' src={Image} alt="temporary-image" />
+        {/* <LiveTracking /> */}
+      </div>
+      <div className='p-3 absolute top-0 w-screen'>
+        <img className='flex w-36 absolute top-5 left-5' src={RideNowIcon} alt="ride-logo" />
+        {/* <Link to='/users/logout' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+          <i className="ri-logout-box-r-line"></i>
+        </Link> */}
       </div>
       <div className='h-screen flex flex-col justify-end absolute top-0 w-full'>
         <div className='p-5 bg-white relative'>
@@ -222,9 +221,8 @@ const Home = () => {
                 setPickup(e.target.value);
                 setActiveField('pickup');
                 fetchSuggestions(e.target.value);
-                // setPanelOpen(true);
               }}
-              className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full'
+              className='bg-[#eee] m-2 px-8 py-2 rounded-lg w-full'
               type="text"
               placeholder='add a pickup location'
               autoComplete="off"
@@ -237,7 +235,6 @@ const Home = () => {
                 setDestination(e.target.value);
                 setActiveField('destination');
                 fetchSuggestions(e.target.value);
-                // setPanelOpen(true);
               }}
               className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full'
               type="text"
@@ -259,9 +256,9 @@ const Home = () => {
         </div>
       </div>
       <div>
-        <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-          <VehiclePanel selectVehicle={setVehicleType} setVehicleImage={setVehicleImage} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
-        </div>
+      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
+        <VehiclePanel selectVehicle={setVehicleType} setVehicleImage={setVehicleImage} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
+      </div>
       </div>
       <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
         <ConfirmRide createRide={createRide} vehicleImage={vehicleImage} pickup={pickup} destination={destination} fare={fare} vehicleType={vehicleType} setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />

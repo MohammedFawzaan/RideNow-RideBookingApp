@@ -1,9 +1,8 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 import axios from 'axios'
 import { useContext } from 'react'
-import LogoImage from '../assets/logo.png'
+import RideNowIcon from '../assets/RideNowIcon.png'
 import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainSignup = () => {
@@ -30,28 +29,49 @@ const CaptainSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newCaptain = {
-      fullname: {
-        firstname: firstname,
-        lastname: lastname,
-      },
-      email: email,
-      password: password,
-      vehicle: {
-        color: vehicleColor,
-        plate: vehiclePlate,
-        capacity: vehicleCapacity,
-        vehicleType: vehicleType,
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email');
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      const newCaptain = {
+        fullname: {
+          firstname: firstname,
+          lastname: lastname,
+        },
+        email: email,
+        password: password,
+        vehicle: {
+          color: vehicleColor,
+          plate: vehiclePlate,
+          capacity: vehicleCapacity,
+          vehicleType: vehicleType,
+        }
+      };
+
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, newCaptain);
+
+      if (response.status === 201) {
+        const data = await response.data;
+        setCaptain(data.captain);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        toast.success('Account created successfully');
+        navigate('/captain-home');
       }
+    } catch (err) {
+      toast.error('Registration failed');
     }
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, newCaptain);
-    if (response.status === 201) {
-      const data = await response.data;
-      setCaptain(data.captain);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', data.role);
-      navigate('/captain-home');
-    }
+
     setFirstname('');
     setLastname('');
     setEmail('');
@@ -60,14 +80,15 @@ const CaptainSignup = () => {
     setVehicleCapacity('');
     setVehiclePlate('');
     setVehicleType('');
-  }
+  };
+
 
   return (
     <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-        <img className='w-28 mb-10' src={LogoImage} alt="Uber" />
-        <form onSubmit={(e) => handleSubmit(e)} action="">
-          <h2 className='text-center font-bold text-2xl mb-5'>Your Details</h2>
+        <img className='mb-5 w-36' src={RideNowIcon} alt="ride-logo" />
+        <h1 className='text-3xl text-center my-6 text-orange-500 font-medium'>Captain's SignUp</h1>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <h3 className='text-xl mb-2'>Our Captain's Name</h3>
           <input
             className='border-rounded mt-5 mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
@@ -109,8 +130,7 @@ const CaptainSignup = () => {
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
             value={vehicleType}
-            onChange={(e) => setVehicleType(e.target.value)}
-          >
+            onChange={(e) => setVehicleType(e.target.value)}>
             <option value="" disabled>What's Your Vehicle</option>
             <option value="car">Car</option>
             <option value="auto">Auto</option>
@@ -121,8 +141,7 @@ const CaptainSignup = () => {
             className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
             required
             value={vehicleCapacity}
-            onChange={(e) => setVehicleCapacity(e.target.value)}
-          >
+            onChange={(e) => setVehicleCapacity(e.target.value)}>
             <option value="" disabled>How Many Passengers</option>
             <option value="1">1</option>
             <option value="3">3</option>

@@ -1,4 +1,5 @@
 import React from 'react'
+import userImage from '../assets/userImage.png'
 
 const RidePopUp = (props) => {
     return (
@@ -7,26 +8,26 @@ const RidePopUp = (props) => {
                 <h3 className='text-2xl font-bold my-3'>New Ride Available!</h3>
                 {/* <i onClick={() => { props.setRidePopUpPanel(false)} } className="text-3xl ri-arrow-down-wide-fill"></i> */}
             </div>
-            <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-400'>
+            <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-300'>
                 <div className='flex items-center justify-center gap-3'>
-                    <img className='h-14 w-14 rounded-full object-cover' src="https://img.freepik.com/free-photo/close-up-portrait-curly-handsome-european-male_176532-8133.jpg?semt=ais_hybrid&w=740" alt="person-image" />
-                    <h2 className='text-xl font-medium'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
+                    <img className='h-10 w-10 rounded-full object-cover' src={userImage} alt="person-image" />
+                    <h2 className='text-base font-medium'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
                 </div>
-                <h5 className='text-lg font-semibold'>Some kms away</h5>
+                {/* <h5 className='text-lg font-semibold'>Some kms away</h5> */}
             </div>
             <div className='w-full mt-5'>
                 <div className='flex items-center gap-5 p-3 border-b-2'>
                     <i className="ri-map-pin-line"></i>
                     <div className=''>
                         <h3 className='text-lg font-medium'>Pickup</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>{props.ride?.pickup}</p>
+                        <p className='text-sm -mt-1 text-gray-800'>{props.ride?.pickup}</p>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3 border-b-2'>
                     <i className="text-lg ri-map-pin-fill"></i>
                     <div className=''>
                         <h3 className='text-lg font-medium'>Destination</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>{props.ride?.destination}</p>
+                        <p className='text-sm -mt-1 text-gray-800'>{props.ride?.destination}</p>
                     </div>
                 </div>
                 <div className='flex items-center gap-5 p-3'>

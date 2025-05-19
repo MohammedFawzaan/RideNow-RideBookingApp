@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import userImage from '../assets/userImage.png'
 
 const ConfirmRidePopUp = (props) => {
 
@@ -35,7 +36,7 @@ const ConfirmRidePopUp = (props) => {
             </div>
             <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-400'>
                 <div className='flex items-center justify-center gap-3'>
-                    <img className='h-14 w-14 rounded-full object-cover' src="https://img.freepik.com/free-photo/close-up-portrait-curly-handsome-european-male_176532-8133.jpg?semt=ais_hybrid&w=740" alt="person-image" />
+                    <img className='h-14 w-14 rounded-full object-cover' src={userImage} alt="person-image" />
                     <h2 className='text-lg capitalize font-medium'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
                 </div>
             </div>

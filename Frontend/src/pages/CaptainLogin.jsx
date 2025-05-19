@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import LogoImage from '../assets/logo.png'
+import RideNowIcon from '../assets/RideNowIcon.png'
 import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainLogin = () => {
@@ -25,26 +25,51 @@ const CaptainLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const captainData = {
-      email: email,
-      password: password
+
+    if (!email || !password) {
+      toast.error('Please fill in all fields');
+      return;
     }
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData);
-    if (response.status === 200) {
-      const data = await response.data;
-      setCaptain(data.captain);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', data.role);
-      navigate('/captain-home');
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
     }
+
+    try {
+      const captainData = {
+        email: email,
+        password: password
+      };
+
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData);
+
+      if (response.status === 200) {
+        const data = await response.data;
+        setCaptain(data.captain);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        toast.success('Login successful');
+        navigate('/captain-home');
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        toast.error('Invalid email or password');
+      } else {
+        toast.error('Something went wrong');
+      }
+    }
+
     setEmail('');
     setPassword('');
-  }
+  };
+
 
   return (
     <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-        <img className='w-28 mb-10' src={LogoImage} alt="Uber" />
+        <img className='mb-5 w-36' src={RideNowIcon} alt="ride-logo" />
+        <h1 className='text-3xl text-center my-5 text-orange-500 font-medium'>Captain's Login</h1>
         <form onSubmit={(e) => handleSubmit(e)} action="">
           <h3 className='text-xl mb-2'>What's Your Email</h3>
           <input

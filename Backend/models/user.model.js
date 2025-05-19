@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// using methods creating 3 functions (generateAuthToken, comparePassword, hashPassword)
+// using methods - creating 3 functions (generateAuthToken, comparePassword, hashPassword)
 userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: '1d',

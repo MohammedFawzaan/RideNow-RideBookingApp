@@ -1,4 +1,5 @@
 import React from 'react'
+import { toast } from 'react-toastify';
 
 const ConfirmRide = (props) => {
   return (
@@ -17,6 +18,7 @@ const ConfirmRide = (props) => {
             props.setConfirmRidePanel(false);
             props.setVehicleFound(true);
             props.createRide();
+            toast.success('Searching for nearby captains...');
           }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
         </div>
         <div className='flex items-center gap-5 p-3 border-b-2'>

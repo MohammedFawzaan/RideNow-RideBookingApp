@@ -15,7 +15,8 @@ import Riding from './components/Riding'
 import CaptainRiding from './pages/CaptainRiding'
 import { CaptainDataContext } from './context/CaptainContext'
 import { UserDataContext } from './context/UserContext'
-
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = () => {
   const ans = useContext(UserDataContext);
@@ -23,7 +24,7 @@ const App = () => {
 
   const ans1 = useContext(CaptainDataContext)
   // console.log(ans1.captain);
-  
+
   return (
     <div>
       <Routes>
@@ -39,8 +40,8 @@ const App = () => {
           </CaptainProtectedWrapper>
         } />
 
-        <Route path='/riding' element={<Riding />}/>
-        <Route path='/captain-riding' element={<CaptainRiding />}/>
+        <Route path='/riding' element={<Riding />} />
+        <Route path='/captain-riding' element={<CaptainRiding />} />
 
         <Route path="/users/login" element={<UserLogin />} />
         <Route path="/users/signup" element={<UserSignup />} />
@@ -59,6 +60,22 @@ const App = () => {
           </CaptainProtectedWrapper>
         } />
       </Routes>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+        style={{
+          width: 'auto',    
+          minWidth: '220px',
+          maxWidth: '300px'
+        }}
+      />
+
     </div>
   )
 }

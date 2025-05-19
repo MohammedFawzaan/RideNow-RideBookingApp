@@ -24,7 +24,7 @@ const UserLogout = () => {
   }, []);
 
   return (
-    <div>UserLogout</div>
+    <div></div>
   )
 }
 

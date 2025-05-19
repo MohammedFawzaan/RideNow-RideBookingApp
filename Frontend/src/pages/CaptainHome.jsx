@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
 import { Link } from 'react-router-dom'
-import LogoImage from '../assets/logo.png'
+import RideNowIcon from '../assets/RideNowIcon.png'
 import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
@@ -25,7 +25,6 @@ const CaptainHome = () => {
   const { captain } = React.useContext(CaptainDataContext);
 
   React.useEffect(() => {
-    console.log(captain);
     socket.emit("join", { userType: "captain", userId: captain._id });
     const updateLocation = () => {
       if (navigator.geolocation) {
@@ -45,7 +44,6 @@ const CaptainHome = () => {
   }, []);
 
   socket.on('new-ride', (data) => {
-    console.log(data);
     setRide(data);
     setRidePopUpPanel(true);
   });
@@ -89,16 +87,16 @@ const CaptainHome = () => {
 
   return (
     <div className='h-screen overflow-hidden'>
-      <div className='p-3 absolute top-0 flex items-center justify-between w-screen'>
-        <img className='w-20 absolute top-5 left-5' src={LogoImage} alt="uber-logo" />
-        <Link to='/captains/logout' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
-          <i className="ri-logout-box-r-line"></i>
-        </Link>
-      </div>
-
       <div className='h-[70%]'>
         <LiveTracking />
         {/* <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" /> */}
+      </div>
+
+      <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4'>
+        <img className='flex w-36 bg-white rounded-lg' src={RideNowIcon} alt="ride-logo" />
+        <Link to='/captains/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+          <i className="ri-logout-box-r-line"></i>
+        </Link>
       </div>
 
       <div className='h-[30%] p-5'>

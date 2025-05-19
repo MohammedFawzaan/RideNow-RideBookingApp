@@ -4,7 +4,7 @@ const LookingForDriver = (props) => {
     return (
         <div>
             <div className='flex items-center justify-between'>
-                <h3 className='text-2xl font-semibold mb-3'>Looking For a Driver</h3>
+                <h3 className='text-2xl font-semibold mb-3'>Looking For a Ride</h3>
                 <i onClick={() => { props.setVehicleFound(false) }} className="text-3xl ri-arrow-down-wide-fill"></i>
             </div>
             <div className='flex flex-col justify-between items-center gap-2'>

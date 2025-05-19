@@ -24,7 +24,7 @@ const CaptainLogout = () => {
   }, []);
 
   return (
-    <div>CaptainLogout</div>
+    <div></div>
   )
 }
 

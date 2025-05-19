@@ -5,6 +5,7 @@ const { createRide, getFare, confirmRide, startRide, endRide } = require('../con
 const { authUser } = require('../middlewares/auth.middleware');
 const { authCaptain } = require('../middlewares/auth.middleware');
 
+// Route to create a ride
 router.post('/create',
     authUser,
     body('pickup').isString().isLength({ min: 3 }).withMessage('Invalid pickup location'),
@@ -13,6 +14,7 @@ router.post('/create',
     createRide
 );
 
+// Route to get fare estimate
 router.get('/get-fare', 
     authUser,
     query('pickup').isString().isLength({ min: 3 }).withMessage('Invalid pickup location'),
@@ -20,12 +22,14 @@ router.get('/get-fare',
     getFare,
 );
 
+// Route to confirm a ride
 router.post('/confirm', 
     authCaptain,
     body('rideId').isMongoId().withMessage('Invalid ride ID'),
     confirmRide
 );
 
+// Route to start a ride
 router.get('/start-ride',
     authCaptain,
     query('rideId').isMongoId().withMessage('Invalid ride ID'),
@@ -33,6 +37,7 @@ router.get('/start-ride',
     startRide
 );
 
+// Route to end a ride
 router.post('/end-ride',
     authCaptain,
     body('rideId').isMongoId().withMessage('Invalid ride ID'),
