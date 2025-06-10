@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import { UserDataContext } from '../context/UserContext'
+import { toast } from 'react-toastify';
 
 const UserSignup = () => {
   const [fistname, setFistname] = React.useState('');

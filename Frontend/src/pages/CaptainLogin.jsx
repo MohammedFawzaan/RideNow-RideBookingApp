@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import { CaptainDataContext } from '../context/CaptainContext'
+import { toast } from 'react-toastify';
 
 const CaptainLogin = () => {
 

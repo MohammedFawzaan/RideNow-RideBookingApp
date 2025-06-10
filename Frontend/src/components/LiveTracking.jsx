@@ -15,6 +15,7 @@ const LiveTracking = () => {
     const [ currentPosition, setCurrentPosition ] = useState(center);
 
     useEffect(() => {
+        console.log(center);
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
             setCurrentPosition({

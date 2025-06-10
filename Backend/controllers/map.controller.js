@@ -35,7 +35,10 @@ module.exports.getDistanceTime = async (req, res) => {
         }
         // getting distance and time from origin and destination
         const distanceTime = await mapsService.getDistanceAndTime(origin, destination);
-        return res.status(200).json(distanceTime);
+        return res.status(200).json({
+            distance: distanceTime.distance.text,
+            time: distanceTime.duration.text
+        });
     } catch (error) {
         return res.status(404).json({ error: 'Distance and time not found' });
     }

@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useContext } from 'react'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import { CaptainDataContext } from '../context/CaptainContext'
+import { toast } from 'react-toastify';
 
 const CaptainSignup = () => {
   const [firstname, setFirstname] = React.useState('');
