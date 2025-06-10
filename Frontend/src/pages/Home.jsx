@@ -126,7 +126,7 @@ const Home = () => {
   useGSAP(function () {
     if (panelOpen) {
       gsap.to(panelRef.current, {
-        height: '60%',
+        height: '50%',
         padding: 15
       })
       gsap.to(panelCloseRef.current, {
@@ -255,20 +255,56 @@ const Home = () => {
           />
         </div>
       </div>
-      <div>
-      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <VehiclePanel selectVehicle={setVehicleType} setVehicleImage={setVehicleImage} fare={fare} setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
-      </div>
-      </div>
-      <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <ConfirmRide createRide={createRide} vehicleImage={vehicleImage} pickup={pickup} destination={destination} fare={fare} vehicleType={vehicleType} setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
-      </div>
-      <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <LookingForDriver pickup={pickup} vehicleImage={vehicleImage} destination={destination} fare={fare} vehicleType={vehicleType} setVehicleFound={setVehicleFound} setConfirmRidePanel={setConfirmRidePanel} />
-      </div>
-      <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 bg-white p-3'>
-        <WaitingForDriver ride={ride} vehicleImage={vehicleImage} setWaitingForDriver={setWaitingForDriver} />
-      </div>
+      {vehiclePanel && (
+        <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 bg-white p-3' style={{ transform: 'translateY(100%)' }}>
+          <VehiclePanel
+            selectVehicle={setVehicleType}
+            setVehicleImage={setVehicleImage}
+            fare={fare}
+            setConfirmRidePanel={setConfirmRidePanel}
+            setVehiclePanel={setVehiclePanel}
+          />
+        </div>
+      )}
+      {confirmRidePanel && (
+        <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 bg-white p-3' style={{ transform: 'translateY(100%)' }}>
+          <ConfirmRide
+            createRide={createRide}
+            vehicleImage={vehicleImage}
+            pickup={pickup}
+            destination={destination}
+            fare={fare}
+            vehicleType={vehicleType}
+            setConfirmRidePanel={setConfirmRidePanel}
+            setVehicleFound={setVehicleFound}
+          />
+        </div>
+      )}
+      {vehicleFound && (
+        <div
+          ref={vehicleFoundRef}
+          className='fixed w-full z-10 bottom-0 bg-white p-3'
+          style={{ transform: 'translateY(100%)' }}>
+          <LookingForDriver
+            pickup={pickup}
+            vehicleImage={vehicleImage}
+            destination={destination}
+            fare={fare}
+            vehicleType={vehicleType}
+            setVehicleFound={setVehicleFound}
+            setConfirmRidePanel={setConfirmRidePanel}
+          />
+        </div>
+      )}
+      {waitingForDriver && (
+        <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 bg-white p-3' style={{ transform: 'translateY(100%)' }}>
+          <WaitingForDriver
+            ride={ride}
+            vehicleImage={vehicleImage}
+            setWaitingForDriver={setWaitingForDriver}
+          />
+        </div>
+      )}
     </div>
   )
 }

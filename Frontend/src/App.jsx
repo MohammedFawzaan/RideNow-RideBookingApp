@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Start from './pages/Start'
@@ -26,7 +26,7 @@ const App = () => {
   // console.log(ans1.captain);
 
   return (
-    <div>
+    <div className='container'>
       <Routes>
         <Route path="/" element={<Start />} />
         <Route path="/home" element={

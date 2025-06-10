@@ -87,7 +87,7 @@ const CaptainHome = () => {
 
   return (
     <div className='h-screen overflow-hidden'>
-      <div className='h-[70%]'>
+      <div className='h-[90%]'>
         <LiveTracking />
         {/* <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" /> */}
       </div>
@@ -99,7 +99,7 @@ const CaptainHome = () => {
         </Link>
       </div>
 
-      <div className='h-[30%] p-5'>
+      <div className='fixed bottom-0 p-5'>
         <CaptainDetails />
       </div>
 
