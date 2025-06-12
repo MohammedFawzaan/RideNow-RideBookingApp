@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
-import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
+// import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 import { CaptainDataContext } from '../context/CaptainContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracking from '../components/LiveTracking'
@@ -17,9 +17,9 @@ const CaptainHome = () => {
   const [ride, setRide] = React.useState(null);
 
   const [ridePopUpPanel, setRidePopUpPanel] = React.useState(false);
-  const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = React.useState(false);
+  // const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = React.useState(false);
   const ridePopUpPanelRef = React.useRef(null);
-  const confirmRidePopUpPanelRef = React.useRef(null);
+  // const confirmRidePopUpPanelRef = React.useRef(null);
 
   const { socket } = React.useContext(SocketContext);
   const { captain } = React.useContext(CaptainDataContext);
@@ -58,7 +58,8 @@ const CaptainHome = () => {
       }
     });
     setRidePopUpPanel(false);
-    setConfirmRidePopUpPanel(true);
+    // setConfirmRidePopUpPanel(true);
+    console.log("Working");
   }
 
   useGSAP(function () {
@@ -73,17 +74,17 @@ const CaptainHome = () => {
     }
   }, [ridePopUpPanel])
 
-  useGSAP(function () {
-    if (confirmRidePopUpPanel) {
-      gsap.to(confirmRidePopUpPanelRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(confirmRidePopUpPanelRef.current, {
-        transform: 'translateY(100%)'
-      })
-    }
-  }, [confirmRidePopUpPanel])
+  // useGSAP(function () {
+  //   if (confirmRidePopUpPanel) {
+  //     gsap.to(confirmRidePopUpPanelRef.current, {
+  //       transform: 'translateY(0)'
+  //     })
+  //   } else {
+  //     gsap.to(confirmRidePopUpPanelRef.current, {
+  //       transform: 'translateY(100%)'
+  //     })
+  //   }
+  // }, [confirmRidePopUpPanel])
 
   return (
     <div className='h-screen overflow-hidden'>
@@ -104,12 +105,12 @@ const CaptainHome = () => {
       </div>
 
       <div ref={ridePopUpPanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <RidePopUp ride={ride} setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} confirmRide={confirmRide} />
+        <RidePopUp ride={ride} setRidePopUpPanel={setRidePopUpPanel} confirmRide={confirmRide} />
       </div>
 
-      <div ref={confirmRidePopUpPanelRef} className='fixed h-[80%] w-full z-10 bottom-0 translate-y-full bg-white p-3'>
+      {/* <div ref={confirmRidePopUpPanelRef} className='fixed h-[80%] w-full z-10 bottom-0 translate-y-full bg-white p-3'>
         <ConfirmRidePopUp ride={ride} setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
-      </div>
+      </div> */}
     </div >
   )
 }

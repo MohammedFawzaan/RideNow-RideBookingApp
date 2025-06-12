@@ -22,7 +22,7 @@ const ConfirmRidePopUp = (props) => {
         })
 
         if (response.status === 200) {
-            props.setRidePopUpPanel(false);
+            // props.setRidePopUpPanel(false);
             props.setConfirmRidePopUpPanel(false);
             navigate('/captain-riding', { state: { ride: props.ride } });
         }
@@ -36,11 +36,15 @@ const ConfirmRidePopUp = (props) => {
             </div>
             <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-400'>
                 <div className='flex items-center justify-center gap-3'>
-                    <img className='h-14 w-14 rounded-full object-cover' src={userImage} alt="person-image" />
-                    <h2 className='text-lg capitalize font-medium'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
+                    <img className='h-10 w-10 rounded-full object-cover' src={userImage} alt="person-image" />
+                    <p className='capitalize font-medium'>{props.ride?.user.fullname.firstname + ' ' + props.ride?.user.fullname.lastname}</p>
                 </div>
             </div>
-            <div className='w-full mt-5'>
+            <form className='flex items-center justify-center mt-3 gap-2' onSubmit={(e) => { handleSubmit(e) }}>
+                <input value={otp} onChange={(e) => { setOtp(e.target.value) }} className='bg-[#eee] px-4 py-2 text-base rounded-lg w-auto' required type="text" placeholder='Enter OTP' />
+                <button className='block text-center text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>&#10004;</button>
+            </form>
+            <div className='w-full mt-1'>
                 <div className='flex items-center gap-5 p-3 border-b-2'>
                     <i className="ri-map-pin-line"></i>
                     <div className=''>
@@ -62,13 +66,7 @@ const ConfirmRidePopUp = (props) => {
                         <p className='text-sm -mt-1 text-gray-600'>Cash</p>
                     </div>
                 </div>
-            </div>
-            <div>
-                <form onSubmit={(e) => { handleSubmit(e) }}>
-                    <input value={otp} onChange={(e) => { setOtp(e.target.value) }} className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full' required type="text" placeholder='Enter OTP' />
-                    <button className='flex justify-center w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
-                </form>
-                <button onClick={() => { props.setConfirmRidePopUpPanel(false) }} className='w-full mt-5 text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Cancel</button>
+                <button onClick={() => { props.setConfirmRidePopUpPanel(false) }} className='flex items-center justify-center w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Cancel</button>
             </div>
         </div>
     )

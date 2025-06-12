@@ -1,8 +1,13 @@
-import React from 'react'
+import PickupNavigation from './PickupNavigation'
 
 const WaitingForDriver = (props) => {
+
+  const pickup = props.ride?.pickup;
+
   return (
     <div>
+      <PickupNavigation pickupLocation={pickup} />
+
       <div className='flex items-center justify-between'>
         <h3 className='text-2xl font-semibold mb-3'>Meet At Pickup Point</h3>
         <i onClick={() => { props.setWaitingForDriver(true) }} className="text-3xl ri-arrow-down-wide-fill"></i>

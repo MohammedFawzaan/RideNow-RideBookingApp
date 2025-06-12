@@ -1,7 +1,17 @@
-import React from 'react'
 import userImage from '../assets/userImage.png'
+import { useNavigate } from 'react-router-dom'
 
 const RidePopUp = (props) => {
+
+    const navigate = useNavigate();
+
+    const handleAccept = (e) => {
+        e.preventDefault();
+        props.confirmRide();
+        props.setRidePopUpPanel(false);
+        navigate('/captain-pickup', { state: { ride: props.ride }});
+    }
+
     return (
         <div>
             <div className='flex items-center justify-between'>
@@ -11,7 +21,7 @@ const RidePopUp = (props) => {
             <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-300'>
                 <div className='flex items-center justify-center gap-3'>
                     <img className='h-10 w-10 rounded-full object-cover' src={userImage} alt="person-image" />
-                    <h2 className='text-base font-medium'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
+                    <h2 className='text-base font-medium'>{props.ride?.user.fullname.firstname + ' ' + props.ride?.user.fullname.lastname}</h2>
                 </div>
                 {/* <h5 className='text-lg font-semibold'>Some kms away</h5> */}
             </div>
@@ -39,7 +49,7 @@ const RidePopUp = (props) => {
                 </div>
             </div>
             <div className='flex items-center gap-2'>
-                <button onClick={() => { props.confirmRide(); props.setConfirmRidePopUpPanel(true); props.setRidePopUpPanel(false); }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
+                <button onClick={(e) => { handleAccept(e); }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
                 <button onClick={() => { props.setRidePopUpPanel(false) }} className='w-full mt-5 text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Ignore</button>
             </div>
         </div>

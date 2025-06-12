@@ -13,6 +13,7 @@ import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
 import CaptainLogout from './pages/CaptainLogout'
 import Riding from './components/Riding'
 import CaptainRiding from './pages/CaptainRiding'
+import CaptainPickup from './pages/CaptainPickup'
 import { CaptainDataContext } from './context/CaptainContext'
 import { UserDataContext } from './context/UserContext'
 import { ToastContainer } from 'react-toastify'
@@ -42,6 +43,7 @@ const App = () => {
 
         <Route path='/riding' element={<Riding />} />
         <Route path='/captain-riding' element={<CaptainRiding />} />
+        <Route path='/captain-pickup' element={<CaptainPickup />} />
 
         <Route path="/users/login" element={<UserLogin />} />
         <Route path="/users/signup" element={<UserSignup />} />
