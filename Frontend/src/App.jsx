@@ -11,7 +11,8 @@ import UserProtectedWrapper from './pages/UserProtectedWrapper'
 import CaptainHome from './pages/CaptainHome'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
 import CaptainLogout from './pages/CaptainLogout'
-import Riding from './components/Riding'
+import Riding from './pages/Riding'
+import Pickup from './pages/Pickup'
 import CaptainRiding from './pages/CaptainRiding'
 import CaptainPickup from './pages/CaptainPickup'
 import { CaptainDataContext } from './context/CaptainContext'
@@ -42,6 +43,7 @@ const App = () => {
         } />
 
         <Route path='/riding' element={<Riding />} />
+        <Route path='/pickup' element={<Pickup />} />
         <Route path='/captain-riding' element={<CaptainRiding />} />
         <Route path='/captain-pickup' element={<CaptainPickup />} />
 
@@ -64,7 +66,7 @@ const App = () => {
       </Routes>
 
       <ToastContainer
-        position="bottom-right"
+        position="top-center"
         autoClose={2000}
         hideProgressBar={false}
         closeOnClick
@@ -72,12 +74,12 @@ const App = () => {
         draggable
         theme="colored"
         style={{
-          width: 'auto',    
-          minWidth: '220px',
-          maxWidth: '300px'
+          width: 'auto',
+          minWidth: '180px',
+          maxWidth: '250px',
+          marginTop: '1rem',
         }}
       />
-
     </div>
   )
 }

@@ -61,24 +61,29 @@ module.exports.createRide = async ({ user, pickup, destination, vehicleType }) =
         pickup,
         destination,
         otp: getOtp(6),
-        fare: fare[vehicleType]
+        fare: fare[vehicleType],
+        status: 'pending'
     });
     return ride;
 };
 
 // Function to confirm a ride and assign a captain to it.
-module.exports.confirmRide = async ({rideId, captain}) => {
+module.exports.confirmRide = async ({ rideId, captain }) => {
     if (!rideId) {
         throw new Error('Ride ID is required');
     }
-    // Updating its status to 'accepted' and assigning the captain to it.
-    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'accepted', captain: captain._id });
-    // Finding the ride and populating user and captain details.
-    const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain').select('+otp');
-    if (!ride) {
-        throw new Error('Ride not found');
-    }
-    return ride;
+    // Atomically update the ride only if it's still pending
+    const ride = await rideModel.findOneAndUpdate(
+        { _id: rideId, status: 'pending' },  // Only update if pending
+        {
+            status: 'accepted',
+            captain: captain._id
+        },
+        {
+            new: true // return the updated ride
+        }
+    ).populate('user').populate('captain').select('+otp');
+    return ride; // will be null if already accepted or not found
 };
 
 // Function to start a ride and updating the status to accepted.

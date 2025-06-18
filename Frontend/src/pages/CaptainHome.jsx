@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import axios from 'axios'
 import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
@@ -11,6 +11,7 @@ import RidePopUp from '../components/RidePopUp'
 import { CaptainDataContext } from '../context/CaptainContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracking from '../components/LiveTracking'
+import { toast } from 'react-toastify';
 
 const CaptainHome = () => {
 
@@ -23,6 +24,8 @@ const CaptainHome = () => {
 
   const { socket } = React.useContext(SocketContext);
   const { captain } = React.useContext(CaptainDataContext);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     socket.emit("join", { userType: "captain", userId: captain._id });
@@ -49,17 +52,30 @@ const CaptainHome = () => {
   });
 
   async function confirmRide() {
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
-      rideId: ride._id,
-      captainId: captain._id,
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+        rideId: ride._id,
+        captainId: captain._id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      toast.success("Ride Accepted");
+      setRidePopUpPanel(false);
+      navigate('/captain-pickup', { state: { ride: ride } });
+
+    } catch (error) {
+      // Catch 400 from backend when another captain already accepted
+      if (error.response?.status === 400) {
+        toast.error("Ride already accepted by another captain.");
+        setRide(null);
+        setRidePopUpPanel(false);
+      } else {
+        toast.error("Something went wrong while accepting the ride.");
+        console.error(error);
       }
-    });
-    setRidePopUpPanel(false);
-    // setConfirmRidePopUpPanel(true);
-    console.log("Working");
+    }
   }
 
   useGSAP(function () {
@@ -73,18 +89,6 @@ const CaptainHome = () => {
       })
     }
   }, [ridePopUpPanel])
-
-  // useGSAP(function () {
-  //   if (confirmRidePopUpPanel) {
-  //     gsap.to(confirmRidePopUpPanelRef.current, {
-  //       transform: 'translateY(0)'
-  //     })
-  //   } else {
-  //     gsap.to(confirmRidePopUpPanelRef.current, {
-  //       transform: 'translateY(100%)'
-  //     })
-  //   }
-  // }, [confirmRidePopUpPanel])
 
   return (
     <div className='h-screen overflow-hidden'>

@@ -2,9 +2,9 @@ const rideModel = require('../models/ride.model');
 const rideService = require('../services/ride.service');
 const mapService = require('../services/maps.service');
 const { validationResult } = require('express-validator');
-const { sendMessageToSocketId } = require('../socket');
+const { sendMessageToSocketId, io } = require('../socket');
 
-// Creating a new ride when user requests it and captain accepts it.
+// Creating a new ride when user requests it and sending it to captains nearby.
 module.exports.createRide = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -37,7 +37,7 @@ module.exports.createRide = async (req, res) => {
         // Emptying OTP field in the ride object.
         ride.otp = "";
 
-        // Getting the ride details to the captains in the radius.
+        // Getting the ride details for sending it to captains in the radius.
         const rideWithUser = await rideModel.findOne({ _id: ride._id }).populate('user');
 
         // Mapping through the captains and sending them the ride details.
@@ -74,15 +74,13 @@ module.exports.confirmRide = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    // Getting the ride ID from the request body.
     const { rideId } = req.body;
     try {
-        // To Get the ride details and Assigning the ride to the captain by sending captain and ride id to confirmRide service.
+        // Attempt atomic update inside service
         const ride = await rideService.confirmRide({ rideId, captain: req.captain });
         if (!ride) {
-            return res.status(404).json({ error: 'Ride not found' });
+            return res.status(400).json({ error: 'Ride is already accepted by another captain' });
         }
-        // Sending the ride details to the user.
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-confirmed',
             data: ride
@@ -91,7 +89,8 @@ module.exports.confirmRide = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });
     }
-}
+};
+
 
 // Starting the ride when captain starts it and sending the OTP to the user.
 module.exports.startRide = async (req, res) => {

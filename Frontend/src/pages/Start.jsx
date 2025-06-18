@@ -21,7 +21,7 @@ const Start = () => {
     }
 
     return (
-        <div>
+        <div className='w-screen'>
             <div className='bg-cover bg-center bg-[url(https://images.pexels.com/photos/139303/pexels-photo-139303.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)] h-screen flex flex-col justify-between items-center'>
                 <img className='w-40 absolute left-5 top-5' src={RideNowIcon} alt="RideNow" />
                 <div className='bg-white pb-7 py-4 px-4 mt-auto w-full'>

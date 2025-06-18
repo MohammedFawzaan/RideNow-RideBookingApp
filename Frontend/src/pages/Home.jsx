@@ -14,7 +14,7 @@ import LookingForDriver from '../components/LookingForDriver'
 import WaitingForDriver from '../components/WaitingForDriver'
 import { UserDataContext } from '../context/UserContext'
 import { SocketContext } from '../context/SocketContext'
-import LiveTracking from '../components/LiveTracking'
+// import LiveTracking from '../components/LiveTracking'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -53,15 +53,15 @@ const Home = () => {
     socket.emit("join", { userType: "user", userId: user._id });
   }, [user]);
 
+  socket.on('ride-started', (ride) => {
+    navigate('/riding', { state: { ride } });
+  });
+
   socket.on('ride-confirmed', (ride) => {
     setVehicleFound(false);
     setWaitingForDriver(true);
     setRide(ride);
-  });
-
-  socket.on('ride-started', (ride) => {
-    setWaitingForDriver(false);
-    navigate('/riding', { state: { ride } });
+    navigate('/pickup', { state: { ride } });
   });
 
   // Fetch suggestions from backend

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import userImage from '../assets/userImage.png'
+import { toast } from 'react-toastify'
 
 const ConfirmRidePopUp = (props) => {
 
@@ -22,8 +23,8 @@ const ConfirmRidePopUp = (props) => {
         })
 
         if (response.status === 200) {
-            // props.setRidePopUpPanel(false);
             props.setConfirmRidePopUpPanel(false);
+            toast.success('Ride Started');
             navigate('/captain-riding', { state: { ride: props.ride } });
         }
     }
@@ -66,7 +67,7 @@ const ConfirmRidePopUp = (props) => {
                         <p className='text-sm -mt-1 text-gray-600'>Cash</p>
                     </div>
                 </div>
-                <button onClick={() => { props.setConfirmRidePopUpPanel(false) }} className='flex items-center justify-center w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Cancel</button>
+                <button onClick={() => { navigate('/captain-home'); }} className='flex items-center justify-center w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Cancel</button>
             </div>
         </div>
     )

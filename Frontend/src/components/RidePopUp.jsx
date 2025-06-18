@@ -1,15 +1,10 @@
 import userImage from '../assets/userImage.png'
-import { useNavigate } from 'react-router-dom'
 
 const RidePopUp = (props) => {
-
-    const navigate = useNavigate();
 
     const handleAccept = (e) => {
         e.preventDefault();
         props.confirmRide();
-        props.setRidePopUpPanel(false);
-        navigate('/captain-pickup', { state: { ride: props.ride }});
     }
 
     return (
