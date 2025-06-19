@@ -37,11 +37,13 @@ RideNow is a full-stack ride-booking application inspired by Uber, built with a 
 
 2. **Configure environment variables:**
 Create a .env file in Backend/ with:
-DB_CONNECT=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+   ```sh
+   DB_CONNECT=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 
-3. **Start Backend Server:**
+4. **Start Backend Server:**
+   ```sh
    npx nodemon
 
 ### Frontend Setup
@@ -53,10 +55,13 @@ GOOGLE_MAPS_API_KEY=your_google_maps_api_key
    
 2. **Configure environment variables:**
 Create a .env file in Frontend/ with:
-VITE_BASE_URL=http://localhost:3000
-VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 
-3. **Start Frontend dev server:**
+   ```sh
+   VITE_BASE_URL=http://localhost:3000
+   VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+
+4. **Start Frontend dev server:**
+   ```sh
    npm run dev
 
 ### Usage
