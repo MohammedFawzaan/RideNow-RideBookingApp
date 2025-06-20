@@ -42,6 +42,8 @@ Create a .env file in Backend/ with:
    DB_CONNECT=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
    GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 4. **Start Backend Server:**
    ```sh
