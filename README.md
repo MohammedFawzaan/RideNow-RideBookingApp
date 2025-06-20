@@ -1,4 +1,4 @@
-# RideNow - Ride Booking System using MERN stack and Google Maps API.
+<p align='center'><img src="./Frontend/src/assets/RideNowIcon.png" alt="Logo Image" center height="50" weight="50" /><p/> # RideNow - Ride Booking System using MERN stack and Google Maps API.
 
 RideNow is a full-stack ride-booking application inspired by Uber, built with a React frontend and a Node.js/Express backend. It allows users to book rides, captains (drivers) to accept rides, and features real-time updates using Socket.IO and Google Maps integration.
 
