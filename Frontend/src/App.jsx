@@ -7,10 +7,11 @@ import UserSignup from './pages/UserSignup'
 import CaptainLogin from './pages/CaptainLogin'
 import CaptainSignup from './pages/CaptainSignup'
 import UserLogout from './pages/UserLogout'
+import CaptainLogout from './pages/CaptainLogout'
+import GoogleSuccess from './pages/GoogleSuccess'
 import UserProtectedWrapper from './pages/UserProtectedWrapper'
 import CaptainHome from './pages/CaptainHome'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
-import CaptainLogout from './pages/CaptainLogout'
 import Riding from './pages/Riding'
 import Pickup from './pages/Pickup'
 import CaptainRiding from './pages/CaptainRiding'
@@ -24,7 +25,7 @@ const App = () => {
   const ans = useContext(UserDataContext);
   // console.log(ans.user);
 
-  const ans1 = useContext(CaptainDataContext)
+  const ans1 = useContext(CaptainDataContext);
   // console.log(ans1.captain);
 
   return (
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="/users/signup" element={<UserSignup />} />
         <Route path="/captains/login" element={<CaptainLogin />} />
         <Route path="/captains/signup" element={<CaptainSignup />} />
+        <Route path="/google-success" element={<GoogleSuccess />} />
 
         <Route path='/users/logout' element={
           <UserProtectedWrapper>

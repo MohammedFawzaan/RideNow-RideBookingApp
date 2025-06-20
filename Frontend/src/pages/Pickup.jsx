@@ -10,11 +10,9 @@ const Pickup = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { ride } = location.state || {};
+  const { ride, vehicleImage } = location.state || {};
 
   const { socket } = React.useContext(SocketContext);
-
-  const [vehicleImage, setVehicleImage] = React.useState(null);
 
   const waitingForDriverRef = React.useRef(null);
   const [waitingForDriver, setWaitingForDriver] = React.useState(false);

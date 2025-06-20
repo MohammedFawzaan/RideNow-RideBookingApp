@@ -3,6 +3,7 @@ const router = express.Router();
 const { body } = require('express-validator'); //express-validator for validating user model
 const userController = require('../controllers/user.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
+const passport = require('passport');
 
 // post request for register route - validate middleware from express-validator, controller logic
 router.post('/register', [
@@ -20,5 +21,16 @@ router.post('/login', [
 // Protected routes
 router.get('/profile', authMiddleware.authUser, userController.getUserProfile); // get request for profile route, controller logic
 router.get('/logout', authMiddleware.authUser, userController.logoutUser); // get request for logout route, controller logic
+
+// Start Google login
+router.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// Callback after Google login
+router.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/users/login' }),
+    userController.googleAuthCallback
+);
 
 module.exports = router;

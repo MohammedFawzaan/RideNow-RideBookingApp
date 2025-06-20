@@ -74,7 +74,7 @@ const UserLogin = () => {
             <div>
                 <img className='mb-5 w-36' src={RideNowIcon} alt="ride-logo" />
                 <h1 className='text-3xl text-center my-6 text-[#10b461] font-medium'>User Login</h1>
-                <form onSubmit={(e) => handleSubmit(e)} action="">
+                <form onSubmit={(e) => handleSubmit(e)}>
                     <h3 className='text-xl mb-2'>What's Your Email</h3>
                     <input
                         className='border-rounded mb-7 bg-white px-4 py-2 border w-full text-lg placeholder:text-size-sm'
@@ -93,12 +93,22 @@ const UserLogin = () => {
                         type="password"
                         placeholder='password'
                     />
-                    <button className='border-rounded mb-7 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Login</button>
+                    <button className='border-rounded bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Login</button>
                 </form>
+                <button
+                    onClick={() => window.location.href = `${import.meta.env.VITE_BASE_URL}/users/auth/google`}
+                    className="my-5 w-full flex items-center justify-center gap-5 bg-white text-gray-700 border border-gray-300 rounded-md px-4 py-2 text-lg font-medium hover:shadow-md transition duration-150">
+                    <img
+                        src="https://developers.google.com/identity/images/g-logo.png"
+                        alt="Google"
+                        className="w-5 h-5"
+                    />
+                    <span>Login with Google</span>
+                </button>
                 <p className='text-center'>New here? <Link to='/users/signup' className='text-blue-600'>Create new Account</Link></p>
             </div>
             <div>
-                <Link to='/captains/login' className='block text-center w-full border-rounded mb-7 bg-[#10b461] text-white font-semibold px-4 py-2 text-lg'>Login as Captain</Link>
+                <Link to='/captains/login' className='block text-center w-full border-rounded my-5 bg-[#10b461] text-white font-semibold px-4 py-2 text-lg'>Login as Captain</Link>
             </div>
         </div>
     )

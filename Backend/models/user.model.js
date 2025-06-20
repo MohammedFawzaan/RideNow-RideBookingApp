@@ -23,12 +23,24 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
         select: false,
+        required: function () {
+            return !this.googleId; // password is required only if googleId is not present
+        },
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true, // allows multiple users with null googleId
+    },
+    authProvider: {
+        type: String,
+        enum: ['email', 'google'],
+        default: 'email'
     },
     socketId: {
         type: String,
-    }
+    },
 });
 
 // using methods - creating 3 functions (generateAuthToken, comparePassword, hashPassword)

@@ -11,7 +11,6 @@ const ConfirmRidePopUp = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
             params: {
                 rideId: props.ride._id,
@@ -21,7 +20,6 @@ const ConfirmRidePopUp = (props) => {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         })
-
         if (response.status === 200) {
             props.setConfirmRidePopUpPanel(false);
             toast.success('Ride Started');

@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const userModel = require('../models/user.model');
 const userService = require('../services/user.service');
 const { validationResult } = require('express-validator');
@@ -63,7 +64,7 @@ module.exports.loginUser = async (req, res, next) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 day
     }); // setting cookie
 
     res.status(200).json({ token, user, role:'user' });
@@ -85,4 +86,23 @@ module.exports.logoutUser = async (req, res, next) => {
     await blacklistTokenModel.create({ token });
     res.clearCookie('token');
     res.status(200).json({ message: 'Logged out successfully' });
+};
+
+// controller for googleAuthCallback.
+module.exports.googleAuthCallback = async (req, res) => {
+    const user = req.user;
+    const token = jwt.sign(
+        { id: user._id, role: 'user' },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+    );
+    // Set token as cookie (like raw login)
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    // Send token to frontend through query
+    res.redirect(`http://localhost:5173/google-success?token=${token}`);
 };

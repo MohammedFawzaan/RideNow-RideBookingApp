@@ -18,9 +18,7 @@ const CaptainHome = () => {
   const [ride, setRide] = React.useState(null);
 
   const [ridePopUpPanel, setRidePopUpPanel] = React.useState(false);
-  // const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = React.useState(false);
   const ridePopUpPanelRef = React.useRef(null);
-  // const confirmRidePopUpPanelRef = React.useRef(null);
 
   const { socket } = React.useContext(SocketContext);
   const { captain } = React.useContext(CaptainDataContext);
@@ -64,7 +62,6 @@ const CaptainHome = () => {
       toast.success("Ride Accepted");
       setRidePopUpPanel(false);
       navigate('/captain-pickup', { state: { ride: ride } });
-
     } catch (error) {
       // Catch 400 from backend when another captain already accepted
       if (error.response?.status === 400) {

@@ -5,16 +5,13 @@ import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import Image from '../assets/Image.png'
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import LocationPanel from '../components/LocationPanel'
 import VehiclePanel from '../components/VehiclePanel'
 import ConfirmRide from '../components/ConfirmRide'
 import LookingForDriver from '../components/LookingForDriver'
-import WaitingForDriver from '../components/WaitingForDriver'
 import { UserDataContext } from '../context/UserContext'
 import { SocketContext } from '../context/SocketContext'
-// import LiveTracking from '../components/LiveTracking'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -25,7 +22,6 @@ const Home = () => {
   const [confirmRidePanel, setConfirmRidePanel] = React.useState(false); // to open confirmRide panel when clicked on vehicle
 
   const [vehicleFound, setVehicleFound] = React.useState(false);
-  const [waitingForDriver, setWaitingForDriver] = React.useState(false);
 
   const [suggestions, setSuggestions] = React.useState([]); // suggestions from backend
   const [activeField, setActiveField] = React.useState(null); // 'pickup' or 'destination'
@@ -38,9 +34,7 @@ const Home = () => {
   const panelCloseRef = React.useRef(null);
   const vehiclePanelRef = React.useRef(null);
   const confirmRidePanelRef = React.useRef(null)
-
   const vehicleFoundRef = React.useRef(null);
-  const waitingForDriverRef = React.useRef(null);
 
   const { user } = React.useContext(UserDataContext);
   const { socket } = React.useContext(SocketContext);
@@ -53,15 +47,10 @@ const Home = () => {
     socket.emit("join", { userType: "user", userId: user._id });
   }, [user]);
 
-  socket.on('ride-started', (ride) => {
-    navigate('/riding', { state: { ride } });
-  });
-
   socket.on('ride-confirmed', (ride) => {
     setVehicleFound(false);
-    setWaitingForDriver(true);
     setRide(ride);
-    navigate('/pickup', { state: { ride } });
+    navigate('/pickup', { state: { ride, vehicleImage } });
   });
 
   // Fetch suggestions from backend
@@ -178,18 +167,6 @@ const Home = () => {
     }
   }, [vehicleFound])
 
-  useGSAP(function () {
-    if (waitingForDriver) {
-      gsap.to(waitingForDriverRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(waitingForDriverRef.current, {
-        transform: 'translateY(100%)'
-      })
-    }
-  }, [waitingForDriver])
-
   return (
     <div className='h-screen overflow-hidden'>
       <div className='h-screen w-screen'>
@@ -211,7 +188,7 @@ const Home = () => {
             className='absolute opacity-0 top-4 right-6 text-2xl'>
             <i className="ri-arrow-down-wide-line"></i>
           </h5>
-          <h4 className='text-2xl font-bold'>Find Your Trip</h4>
+          <h4 className='text-2xl font-bold'>Find Your Trip, {user.fullname.firstname}</h4>
           <form onSubmit={handleSubmit}>
             <input
               onClick={() => { setPanelOpen(true); setActiveField('pickup'); fetchSuggestions(pickup); }}
@@ -293,15 +270,6 @@ const Home = () => {
             vehicleType={vehicleType}
             setVehicleFound={setVehicleFound}
             setConfirmRidePanel={setConfirmRidePanel}
-          />
-        </div>
-      )}
-      {waitingForDriver && (
-        <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 bg-white p-3' style={{ transform: 'translateY(100%)' }}>
-          <WaitingForDriver
-            ride={ride}
-            vehicleImage={vehicleImage}
-            setWaitingForDriver={setWaitingForDriver}
           />
         </div>
       )}
