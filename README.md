@@ -5,6 +5,7 @@ RideNow is a full-stack ride-booking application inspired by Uber, built with a 
 ## Features
 
 - User and Captain (Driver) registration & login
+- Google Authentication for Users
 - Real-time ride requests and confirmations via Socket.IO
 - Google Maps integration for location, directions, and suggestions
 - Real time Route Navigation using Google Maps API
