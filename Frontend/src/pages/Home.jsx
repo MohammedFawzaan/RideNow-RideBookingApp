@@ -1,17 +1,17 @@
 import React from 'react'
 import axios from 'axios'
 import gsap from 'gsap'
-import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
+import { useGSAP } from '@gsap/react'
+import { Link, useNavigate } from 'react-router-dom'
 import RideNowIcon from '../assets/RideNowIcon.png'
-import Image from '../assets/Image.png'
-import { useNavigate } from 'react-router-dom'
 import LocationPanel from '../components/LocationPanel'
 import VehiclePanel from '../components/VehiclePanel'
 import ConfirmRide from '../components/ConfirmRide'
 import LookingForDriver from '../components/LookingForDriver'
 import { UserDataContext } from '../context/UserContext'
 import { SocketContext } from '../context/SocketContext'
+import LiveTracker from '../components/LiveTracking'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -33,7 +33,7 @@ const Home = () => {
   const panelRef = React.useRef(null);
   const panelCloseRef = React.useRef(null);
   const vehiclePanelRef = React.useRef(null);
-  const confirmRidePanelRef = React.useRef(null)
+  const confirmRidePanelRef = React.useRef(null);
   const vehicleFoundRef = React.useRef(null);
 
   const { user } = React.useContext(UserDataContext);
@@ -168,27 +168,26 @@ const Home = () => {
   }, [vehicleFound])
 
   return (
-    <div className='h-screen overflow-hidden'>
+    <div className='h-screen relative overflow-hidden'>
       <div className='h-screen w-screen'>
-        {/* <img className='h-full w-full object-cover' src='https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif' alt="temporary-image" /> */}
-        <img className='h-full w-full object-cover' src={Image} alt="temporary-image" />
-        {/* <LiveTracking /> */}
+        {/* <img className='h-full w-full object-cover' src={Image} alt="temporary-image" /> */}
+        <LiveTracker />
       </div>
-      <div className='p-3 absolute top-0 w-screen'>
-        <img className='flex w-36 absolute top-5 left-5' src={RideNowIcon} alt="ride-logo" />
-        {/* <Link to='/users/logout' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+      <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4'>
+        <img className='flex w-36 bg-white rounded-lg' src={RideNowIcon} alt="ride-logo" />
+        <Link to='/users/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
           <i className="ri-logout-box-r-line"></i>
-        </Link> */}
+        </Link>
       </div>
-      <div className='h-screen flex flex-col justify-end absolute top-0 w-full'>
-        <div className='p-5 bg-white relative'>
+      <div className='flex flex-col justify-end absolute bottom-0 w-full z-10'>
+        <div className='h-[30%] p-5 bg-white relative'>
           <h5
             ref={panelCloseRef}
             onClick={() => { setPanelOpen(false); setSuggestions([]); }}
             className='absolute opacity-0 top-4 right-6 text-2xl'>
             <i className="ri-arrow-down-wide-line"></i>
           </h5>
-          <h4 className='text-2xl font-bold'>Find Your Trip, {user.fullname.firstname}</h4>
+          <h4 className='ml-2 text-2xl font-bold'>Find Your Trip</h4>
           <form onSubmit={handleSubmit}>
             <input
               onClick={() => { setPanelOpen(true); setActiveField('pickup'); fetchSuggestions(pickup); }}

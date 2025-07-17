@@ -90,7 +90,7 @@ const CaptainLogin = () => {
             type="password"
             placeholder='password'
           />
-          <button className='border-rounded mb-7 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Login</button>
+          <button className='border-rounded my-5 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Login</button>
         </form>
         <p className='text-center'>New here? <Link to='/captains/signup' className='text-blue-600'>Create new Account</Link></p>
       </div>

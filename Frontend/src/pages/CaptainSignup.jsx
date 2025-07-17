@@ -167,12 +167,12 @@ const CaptainSignup = () => {
             type="text"
             placeholder='vehicle number'
           />
-          <button className='border-rounded mb-2 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Create Your Account</button>
+          <button className='border-rounded my-5 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Create Your Account</button>
         </form>
-        <p className='text-center m'>Already have an Account? <Link to='/users/login' className='text-blue-600'>Login here</Link></p>
+        <p className='text-center m'>Already have an Account? <Link to='/captains/login' className='text-blue-600'>Login here</Link></p>
       </div>
       <div>
-        <Link to='/users/signup' className='block text-center w-full border-rounded mb-7 mt-5 bg-orange-500 text-white font-semibold px-4 py-2 text-lg'>Register as User</Link>
+        <Link to='/users/signup' className='block text-center w-full border-rounded my-5 bg-orange-500 text-white font-semibold px-4 py-2 text-lg'>Register as User</Link>
       </div>
     </div>
   )

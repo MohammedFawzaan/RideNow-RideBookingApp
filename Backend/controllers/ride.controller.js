@@ -47,6 +47,21 @@ module.exports.createRide = async (req, res) => {
                 data: rideWithUser
             });
         });
+
+        // ⏳ Send notification to user if no captain accepts ride in 5 seconds
+        setTimeout(async () => {
+            const stillPending = await rideModel.findById(ride._id);
+            if (stillPending && stillPending.status === 'pending') {
+                const userSocket = req.user.socketId;
+                if (userSocket) {
+                    sendMessageToSocketId(userSocket, {
+                        event: 'no-captain-found',
+                        data: { rideId: ride._id }
+                    });
+                }
+            }
+        }, 7000); // 5 seconds
+
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });
     }
@@ -90,7 +105,6 @@ module.exports.confirmRide = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 
 // Starting the ride when captain starts it and sending the OTP to the user.
 module.exports.startRide = async (req, res) => {

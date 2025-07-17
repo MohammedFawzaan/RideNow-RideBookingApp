@@ -1,7 +1,6 @@
-import React from "react"
+import React from 'react'
 
 const WaitingForDriver = (props) => {
-
   return (
     <div>
       <div className='flex items-center justify-between'>

@@ -118,7 +118,10 @@ const UserSignup = () => {
           <button className='border-rounded bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Create Account</button>
         </form>
         <button
-          onClick={() => window.location.href = `${import.meta.env.VITE_BASE_URL}/users/auth/google`}
+          onClick={() => {
+            window.location.href = `${import.meta.env.VITE_BASE_URL}/users/auth/google`;
+            // toast.success('Account created successfully');
+          }}
           className="my-5 w-full flex items-center justify-center gap-5 bg-white text-gray-700 border border-gray-300 rounded-md px-4 py-2 text-lg font-medium hover:shadow-md transition duration-150">
           <img
             src="https://developers.google.com/identity/images/g-logo.png"
