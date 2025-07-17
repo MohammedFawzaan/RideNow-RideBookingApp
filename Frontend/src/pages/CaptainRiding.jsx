@@ -64,7 +64,7 @@ const CaptainRiding = () => {
       <div className='h-[10%] p-5 bg-yellow-400 flex items-center justify-between'>
         <div className='flex items-center justify-center'>
           <i className="mr-2 ri-map-pin-line"></i>
-          <h4 className='text-2xl font-semibold'>Arriving in {riding?.time}</h4>
+          <h4 className='text-2xl font-semibold'>Arrival in {riding?.time}</h4>
         </div>
           <h4 className='text-2xl font-semibold'>{riding?.distance} Away</h4>
         <button onClick={() => { setFinishRidePanel(true) }} className='block m-3 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>Complete Ride</button>

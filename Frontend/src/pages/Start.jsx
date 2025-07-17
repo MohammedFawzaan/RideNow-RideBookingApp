@@ -1,8 +1,9 @@
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import RideNowIcon from '../assets/RideNowIcon.png'
 import { UserDataContext } from '../context/UserContext'
 import { CaptainDataContext } from '../context/CaptainContext'
+import RideNowIcon from '../assets/RideNowIcon.png'
+import StartImage from '../assets/StartImage.jpeg'
 
 const Start = () => {
     const { user } = useContext(UserDataContext);
@@ -23,10 +24,18 @@ const Start = () => {
     return (
         <div className="flex flex-col h-screen w-screen">
             {/* Top 80% */}
-            <div className="h-[80%] bg-cover bg-center bg-[url('https://images.pexels.com/photos/139303/pexels-photo-139303.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] flex flex-col justify-between items-center relative">
-                <img className="w-40 absolute left-5 top-5" src={RideNowIcon} alt="RideNow" />
+            <div className="h-[80%] relative flex flex-col justify-between items-center">
+                <img
+                    className="h-full w-full object-cover"
+                    src={StartImage}
+                    alt="Start"
+                />
+                <img
+                    className="w-40 absolute top-5 left-5 z-10"
+                    src={RideNowIcon}
+                    alt="RideNow"
+                />
             </div>
-
             {/* Bottom 20% */}
             <div className="h-[20%] bg-white pb-7 py-4 px-4 w-full">
                 <h2 className="text-3xl font-bold">Get Started with RideNow</h2>

@@ -59,7 +59,7 @@ const Riding = () => {
                     <div className='flex items-center gap-5 p-3 border-b-2'>
                         <i className="text-lg ri-map-pin-fill"></i>
                         <div className=''>
-                            <h3 className='text-lg font-medium'>Arriving in {riding?.time} ,{riding?.distance} Away</h3>
+                            <h3 className='text-lg font-medium'>Arrival in {riding?.time} ,{riding?.distance} Away</h3>
                         </div>
                     </div>
                     <div className='flex items-center gap-5 p-3'>

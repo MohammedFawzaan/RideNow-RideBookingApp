@@ -7,11 +7,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import CaptainDetails from '../components/CaptainDetails'
 import RidePopUp from '../components/RidePopUp'
-// import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 import { CaptainDataContext } from '../context/CaptainContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracking from '../components/LiveTracking'
 import { toast } from 'react-toastify';
+// import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 
 const CaptainHome = () => {
 
