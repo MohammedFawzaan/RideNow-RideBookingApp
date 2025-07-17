@@ -42,7 +42,7 @@ const ConfirmRidePopUp = (props) => {
                     </div>
                 </div>
                 <div className='text-right'>
-                    <p className='text-sm font-medium'>{props.driverDistance?.time} & {props.driverDistance?.distance} Away</p>
+                    <p className='text-sm font-medium text-green-600'>{props.driverDistance?.time} & {props.driverDistance?.distance} Away</p>
                 </div>
             </div>
             <form className='flex items-center justify-center mt-2 gap-2' onSubmit={(e) => { handleSubmit(e) }}>

@@ -10,7 +10,7 @@ const RidePopUp = (props) => {
     return (
         <div>
             <div className='flex items-center justify-between'>
-                <h3 className='text-2xl font-bold my-3'>New Ride Available!</h3>
+                <h3 className='text-2xl font-bold my-2'>New Ride Available!</h3>
                 {/* <i onClick={() => { props.setRidePopUpPanel(false)} } className="text-3xl ri-arrow-down-wide-fill"></i> */}
             </div>
             <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-300'>
@@ -20,7 +20,7 @@ const RidePopUp = (props) => {
                 </div>
                 {/* <h5 className='text-lg font-semibold'>Some kms away</h5> */}
             </div>
-            <div className='w-full mt-5'>
+            <div className='w-full'>
                 <div className='flex items-center gap-5 p-3 border-b-2'>
                     <i className="ri-map-pin-line"></i>
                     <div className=''>
@@ -44,8 +44,8 @@ const RidePopUp = (props) => {
                 </div>
             </div>
             <div className='flex items-center gap-2'>
-                <button onClick={(e) => { handleAccept(e); }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
-                <button onClick={() => { props.setRidePopUpPanel(false) }} className='w-full mt-5 text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Ignore</button>
+                <button onClick={(e) => { handleAccept(e); }} className='w-full  text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
+                <button onClick={() => { props.setRidePopUpPanel(false) }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Ignore</button>
             </div>
         </div>
     )

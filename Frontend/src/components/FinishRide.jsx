@@ -34,7 +34,7 @@ const FinishRide = (props) => {
         </div>
         <h5 className='text-lg font-semibold'>Reached</h5>
       </div>
-      <div className='w-full mt-5'>
+      <div className='w-full'>
         <div className='flex items-center gap-5 p-3 border-b-2'>
           <i className="text-lg ri-map-pin-fill"></i>
           <div className=''>
@@ -51,7 +51,7 @@ const FinishRide = (props) => {
         </div>
       </div>
       <div>
-        <button onClick={endRide} className='w-full text-center mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>End Ride</button>
+        <button onClick={endRide} className='w-full text-center text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>End Ride</button>
         <p className='text-gray-600 font-semibold text-center text-sm my-2'>End the Ride if passenger has made the payment</p>
       </div>
     </div>

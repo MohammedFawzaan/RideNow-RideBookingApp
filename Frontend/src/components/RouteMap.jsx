@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
     LoadScript,
     GoogleMap,
@@ -11,45 +11,57 @@ const containerStyle = {
     height: '100%',
 };
 
-const RouteMap = ({ pickup, destination }) => {
+const RouteMap = ({ pickup, destination, onDriverLocationUpdate }) => {
     const [currentPosition, setCurrentPosition] = useState(null);
     const [directions, setDirections] = useState(null);
-    const [mapInstance, setMapInstance] = useState(null);
+    const mapRef = useRef(null);
+    const lastRouteUpdate = useRef(0);
 
-    // Live tracking
-    useEffect(() => {
-        const watchId = navigator.geolocation.watchPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-                lat: latitude,
-                lng: longitude,
-            });
-        });
-
-        return () => navigator.geolocation.clearWatch(watchId);
+    // Memoized map load handler
+    const handleMapLoad = useCallback((map) => {
+        mapRef.current = map;
     }, []);
 
-    const handleMapLoad = (map) => {
-        setMapInstance(map);
+    // Watch position updates
+    useEffect(() => {
+        const watchId = navigator.geolocation.watchPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const liveLocation = { lat: latitude, lng: longitude };
+                setCurrentPosition(liveLocation);
 
-        if (pickup && destination) {
-            const directionsService = new window.google.maps.DirectionsService();
-            directionsService.route(
-                {
-                    origin: pickup,
-                    destination: destination,
-                    travelMode: window.google.maps.TravelMode.DRIVING,
-                },
-                (result, status) => {
-                    if (status === 'OK') {
-                        setDirections(result);
-                    } else {
-                        console.error('Directions request failed:', status);
-                    }
+                // Send live location up to parent
+                if (onDriverLocationUpdate) {
+                    onDriverLocationUpdate(liveLocation);
                 }
-            );
-        }
-    };
+
+                // Debounce route updates
+                const now = Date.now();
+                if (pickup && destination && now - lastRouteUpdate.current > 4000) {
+                    lastRouteUpdate.current = now;
+                    const directionsService = new window.google.maps.DirectionsService();
+                    directionsService.route(
+                        {
+                            origin: liveLocation,
+                            destination: destination,
+                            travelMode: window.google.maps.TravelMode.DRIVING,
+                        },
+                        (result, status) => {
+                            if (status === 'OK') {
+                                setDirections(result);
+                            } else {
+                                console.error('Directions request failed:', status);
+                            }
+                        }
+                    );
+                }
+            },
+            (error) => console.error('Geolocation error:', error),
+            { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+        );
+
+        return () => navigator.geolocation.clearWatch(watchId);
+    }, [pickup, destination, onDriverLocationUpdate]);
 
     return (
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -57,8 +69,8 @@ const RouteMap = ({ pickup, destination }) => {
                 mapContainerStyle={containerStyle}
                 center={pickup}
                 zoom={14}
-                onLoad={handleMapLoad}>
-
+                onLoad={handleMapLoad}
+            >
                 {pickup && <Marker position={pickup} label="P" />}
                 {destination && <Marker position={destination} label="D" />}
                 {currentPosition && <Marker position={currentPosition} label="You" />}

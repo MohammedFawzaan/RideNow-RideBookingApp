@@ -1,16 +1,13 @@
-import React, { useState, useRef } from 'react'
-import gsap from 'gsap'
-import RideNowIcon from '../assets/RideNowIcon.png'
-import { useGSAP } from '@gsap/react'
-import { Link, useLocation } from 'react-router-dom'
-import FinishRide from '../components/FinishRide'
-import LiveTracking from '../components/LiveTracking'
-import RouteMap from '../components/RouteMap'
-import { useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useRef } from 'react';
+import gsap from 'gsap';
+import RideNowIcon from '../assets/RideNowIcon.png';
+import { useGSAP } from '@gsap/react';
+import { Link, useLocation } from 'react-router-dom';
+import FinishRide from '../components/FinishRide';
+import RouteMap from '../components/RouteMap';
+import axios from 'axios';
 
 const CaptainRiding = () => {
-
   const [finishRidePanel, setFinishRidePanel] = useState(false);
   const finishRidePanelRef = useRef(null);
   const [riding, setRiding] = useState(null);
@@ -18,33 +15,28 @@ const CaptainRiding = () => {
   const location = useLocation();
   const rideData = location.state?.ride;
 
-  // useEffect(() => {
-  useEffect(() => {
-    const fetchRideDetails = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-distance-time`,
-          {
-            params: { origin: rideData.pickup, destination: rideData.destination },
-          }); // adjust path
-        setRiding(res.data);
-      } catch (err) {
-        console.error('Failed to fetch ride info:', err);
-      }
-    };
-    fetchRideDetails();
-  }, []);
+  // This is called every few seconds from RouteMap
+  const handleDriverLocationUpdate = async (captainLocation) => {
+    if (!captainLocation || !rideData?.destination) return;
 
-  useGSAP(function () {
-    if (finishRidePanel) {
-      gsap.to(finishRidePanelRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(finishRidePanelRef.current, {
-        transform: 'translateY(100%)'
-      })
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-distance-time`, {
+        params: {
+          origin: `${captainLocation.lat},${captainLocation.lng}`,
+          destination: rideData.destination,
+        },
+      });
+      setRiding(res.data);
+    } catch (err) {
+      console.error('Failed to fetch ride info:', err);
     }
-  }, [finishRidePanel])
+  };
+
+  useGSAP(() => {
+    gsap.to(finishRidePanelRef.current, {
+      transform: finishRidePanel ? 'translateY(0)' : 'translateY(100%)',
+    });
+  }, [finishRidePanel]);
 
   return (
     <div className='h-screen relative overflow-hidden'>
@@ -56,25 +48,35 @@ const CaptainRiding = () => {
       </div>
 
       <div className='h-[90%]'>
-        {/* <LiveTracking /> */}
-        <RouteMap pickup={rideData.pickup} destination={rideData.destination} />
-        {/* <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" /> */}
+        <RouteMap
+          pickup={rideData.pickup}
+          destination={rideData.destination}
+          onDriverLocationUpdate={handleDriverLocationUpdate}
+        />
       </div>
 
       <div className='h-[10%] p-5 bg-yellow-400 flex items-center justify-between'>
         <div className='flex items-center justify-center'>
           <i className="mr-2 ri-map-pin-line"></i>
-          <h4 className='text-2xl font-semibold'>Arrival in {riding?.time}</h4>
+          <h4 className='text-2xl font-semibold'>
+            Arrival in {riding?.time || '-'}
+          </h4>
         </div>
-          <h4 className='text-2xl font-semibold'>{riding?.distance} Away</h4>
-        <button onClick={() => { setFinishRidePanel(true) }} className='block m-3 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>Complete Ride</button>
+        <h4 className='text-2xl font-semibold'>
+          {riding?.distance || '-'} Away
+        </h4>
+        <button
+          onClick={() => setFinishRidePanel(true)}
+          className='block m-3 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>
+          Complete Ride
+        </button>
       </div>
 
       <div ref={finishRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
         <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel} />
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default CaptainRiding
+export default CaptainRiding;

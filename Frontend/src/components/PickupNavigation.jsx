@@ -35,7 +35,7 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
 
                 // Debounce route calculation
                 const now = Date.now();
-                if (pickupLocation && now - lastRouteUpdate.current > 3000) {
+                if (pickupLocation && now - lastRouteUpdate.current > 4000) {
                     lastRouteUpdate.current = now;
                     const directionsService = new window.google.maps.DirectionsService();
                     directionsService.route(
@@ -65,7 +65,7 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={pickupLocation} // Don’t keep changing center
+                center={pickupLocation}
                 zoom={14}
                 onLoad={handleMapLoad}
             >

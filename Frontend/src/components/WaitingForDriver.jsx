@@ -1,25 +1,24 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const WaitingForDriver = (props) => {
+  const navigate = useNavigate();
+
   return (
     <div className="">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold m-2">Meet At Pickup Point</h3>
-        <i
-          onClick={() => props.setWaitingForDriver(true)}
-          className="text-3xl ri-arrow-down-wide-fill cursor-pointer"
-        ></i>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between ml-3">
         <div className='flex items-center justify-center gap-3'>
           {/* Image */}
           <img className="h-12" src={props.vehicleImage} alt="Car-Icon" />
 
           {/* Time + Distance */}
           <div className="text-center">
-            <p className="text-lg font-medium">{props.driverDistance?.time} &</p>
-            <p className="text-lg font-medium">{props.driverDistance?.distance} Away</p>
+            <p className="text-lg font-medium text-green-600">{props.driverDistance?.time} &</p>
+            <p className="text-lg font-medium text-green-600">{props.driverDistance?.distance} Away</p>
           </div>
         </div>
 
@@ -66,6 +65,7 @@ const WaitingForDriver = (props) => {
             <p className="text-sm -mt-1 text-gray-600">Cash</p>
           </div>
         </div>
+        <button onClick={() => { navigate('/home'); }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
       </div>
     </div>
   )
