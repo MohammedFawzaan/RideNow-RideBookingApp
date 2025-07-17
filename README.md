@@ -1,10 +1,11 @@
-# RideNow - Ride Booking System using MERN stack and Google Maps API.
+<p align='center'><img src="./Frontend/src/assets/RideNowLogo.png" alt="Logo Image" center height="60" weight="60" /> <h1>RideNow - Ride Booking System using MERN stack and Google Maps API.<h1/> <p/>
 
 RideNow is a full-stack ride-booking application inspired by Uber, built with a React frontend and a Node.js/Express backend. It allows users to book rides, captains (drivers) to accept rides, and features real-time updates using Socket.IO and Google Maps integration.
 
 ## Features
 
 - User and Captain (Driver) registration & login
+- Google Authentication for Users
 - Real-time ride requests and confirmations via Socket.IO
 - Google Maps integration for location, directions, and suggestions
 - Real time Route Navigation using Google Maps API
@@ -41,6 +42,8 @@ Create a .env file in Backend/ with:
    DB_CONNECT=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
    GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 4. **Start Backend Server:**
    ```sh
