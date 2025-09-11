@@ -12,6 +12,7 @@ import LookingForDriver from '../components/LookingForDriver'
 import { UserDataContext } from '../context/UserContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracker from '../components/LiveTracking'
+import { toast } from 'react-toastify'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -174,8 +175,8 @@ const Home = () => {
         <LiveTracker />
       </div>
       <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4'>
-        <img className='flex w-36 bg-white rounded-lg' src={RideNowIcon} alt="ride-logo" />
-        <Link to='/users/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+        <img onClick={() => navigate('/home')} className='flex w-36 bg-white rounded-lg cursor-pointer' src={RideNowIcon} alt="ride-logo" />
+        <Link onClick={() => toast.success('You are Logged Out')} to='/users/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
           <i className="ri-logout-box-r-line"></i>
         </Link>
       </div>

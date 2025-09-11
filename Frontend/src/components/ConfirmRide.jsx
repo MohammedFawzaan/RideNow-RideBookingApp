@@ -1,7 +1,31 @@
-import React from 'react'
 import { toast } from 'react-toastify';
 
 const ConfirmRide = (props) => {
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    props.setConfirmRidePanel(false);
+    props.setVehicleFound(true);
+    props.createRide();
+    toast.success('Searching for nearby captains...');
+
+    // Wait for ride for 5 secs if no ride found and if no captain accept it.
+    const searchTimeout = setTimeout(() => {
+      if (!props.rideAccepted) { // If ride not accepted in 5 sec
+        toast.error('No nearby captains found. Please try again later.');
+
+        // Cancel ride on server
+        props.cancelRide();
+
+        // Reset vehicleFound back to false
+        props.setVehicleFound(false);
+      }
+    }, 5000);
+
+    // Clear timeout if ride gets accepted before 5 sec
+    return () => clearTimeout(searchTimeout);
+  }
+
   return (
     <div>
       <div className='flex items-center justify-between'>
@@ -13,13 +37,7 @@ const ConfirmRide = (props) => {
       </div>
       <div className='w-full mt-5'>
         <div>
-          <button onClick={(e) => {
-            e.preventDefault();
-            props.setConfirmRidePanel(false);
-            props.setVehicleFound(true);
-            props.createRide();
-            toast.success('Searching for nearby captains...');
-          }} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
+          <button onClick={(e) => onSubmit(e)} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
         </div>
         <div className='flex items-center gap-5 p-3 border-b-2'>
           <i className="ri-map-pin-line"></i>

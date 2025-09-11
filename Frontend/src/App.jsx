@@ -72,7 +72,6 @@ const App = () => {
         autoClose={2000}
         hideProgressBar={false}
         closeOnClick
-        pauseOnHover
         draggable
         theme="colored"
         style={{

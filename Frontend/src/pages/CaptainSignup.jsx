@@ -87,7 +87,7 @@ const CaptainSignup = () => {
   return (
     <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-        <img className='mb-5 w-36' src={RideNowIcon} alt="ride-logo" />
+        <img onClick={() => navigate('/')} className='mb-5 w-36 cursor-pointer' src={RideNowIcon} alt="ride-logo" />
         <h1 className='text-3xl text-center my-6 text-orange-500 font-medium'>Captain's SignUp</h1>
         <form onSubmit={(e) => handleSubmit(e)}>
           <h3 className='text-xl mb-2'>Our Captain's Name</h3>

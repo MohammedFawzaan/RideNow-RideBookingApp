@@ -12,18 +12,18 @@ router.get('/get-coordinates',
     getCoordinates
 );
 
-// Route to get distance and time between two locations
-router.get('/get-distance-time',
-    query('origin').isString().isLength({ min: 3 }),
-    query('destination').isString().isLength({ min: 3 }),
-    getDistanceTime
-);
-
 // Route to get autocomplete suggestions for a given input
 router.get('/get-suggestions',
     query('input').isString().isLength({ min: 3 }),
     authUser,
     getAutoCompleteSuggestions
+);
+
+// Route to get distance and time between two locations
+router.get('/get-distance-time',
+    query('origin').isString().isLength({ min: 3 }),
+    query('destination').isString().isLength({ min: 3 }),
+    getDistanceTime
 );
 
 module.exports = router;

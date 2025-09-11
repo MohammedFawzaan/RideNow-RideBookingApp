@@ -47,21 +47,6 @@ module.exports.createRide = async (req, res) => {
                 data: rideWithUser
             });
         });
-
-        // ⏳ Send notification to user if no captain accepts ride in 5 seconds
-        setTimeout(async () => {
-            const stillPending = await rideModel.findById(ride._id);
-            if (stillPending && stillPending.status === 'pending') {
-                const userSocket = req.user.socketId;
-                if (userSocket) {
-                    sendMessageToSocketId(userSocket, {
-                        event: 'no-captain-found',
-                        data: { rideId: ride._id }
-                    });
-                }
-            }
-        }, 7000); // 5 seconds
-
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });
     }
@@ -106,7 +91,7 @@ module.exports.confirmRide = async (req, res) => {
     }
 };
 
-// Starting the ride when captain starts it and sending the OTP to the user.
+// Starting the ride when captain starts it and send the OTP to the user.
 module.exports.startRide = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -150,5 +135,29 @@ module.exports.endRide = async (req, res) => {
         return res.status(200).json(ride);
     } catch (err) {
         return res.status(500).json({ message: err.message });
+    }
+}
+
+module.exports.cancelRide = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    // Getting the ride ID from the request body.
+    const { rideId } = req.body;
+    try {
+        // To get the ride details and cancel the ride, we are sending rideId and user to cancelRide service.
+        const ride = await rideService.cancelRide({ rideId, user: req.user });
+        if (!ride) {
+            return res.status(404).json({ error: 'Ride not found' });
+        }
+        // Sending the ride details to the user.
+        sendMessageToSocketId(ride.user.socketId, {
+            event: 'ride-cancelled',
+            data: ride
+        });
+        return res.status(200).json(ride);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
     }
 }

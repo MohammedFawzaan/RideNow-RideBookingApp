@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { body, query } = require('express-validator');
-const { createRide, getFare, confirmRide, startRide, endRide } = require('../controllers/ride.controller');
+const { createRide, getFare, confirmRide, startRide, endRide, cancelRide } = require('../controllers/ride.controller');
 const { authUser } = require('../middlewares/auth.middleware');
 const { authCaptain } = require('../middlewares/auth.middleware');
 
@@ -42,6 +42,12 @@ router.post('/end-ride',
     authCaptain,
     body('rideId').isMongoId().withMessage('Invalid ride ID'),
     endRide
+);
+
+// Route to cancel a ride
+router.post('/ride-cancel',
+    body('rideId').isMongoId().withMessage('Invalid ride ID'),
+    cancelRide
 );
 
 module.exports = router;

@@ -1,8 +1,9 @@
 import React from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useGSAP } from "@gsap/react"
+import { toast } from "react-toastify"
 import gsap from "gsap"
 import axios from "axios"
-import { useLocation, useNavigate } from "react-router-dom"
 import WaitingForDriver from "../components/WaitingForDriver"
 import PickupNavigation from "../components/PickupNavigation"
 import { SocketContext } from "../context/SocketContext"
@@ -23,6 +24,11 @@ const Pickup = () => {
   React.useEffect(() => {
     setWaitingForDriver(true);
   }, []);
+
+  React.useEffect(() => {
+    if (ride)
+      toast.success('A captain accepted your ride! 🎉');
+  }, [ride]);
 
   const handleDriverLocationUpdate = async (driverLocation) => {
     try {

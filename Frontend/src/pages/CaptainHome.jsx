@@ -11,7 +11,6 @@ import { CaptainDataContext } from '../context/CaptainContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracking from '../components/LiveTracking'
 import { toast } from 'react-toastify';
-// import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 
 const CaptainHome = () => {
 
@@ -95,8 +94,8 @@ const CaptainHome = () => {
       </div>
 
       <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4'>
-        <img className='flex w-36 bg-white rounded-lg' src={RideNowIcon} alt="ride-logo" />
-        <Link to='/captains/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+        <img onClick={() => navigate('/captain-home')} className='flex w-36 bg-white rounded-lg cursor-pointer' src={RideNowIcon} alt="ride-logo" />
+        <Link onClick={() => toast.success('You are Logged Out')} to='/captains/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
           <i className="ri-logout-box-r-line"></i>
         </Link>
       </div>

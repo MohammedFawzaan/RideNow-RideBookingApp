@@ -11,7 +11,7 @@ module.exports.authUser = async (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const isBlackListed = await blackListTokenModel.findOne({ token : token }); // check if token is blacklisted
+    const isBlackListed = await blackListTokenModel.findOne({ token: token }); // check if token is blacklisted
     if (isBlackListed) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -50,5 +50,41 @@ module.exports.authCaptain = async (req, res, next) => {
         return next(); // call next middleware
     } catch (error) {
         return res.status(401).json({ message: 'Unauthorized, Token Verification Failed' });
+    }
+};
+
+module.exports.authAny = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const token = req.cookies.token || (authHeader && authHeader.split(' ')[1]); // get token from header or cookie
+
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized: Token Missing' });
+    }
+
+    const isBlackListed = await blackListTokenModel.findOne({ token });
+    if (isBlackListed) {
+        return res.status(401).json({ message: 'Unauthorized: Token Blacklisted' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Try to find user
+        const user = await userModel.findById(decoded.id);
+        if (user) {
+            req.user = user;
+            return next();
+        }
+
+        // Try to find captain
+        const captain = await captainModel.findById(decoded._id);
+        if (captain) {
+            req.captain = captain;
+            return next();
+        }
+
+        return res.status(401).json({ message: 'Unauthorized: Invalid User or Captain' });
+    } catch (err) {
+        return res.status(401).json({ message: 'Unauthorized: Token Verification Failed' });
     }
 };

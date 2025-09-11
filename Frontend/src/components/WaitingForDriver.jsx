@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 const WaitingForDriver = (props) => {
   const navigate = useNavigate();
 
+  const onCancel = () => {
+    navigate('/home');
+  }
+
   return (
     <div className="">
       <div className="flex items-center justify-between">
@@ -65,7 +69,7 @@ const WaitingForDriver = (props) => {
             <p className="text-sm -mt-1 text-gray-600">Cash</p>
           </div>
         </div>
-        <button onClick={() => { navigate('/home'); }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
+        <button onClick={() => onCancel()} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
       </div>
     </div>
   )
