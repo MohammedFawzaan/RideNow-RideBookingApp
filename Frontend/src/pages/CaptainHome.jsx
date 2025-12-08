@@ -62,7 +62,6 @@ const CaptainHome = () => {
       setRidePopUpPanel(false);
       navigate('/captain-pickup', { state: { ride: ride } });
     } catch (error) {
-      // Catch 400 from backend when another captain already accepted
       if (error.response?.status === 400) {
         toast.error("Ride already accepted by another captain.");
         setRide(null);
@@ -87,31 +86,47 @@ const CaptainHome = () => {
   }, [ridePopUpPanel])
 
   return (
-    <div className='h-screen overflow-hidden'>
-      <div className='h-[90%]'>
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-100">
+
+      {/* Map Container */}
+      <div className="flex-1 m-4 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.15)] relative z-0">
         <LiveTracking />
-        {/* <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="temp-image" /> */}
       </div>
 
-      <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4'>
-        <img onClick={() => navigate('/captain-home')} className='flex w-36 bg-white rounded-lg cursor-pointer' src={RideNowIcon} alt="ride-logo" />
-        <Link onClick={() => toast.success('You are Logged Out')} to='/captains/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
-          <i className="ri-logout-box-r-line"></i>
+      {/* Top Bar */}
+      <div className="absolute top-6 left-0 right-0 flex items-center justify-between px-6 z-20">
+        <img
+          onClick={() => navigate('/captain-home')}
+          className="w-32 md:w-36 bg-white rounded-xl cursor-pointer p-2 shadow-md hover:shadow-lg transition-all"
+          src={RideNowIcon}
+          alt="ride-logo"
+        />
+
+        <Link
+          onClick={() => toast.success('You are Logged Out')}
+          to="/captains/logout"
+          className="h-12 w-12 bg-white flex items-center justify-center rounded-full shadow-md hover:shadow-lg transition-all">
+          <i className="ri-logout-box-r-line text-xl"></i>
         </Link>
       </div>
 
-      <div className='fixed bottom-0 p-5'>
+      {/* Bottom Captain Details Panel */}
+      <div className="bg-white w-full p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.15)]">
         <CaptainDetails />
       </div>
 
-      <div ref={ridePopUpPanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <RidePopUp ride={ride} setRidePopUpPanel={setRidePopUpPanel} confirmRide={confirmRide} />
+      {/* Ride Popup Panel */}
+      <div
+        ref={ridePopUpPanelRef}
+        className="fixed w-full z-30 bottom-0 translate-y-full bg-white p-5
+               rounded-t-3xl shadow-[0_-10px_25px_rgb(0,0,0,0.2)] transition-all">
+        <RidePopUp
+          ride={ride}
+          setRidePopUpPanel={setRidePopUpPanel}
+          confirmRide={confirmRide}
+        />
       </div>
-
-      {/* <div ref={confirmRidePopUpPanelRef} className='fixed h-[80%] w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <ConfirmRidePopUp ride={ride} setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
-      </div> */}
-    </div >
+    </div>
   )
 }
 

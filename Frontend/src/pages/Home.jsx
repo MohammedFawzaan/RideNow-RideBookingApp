@@ -169,19 +169,19 @@ const Home = () => {
   }, [vehicleFound])
 
   return (
-    <div className='h-screen relative overflow-hidden'>
-      <div className='h-screen w-screen'>
+    <div className='h-screen flex flex-col overflow-hidden bg-gray-100'>
+      <div className='flex-1 m-5 rounded-3xl overflow-hidden shadow-2xl relative z-0'>
         {/* <img className='h-full w-full object-cover' src={Image} alt="temporary-image" /> */}
         <LiveTracker />
       </div>
-      <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4'>
-        <img onClick={() => navigate('/home')} className='flex w-36 bg-white rounded-lg cursor-pointer' src={RideNowIcon} alt="ride-logo" />
-        <Link onClick={() => toast.success('You are Logged Out')} to='/users/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+      <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4 z-10 pointer-events-none'>
+        <img onClick={() => navigate('/home')} className='flex w-36 bg-white rounded-lg cursor-pointer pointer-events-auto' src={RideNowIcon} alt="ride-logo" />
+        <Link onClick={() => toast.success('You are Logged Out')} to='/users/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full pointer-events-auto'>
           <i className="ri-logout-box-r-line"></i>
         </Link>
       </div>
-      <div className='flex flex-col justify-end absolute bottom-0 w-full z-10'>
-        <div className='h-[30%] p-5 bg-white relative'>
+      <div className='flex flex-col justify-end w-full z-10'>
+        <div className='p-5 bg-white relative'>
           <h5
             ref={panelCloseRef}
             onClick={() => { setPanelOpen(false); setSuggestions([]); }}
@@ -223,7 +223,7 @@ const Home = () => {
             </button>
           </form>
         </div>
-        <div ref={panelRef} className='bg-white'>
+        <div ref={panelRef} className='bg-white overflow-y-auto'>
           <LocationPanel
             setPanelOpen={setPanelOpen}
             setVehiclePanel={setVehiclePanel}

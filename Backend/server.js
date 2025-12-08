@@ -1,4 +1,4 @@
-const app = require('./app'); 
+const app = require('./app');
 const http = require('http'); // server on http
 const { initializeSocket } = require('./socket'); // initializeSocket
 const port = 3000 || process.env.PORT;

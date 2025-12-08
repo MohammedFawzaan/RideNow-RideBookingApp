@@ -24,6 +24,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Creating session
 app.use(session({
     secret: process.env.SESSION_SECRET || 'secret',
     resave: false,

@@ -1,69 +1,107 @@
-import React, { useState, useEffect } from 'react'
-import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api'
+import React, { useState, useEffect, useRef } from "react";
+import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
-    width: '100%',
-    height: '100%',
-};
-
-const center = {
-    lat: -3.745,
-    lng: -38.523
+  width: "100%",
+  height: "100%",
 };
 
 const LiveTracking = () => {
-    const [ currentPosition, setCurrentPosition ] = useState(center);
+  const [currentPosition, setCurrentPosition] = useState(null);
+  const mapRef = useRef(null);
 
-    useEffect(() => {
-        console.log(center);
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-                lat: latitude,
-                lng: longitude
-            });
+  // Load initial location + enable watch mode
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      console.log("Geolocation not supported");
+      return;
+    }
+
+    // Initial location fetch
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCurrentPosition({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
         });
+      },
+      (err) => console.log("Error initial:", err),
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
 
-        const watchId = navigator.geolocation.watchPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-                lat: latitude,
-                lng: longitude
-            });
+    // Continuous real-time tracking
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        setCurrentPosition({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
         });
+      },
+      (err) => console.log("Error watch:", err),
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
 
-        return () => navigator.geolocation.clearWatch(watchId);
-    }, []);
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
-    useEffect(() => {
-        const updatePosition = () => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
+  // Recenter Button Function
+  const recenterToUser = () => {
+    if (mapRef.current && currentPosition) {
+      mapRef.current.panTo(currentPosition);
+      mapRef.current.setZoom(16);
+    }
+  };
 
-                console.log('Position updated:', latitude, longitude);
-                setCurrentPosition({
-                    lat: latitude,
-                    lng: longitude
-                });
-            });
-        };
+  const onLoad = (map) => {
+    mapRef.current = map;
+  };
 
-        updatePosition(); // Initial position update
+  return (
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+        {currentPosition ? (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={currentPosition}
+            zoom={16}
+            onLoad={onLoad}
+          >
+            <Marker position={currentPosition} />
+          </GoogleMap>
+        ) : (
+          <p>Fetching your location…</p>
+        )}
+      </LoadScript>
 
-        const intervalId = setInterval(updatePosition, 5000); // Update every 10 seconds
+      {/* Recenter Button */}
+      <button
+        onClick={recenterToUser}
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          right: "20px",
+          padding: "10px 14px",
+          background: "#000",
+          color: "#fff",
+          borderRadius: "8px",
+          border: "none",
+          cursor: "pointer",
+          fontWeight: "600",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+        }}
+      >
+        Recenter
+      </button>
+    </div>
+  );
+};
 
-    }, []);
-
-    return (
-        <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={currentPosition}
-                zoom={15}>
-                <Marker position={currentPosition} />
-            </GoogleMap>
-        </LoadScript>
-    )
-}
-
-export default LiveTracking
+export default LiveTracking;
