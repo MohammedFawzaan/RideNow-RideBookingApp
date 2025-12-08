@@ -67,8 +67,7 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
                 mapContainerStyle={containerStyle}
                 center={pickupLocation}
                 zoom={14}
-                onLoad={handleMapLoad}
-            >
+                onLoad={handleMapLoad}>
                 {captainLocation && <Marker position={captainLocation} label="C" />}
                 {pickupLocation && <Marker position={pickupLocation} label="P" />}
                 {directions && <DirectionsRenderer directions={directions} />}

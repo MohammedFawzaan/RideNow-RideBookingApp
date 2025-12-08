@@ -5,7 +5,6 @@ const LookingForDriver = (props) => {
         <div>
             <div className='flex items-center justify-between'>
                 <h3 className='text-2xl font-semibold m-2'>Looking For a Ride</h3>
-                <i onClick={() => { props.setVehicleFound(false) }} className="text-3xl ri-arrow-down-wide-fill"></i>
             </div>
             <div className='flex flex-col justify-between items-center gap-2'>
                 <img className='h-20' src={props.vehicleImage} alt="Car-Image" />

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PickupNavigation from '../components/PickupNavigation';
 import { useGSAP } from '@gsap/react';
+import axios from 'axios';
 import gsap from 'gsap';
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp';
-import axios from 'axios';
+import DraggablePanel from '../components/DraggablePanel';
 
 const CaptainPickup = () => {
   const location = useLocation();
@@ -42,18 +43,20 @@ const CaptainPickup = () => {
   }, [confirmRidePopUpPanel]);
 
   return (
-    <div>
-      <PickupNavigation
-        pickupLocation={rideData.pickup}
-        onDriverLocationUpdate={handleDriverLocationUpdate}
-      />
-      <div ref={confirmRidePopUpPanelRef} className="fixed w-full z-10 bottom-0 translate-y-full bg-white p-3">
+    <div className="relative h-screen w-full overflow-hidden">
+      <div className="h-[90%] w-full rounded-3xl overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.15)] border border-gray-200 mt-4">
+        <PickupNavigation
+          pickupLocation={rideData.pickup}
+          onDriverLocationUpdate={handleDriverLocationUpdate}
+        />
+      </div>
+      <DraggablePanel isVisible={confirmRidePopUpPanel}>
         <ConfirmRidePopUp
           ride={rideData}
           driverDistance={driverDistance}
           setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
         />
-      </div>
+      </DraggablePanel>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import axios from "axios"
 import WaitingForDriver from "../components/WaitingForDriver"
 import PickupNavigation from "../components/PickupNavigation"
 import { SocketContext } from "../context/SocketContext"
+import DraggablePanel from "../components/DraggablePanel"
 
 const Pickup = () => {
   const navigate = useNavigate();
@@ -58,22 +59,21 @@ const Pickup = () => {
   }, [waitingForDriver]);
 
   return (
-    <div>
-      <PickupNavigation
-        pickupLocation={pickup}
-        onDriverLocationUpdate={handleDriverLocationUpdate}
-      />
-      <div
-        ref={waitingForDriverRef}
-        className='fixed w-full z-10 bottom-0 bg-white p-3'
-        style={{ transform: 'translateY(100%)' }}>
+    <div className="relative h-screen w-full overflow-hidden">
+      <div className="h-[90%] w-full rounded-3xl overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.15)] border border-gray-200 mt-4">
+        <PickupNavigation
+          pickupLocation={pickup}
+          onDriverLocationUpdate={handleDriverLocationUpdate}
+        />
+      </div>
+      <DraggablePanel isVisible={waitingForDriver}>
         <WaitingForDriver
           ride={ride}
           vehicleImage={vehicleImage}
           driverDistance={driverDistance}
           setWaitingForDriver={setWaitingForDriver}
         />
-      </div>
+      </DraggablePanel>
     </div>
   );
 };

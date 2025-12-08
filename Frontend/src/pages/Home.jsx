@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import gsap from 'gsap'
+import { toast } from 'react-toastify'
 import 'remixicon/fonts/remixicon.css'
 import { useGSAP } from '@gsap/react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -12,7 +13,7 @@ import LookingForDriver from '../components/LookingForDriver'
 import { UserDataContext } from '../context/UserContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracker from '../components/LiveTracking'
-import { toast } from 'react-toastify'
+import DraggablePanel from '../components/DraggablePanel'
 
 const Home = () => {
   const [pickup, setPickup] = React.useState(''); // pickup input
@@ -171,7 +172,6 @@ const Home = () => {
   return (
     <div className='h-screen flex flex-col overflow-hidden bg-gray-100'>
       <div className='flex-1 m-5 rounded-3xl overflow-hidden shadow-2xl relative z-0'>
-        {/* <img className='h-full w-full object-cover' src={Image} alt="temporary-image" /> */}
         <LiveTracker />
       </div>
       <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4 z-10 pointer-events-none'>
@@ -233,7 +233,7 @@ const Home = () => {
         </div>
       </div>
       {vehiclePanel && (
-        <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 bg-white p-3' style={{ transform: 'translateY(100%)' }}>
+        <DraggablePanel isVisible={vehiclePanel}>
           <VehiclePanel
             selectVehicle={setVehicleType}
             setVehicleImage={setVehicleImage}
@@ -241,10 +241,10 @@ const Home = () => {
             setConfirmRidePanel={setConfirmRidePanel}
             setVehiclePanel={setVehiclePanel}
           />
-        </div>
+        </DraggablePanel>
       )}
       {confirmRidePanel && (
-        <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 bg-white p-3' style={{ transform: 'translateY(100%)' }}>
+        <DraggablePanel isVisible={confirmRidePanel}>
           <ConfirmRide
             createRide={createRide}
             vehicleImage={vehicleImage}
@@ -255,13 +255,10 @@ const Home = () => {
             setConfirmRidePanel={setConfirmRidePanel}
             setVehicleFound={setVehicleFound}
           />
-        </div>
+        </DraggablePanel>
       )}
       {vehicleFound && (
-        <div
-          ref={vehicleFoundRef}
-          className='fixed w-full z-10 bottom-0 bg-white p-3'
-          style={{ transform: 'translateY(100%)' }}>
+        <DraggablePanel isVisible={vehicleFound}>
           <LookingForDriver
             pickup={pickup}
             vehicleImage={vehicleImage}
@@ -271,7 +268,7 @@ const Home = () => {
             setVehicleFound={setVehicleFound}
             setConfirmRidePanel={setConfirmRidePanel}
           />
-        </div>
+        </DraggablePanel>
       )}
     </div>
   )

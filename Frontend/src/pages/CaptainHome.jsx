@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import axios from 'axios'
 import { useGSAP } from '@gsap/react'
 import 'remixicon/fonts/remixicon.css'
+import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom'
 import RideNowIcon from '../assets/RideNowIcon.png'
 import CaptainDetails from '../components/CaptainDetails'
@@ -10,12 +11,11 @@ import RidePopUp from '../components/RidePopUp'
 import { CaptainDataContext } from '../context/CaptainContext'
 import { SocketContext } from '../context/SocketContext'
 import LiveTracking from '../components/LiveTracking'
-import { toast } from 'react-toastify';
+import DraggablePanel from '../components/DraggablePanel'
 
 const CaptainHome = () => {
 
   const [ride, setRide] = React.useState(null);
-
   const [ridePopUpPanel, setRidePopUpPanel] = React.useState(false);
   const ridePopUpPanelRef = React.useRef(null);
 
@@ -26,6 +26,7 @@ const CaptainHome = () => {
 
   React.useEffect(() => {
     socket.emit("join", { userType: "captain", userId: captain._id });
+
     const updateLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -39,6 +40,7 @@ const CaptainHome = () => {
         })
       }
     };
+
     const locationInterval = setInterval(updateLocation, 10000);
     updateLocation();
   }, []);
@@ -58,9 +60,11 @@ const CaptainHome = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
+
       toast.success("Ride Accepted");
       setRidePopUpPanel(false);
       navigate('/captain-pickup', { state: { ride: ride } });
+
     } catch (error) {
       if (error.response?.status === 400) {
         toast.error("Ride already accepted by another captain.");
@@ -73,17 +77,24 @@ const CaptainHome = () => {
     }
   }
 
-  useGSAP(function () {
-    if (ridePopUpPanel) {
-      gsap.to(ridePopUpPanelRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(ridePopUpPanelRef.current, {
-        transform: 'translateY(100%)'
-      })
-    }
-  }, [ridePopUpPanel])
+  useGSAP(
+    () => {
+      if (ridePopUpPanel) {
+        gsap.to(ridePopUpPanelRef.current, {
+          y: 0,
+          duration: 0.5,
+          ease: "power3.out",
+        });
+      } else {
+        gsap.to(ridePopUpPanelRef.current, {
+          y: '100%',
+          duration: 0.5,
+          ease: "power3.in",
+        });
+      }
+    },
+    { dependencies: [ridePopUpPanel] }
+  );
 
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gray-100">
@@ -94,38 +105,48 @@ const CaptainHome = () => {
       </div>
 
       {/* Top Bar */}
-      <div className="absolute top-6 left-0 right-0 flex items-center justify-between px-6 z-20">
+      <div className="p-3 absolute top-10 w-full flex items-center justify-center gap-4 z-20">
         <img
           onClick={() => navigate('/captain-home')}
-          className="w-32 md:w-36 bg-white rounded-xl cursor-pointer p-2 shadow-md hover:shadow-lg transition-all"
+          className="w-36 bg-white rounded-lg cursor-pointer shadow-md"
           src={RideNowIcon}
           alt="ride-logo"
         />
 
         <Link
           onClick={() => toast.success('You are Logged Out')}
-          to="/captains/logout"
-          className="h-12 w-12 bg-white flex items-center justify-center rounded-full shadow-md hover:shadow-lg transition-all">
-          <i className="ri-logout-box-r-line text-xl"></i>
+          to='/captains/logout'
+          className="h-10 w-10 bg-white flex items-center justify-center rounded-full shadow-md"
+        >
+          <i className="ri-logout-box-r-line text-lg"></i>
         </Link>
       </div>
 
-      {/* Bottom Captain Details Panel */}
-      <div className="bg-white w-full p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.15)]">
+      {/* Bottom Captain Details */}
+      <div className="bg-white w-full p-5 shadow-[0_-5px_20px_rgba(0,0,0,0.15)] z-10">
         <CaptainDetails />
       </div>
 
-      {/* Ride Popup Panel */}
-      <div
+      {/* Ride Popup Panel (GSAP controlled) */}
+      {/* <div
         ref={ridePopUpPanelRef}
-        className="fixed w-full z-30 bottom-0 translate-y-full bg-white p-5
-               rounded-t-3xl shadow-[0_-10px_25px_rgb(0,0,0,0.2)] transition-all">
+        style={{ transform: "translateY(100%)" }}
+        className="fixed w-full bottom-0 bg-white p-5 rounded-t-3xl shadow-[0_-10px_25px_rgb(0,0,0,0.2)] z-30">
         <RidePopUp
           ride={ride}
           setRidePopUpPanel={setRidePopUpPanel}
           confirmRide={confirmRide}
         />
-      </div>
+      </div> */}
+      {ride && (
+        <DraggablePanel isVisible={ridePopUpPanel} maxHeight="60%">
+          <RidePopUp
+            ride={ride}
+            setRidePopUpPanel={setRidePopUpPanel}
+            confirmRide={confirmRide}
+          />
+        </DraggablePanel>
+      )}
     </div>
   )
 }

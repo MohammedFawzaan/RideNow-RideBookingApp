@@ -3,9 +3,10 @@ import gsap from 'gsap';
 import RideNowIcon from '../assets/RideNowIcon.png';
 import { useGSAP } from '@gsap/react';
 import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import FinishRide from '../components/FinishRide';
 import RouteMap from '../components/RouteMap';
-import axios from 'axios';
+import DraggablePanel from '../components/DraggablePanel';
 
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
@@ -47,34 +48,38 @@ const CaptainRiding = () => {
         </Link>
       </div>
 
-      <div className='h-[90%]'>
-        <RouteMap
-          pickup={rideData.pickup}
-          destination={rideData.destination}
-          onDriverLocationUpdate={handleDriverLocationUpdate}
-        />
+      <div className="h-[90%] p-3">
+        <div className="w-full h-full rounded-3xl overflow-hidden shadow-xl">
+          <RouteMap
+            pickup={rideData.pickup}
+            destination={rideData.destination}
+            onDriverLocationUpdate={handleDriverLocationUpdate}
+          />
+        </div>
       </div>
-
-      <div className='h-[10%] p-5 bg-yellow-400 flex items-center justify-between'>
-        <div className='flex items-center justify-center'>
-          <i className="mr-2 ri-map-pin-line"></i>
-          <h4 className='text-2xl font-semibold'>
-            Arrival in {riding?.time || '-'}
+      <div className="h-[10%] px-5 bg-gradient-to-r from-yellow-400 to-yellow-300 
+                flex items-center justify-between shadow-lg">
+        <div className="flex items-center space-x-2">
+          <i className="ri-map-pin-line text-2xl text-black/80"></i>
+          <h4 className="text-lg font-semibold text-black">
+            Arrival in <span className="font-bold">{riding?.time || '-'}</span>
           </h4>
         </div>
-        <h4 className='text-2xl font-semibold'>
+        <h4 className="text-lg font-semibold text-black">
           {riding?.distance || '-'} Away
         </h4>
         <button
           onClick={() => setFinishRidePanel(true)}
-          className='block m-3 text-white bg-green-400 active:bg-green-600 font-semibold p-3 rounded-lg'>
-          Complete Ride
+          className="px-4 py-2 bg-green-500 text-white rounded-xl 
+               font-semibold shadow-md active:bg-green-600">
+          Complete
         </button>
       </div>
 
-      <div ref={finishRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white p-3'>
-        <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel} />
-      </div>
+      {finishRidePanel ?
+        <DraggablePanel isVisible={finishRidePanel}>
+          <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel} />
+        </DraggablePanel> : null}
     </div>
   );
 };
