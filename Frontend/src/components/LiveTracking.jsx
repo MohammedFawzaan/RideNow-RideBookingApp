@@ -86,7 +86,7 @@ const LiveTracking = () => {
         onClick={recenterToUser}
         style={{
           position: "absolute",
-          bottom: "20px",
+          bottom: "30px",
           right: "20px",
           padding: "10px 14px",
           background: "#000",
@@ -96,8 +96,7 @@ const LiveTracking = () => {
           cursor: "pointer",
           fontWeight: "600",
           boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-        }}
-      >
+        }}>
         Recenter
       </button>
     </div>

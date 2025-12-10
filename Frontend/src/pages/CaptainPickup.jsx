@@ -12,7 +12,6 @@ const CaptainPickup = () => {
   const rideData = location.state?.ride;
 
   const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = React.useState(false);
-  const confirmRidePopUpPanelRef = React.useRef(null);
 
   const [driverDistance, setDriverDistance] = useState(null);
 
@@ -35,12 +34,6 @@ const CaptainPickup = () => {
   useEffect(() => {
     setConfirmRidePopUpPanel(true);
   }, []);
-
-  useGSAP(() => {
-    gsap.to(confirmRidePopUpPanelRef.current, {
-      transform: confirmRidePopUpPanel ? 'translateY(0)' : 'translateY(100%)',
-    });
-  }, [confirmRidePopUpPanel]);
 
   return (
     <div className="relative h-screen w-full overflow-hidden">

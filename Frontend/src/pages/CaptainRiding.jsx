@@ -10,7 +10,6 @@ import DraggablePanel from '../components/DraggablePanel';
 
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
-  const finishRidePanelRef = useRef(null);
   const [riding, setRiding] = useState(null);
 
   const location = useLocation();
@@ -33,21 +32,8 @@ const CaptainRiding = () => {
     }
   };
 
-  useGSAP(() => {
-    gsap.to(finishRidePanelRef.current, {
-      transform: finishRidePanel ? 'translateY(0)' : 'translateY(100%)',
-    });
-  }, [finishRidePanel]);
-
   return (
     <div className='h-screen relative overflow-hidden'>
-      <div className='p-3 absolute top-0 flex items-center justify-between w-screen'>
-        <img className='w-32 absolute top-5 left-5' src={RideNowIcon} alt="uber-logo" />
-        <Link to='/captain-home' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
-          <i className="ri-logout-box-r-line"></i>
-        </Link>
-      </div>
-
       <div className="h-[90%] p-3">
         <div className="w-full h-full rounded-3xl overflow-hidden shadow-xl">
           <RouteMap

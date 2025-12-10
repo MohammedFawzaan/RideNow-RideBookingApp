@@ -18,7 +18,6 @@ const Pickup = () => {
   const [driverDistance, setDriverDistance] = React.useState(null);
 
   const [waitingForDriver, setWaitingForDriver] = React.useState(false);
-  const waitingForDriverRef = React.useRef(null);
 
   const pickup = ride.pickup;
 
@@ -45,18 +44,6 @@ const Pickup = () => {
   socket.on('ride-started', (ride) => {
     navigate('/riding', { state: { ride } });
   });
-
-  useGSAP(() => {
-    if (waitingForDriver) {
-      gsap.to(waitingForDriverRef.current, {
-        transform: 'translateY(0)'
-      });
-    } else {
-      gsap.to(waitingForDriverRef.current, {
-        transform: 'translateY(100%)'
-      });
-    }
-  }, [waitingForDriver]);
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
