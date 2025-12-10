@@ -17,7 +17,6 @@ const CaptainHome = () => {
 
   const [ride, setRide] = React.useState(null);
   const [ridePopUpPanel, setRidePopUpPanel] = React.useState(false);
-  const ridePopUpPanelRef = React.useRef(null);
 
   const { socket } = React.useContext(SocketContext);
   const { captain } = React.useContext(CaptainDataContext);
@@ -77,25 +76,6 @@ const CaptainHome = () => {
     }
   }
 
-  useGSAP(
-    () => {
-      if (ridePopUpPanel) {
-        gsap.to(ridePopUpPanelRef.current, {
-          y: 0,
-          duration: 0.5,
-          ease: "power3.out",
-        });
-      } else {
-        gsap.to(ridePopUpPanelRef.current, {
-          y: '100%',
-          duration: 0.5,
-          ease: "power3.in",
-        });
-      }
-    },
-    { dependencies: [ridePopUpPanel] }
-  );
-
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gray-100">
 
@@ -127,17 +107,6 @@ const CaptainHome = () => {
         <CaptainDetails />
       </div>
 
-      {/* Ride Popup Panel (GSAP controlled) */}
-      {/* <div
-        ref={ridePopUpPanelRef}
-        style={{ transform: "translateY(100%)" }}
-        className="fixed w-full bottom-0 bg-white p-5 rounded-t-3xl shadow-[0_-10px_25px_rgb(0,0,0,0.2)] z-30">
-        <RidePopUp
-          ride={ride}
-          setRidePopUpPanel={setRidePopUpPanel}
-          confirmRide={confirmRide}
-        />
-      </div> */}
       {ride && (
         <DraggablePanel isVisible={ridePopUpPanel} maxHeight="60%">
           <RidePopUp

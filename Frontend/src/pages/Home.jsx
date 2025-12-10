@@ -34,9 +34,6 @@ const Home = () => {
 
   const panelRef = React.useRef(null);
   const panelCloseRef = React.useRef(null);
-  const vehiclePanelRef = React.useRef(null);
-  const confirmRidePanelRef = React.useRef(null);
-  const vehicleFoundRef = React.useRef(null);
 
   const { user } = React.useContext(UserDataContext);
   const { socket } = React.useContext(SocketContext);
@@ -55,7 +52,6 @@ const Home = () => {
     navigate('/pickup', { state: { ride, vehicleImage } });
   });
 
-  // Fetch suggestions from backend
   const fetchSuggestions = async (input) => {
     if (!input || input.length < 3) {
       setSuggestions([]);
@@ -76,7 +72,6 @@ const Home = () => {
     }
   };
 
-  // When user clicks a suggestion
   const handleSuggestionClick = (suggestion) => {
     if (activeField === 'pickup') {
       setPickup(suggestion.description);
@@ -133,45 +128,9 @@ const Home = () => {
     }
   }, [panelOpen])
 
-  useGSAP(function () {
-    if (vehiclePanel) {
-      gsap.to(vehiclePanelRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(vehiclePanelRef.current, {
-        transform: 'translateY(100%)'
-      })
-    }
-  }, [vehiclePanel])
-
-  useGSAP(function () {
-    if (confirmRidePanel) {
-      gsap.to(confirmRidePanelRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(confirmRidePanelRef.current, {
-        transform: 'translateY(100%)'
-      })
-    }
-  }, [confirmRidePanel])
-
-  useGSAP(function () {
-    if (vehicleFound) {
-      gsap.to(vehicleFoundRef.current, {
-        transform: 'translateY(0)'
-      })
-    } else {
-      gsap.to(vehicleFoundRef.current, {
-        transform: 'translateY(100%)'
-      })
-    }
-  }, [vehicleFound])
-
   return (
     <div className='h-screen flex flex-col overflow-hidden bg-gray-100'>
-      <div className='flex-1 m-5 rounded-3xl overflow-hidden shadow-2xl relative z-0'>
+      <div className='h-[70vh] m-5 rounded-3xl overflow-hidden shadow-2xl relative z-0'>
         <LiveTracker />
       </div>
       <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4 z-10 pointer-events-none'>
@@ -180,7 +139,7 @@ const Home = () => {
           <i className="ri-logout-box-r-line"></i>
         </Link>
       </div>
-      <div className='flex flex-col justify-end w-full z-10'>
+      <div className='absolute bottom-0 left-0 w-full z-20'>
         <div className='p-5 bg-white relative'>
           <h5
             ref={panelCloseRef}
@@ -223,7 +182,7 @@ const Home = () => {
             </button>
           </form>
         </div>
-        <div ref={panelRef} className='bg-white overflow-y-auto'>
+        <div ref={panelRef} className='bg-white max-h-[40vh] overflow-y-auto'>
           <LocationPanel
             setPanelOpen={setPanelOpen}
             setVehiclePanel={setVehiclePanel}

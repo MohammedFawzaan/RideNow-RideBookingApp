@@ -8,22 +8,6 @@ const ConfirmRide = (props) => {
     props.setVehicleFound(true);
     props.createRide();
     toast.success('Searching for nearby captains...');
-
-    // Wait for ride for 5 secs if no ride found and if no captain accept it.
-    const searchTimeout = setTimeout(() => {
-      if (!props.rideAccepted) { // If ride not accepted in 5 sec
-        toast.error('No nearby captains found. Please try again later.');
-
-        // Cancel ride on server
-        props.cancelRide();
-
-        // Reset vehicleFound back to false
-        props.setVehicleFound(false);
-      }
-    }, 5000);
-
-    // Clear timeout if ride gets accepted before 5 sec
-    return () => clearTimeout(searchTimeout);
   }
 
   return (
