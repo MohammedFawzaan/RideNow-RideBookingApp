@@ -65,15 +65,17 @@ const RouteMap = ({ pickup, destination, onDriverLocationUpdate }) => {
                 const liveLocation = { lat: latitude, lng: longitude };
                 setCurrentPosition(liveLocation);
 
-                // Send live location up to parent
-                if (onDriverLocationUpdate) {
-                    onDriverLocationUpdate(liveLocation);
-                }
-
-                // Debounce route updates
+                // Debounce heavy operations (Route API, Distance API, and Socket Emits)
                 const now = Date.now();
                 if (pickup && destination && now - lastRouteUpdate.current > 4000) {
                     lastRouteUpdate.current = now;
+
+                    // 1. Send live location up to parent (triggers API and Socket)
+                    if (onDriverLocationUpdate) {
+                        onDriverLocationUpdate(liveLocation);
+                    }
+
+                    // 2. Update Map Route
                     const directionsService = new window.google.maps.DirectionsService();
                     directionsService.route(
                         {

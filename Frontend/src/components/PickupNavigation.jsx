@@ -45,11 +45,17 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
         }
     }, [pickupLocation, scriptLoaded]);
 
-    const updateRoute = (liveLocation) => {
-        // Debounce route calculation
+    // Unified handler for location updates (from GPS or Socket)
+    const handleLocationUpdate = (liveLocation) => {
+        if (!liveLocation) return;
+        setCaptainLocation(liveLocation);
+
         const now = Date.now();
+        // Allow first call through immediately (now - 0 > 4000 is always true)
         if (pickupCoords && now - lastRouteUpdate.current > 4000) {
             lastRouteUpdate.current = now;
+
+            // 1. Update Map Route
             const directionsService = new window.google.maps.DirectionsService();
             directionsService.route(
                 {
@@ -65,53 +71,43 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
                     }
                 }
             );
+
+            // 2. Notify Parent (if it's a GPS update for Captain)
+            if (onDriverLocationUpdate) {
+                onDriverLocationUpdate(liveLocation);
+            }
         }
-    }
+    };
 
     // Effect for Socket-based updates (User View)
     useEffect(() => {
         if (captainLiveLocation) {
-            setCaptainLocation(captainLiveLocation);
-            updateRoute(captainLiveLocation);
+            handleLocationUpdate(captainLiveLocation);
         }
     }, [captainLiveLocation, pickupCoords]);
 
     // Effect for GPS-based updates (Captain View)
     useEffect(() => {
-        if (!scriptLoaded || captainLiveLocation) return; // Skip if we have live socket data
+        if (!scriptLoaded || captainLiveLocation) return;
 
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
-                const liveLocation = { lat: latitude, lng: longitude };
-                setCaptainLocation(liveLocation);
-
-                const now = Date.now();
-                if (now - lastRouteUpdate.current > 4000) {
-                    // Update the last update timestamp
-                    lastRouteUpdate.current = now;
-
-                    // Sending driver live location to handleDriverLocationUpdate() in pickup component.
-                    if (onDriverLocationUpdate) {
-                        onDriverLocationUpdate(liveLocation);
-                    }
-
-                    // Also update the map route
-                    updateRoute(liveLocation);
-                }
+                handleLocationUpdate({ lat: latitude, lng: longitude });
             },
-            (error) => {
-                console.error('Geolocation error:', error);
-            },
-            {
-                enableHighAccuracy: true,
-                maximumAge: 0,
-                timeout: 30000
-            }
+            (error) => console.error('Geolocation error:', error),
+            { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 }
         );
 
         return () => navigator.geolocation.clearWatch(watchId);
     }, [pickupCoords, onDriverLocationUpdate, scriptLoaded, captainLiveLocation]);
+
+    // Crucial: Re-trigger route calculation once coordinates are geocoded
+    useEffect(() => {
+        if (pickupCoords && captainLocation && !directions) {
+            handleLocationUpdate(captainLocation);
+        }
+    }, [pickupCoords, captainLocation]);
 
     return (
         <LoadScript
