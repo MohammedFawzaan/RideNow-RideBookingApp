@@ -1,7 +1,24 @@
 const mapsService = require('../services/maps.service');
 const { validationResult } = require('express-validator');
 
-// Function to get coordinates (latitude and longitude) from an address using Google Maps Geocoding API.
+// Function to get all captains within a specified radius from a given location.
+module.exports.getNearbyCaptains = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const { ltd, lng, radius } = req.query;
+        if (!ltd || !lng) {
+            return res.status(400).json({ error: 'Latitude and longitude are required' });
+        }
+        const captains = await mapsService.getCaptainsInTheRadius(ltd, lng, radius || 5);
+        return res.status(200).json(captains);
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports.getCoordinates = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

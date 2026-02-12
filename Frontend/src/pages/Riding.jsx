@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import captainImage from '../assets/captainImage.webp';
@@ -37,11 +38,21 @@ const Riding = () => {
         }
     };
 
-    socket.on('ride-ended', () => {
-        navigate('/home');
-    });
+    React.useEffect(() => {
+        const handleRideEnded = () => {
+            toast.success("Ride completed. Hope you had a great trip!");
+            navigate('/home');
+        };
+
+        socket.on('ride-ended', handleRideEnded);
+
+        return () => {
+            socket.off('ride-ended', handleRideEnded);
+        };
+    }, [socket, navigate]);
 
     function endRide() {
+        toast.success("Payment confirmed!");
         navigate('/home');
     }
 
