@@ -13,6 +13,14 @@ const Riding = () => {
     const { socket } = React.useContext(SocketContext);
     const [riding, setRiding] = useState(null);
 
+    React.useEffect(() => {
+        if (!ride) {
+            navigate('/home');
+        }
+    }, [ride, navigate]);
+
+    if (!ride) return null;
+
     const handleUserLocationUpdate = async (userLocation) => {
         try {
             const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-distance-time`, {
@@ -56,26 +64,26 @@ const Riding = () => {
                     <div className='flex items-center gap-5 p-3 border-b-2'>
                         <i className="text-lg ri-map-pin-fill"></i>
                         <div>
-                          <h3 className='text-lg font-medium'>
-                              Arrival in {riding?.time}, {riding?.distance} Away
-                          </h3>
-                      </div>
-                  </div>
-                  <div className='flex items-center gap-5 p-3'>
-                      <i className="ri-bank-card-2-line"></i>
-                      <div>
-                          <h3 className='text-lg font-medium'>₹{ride?.fare}</h3>
-                          <p className='text-sm -mt-1 text-gray-600'>Cash</p>
-                      </div>
-                  </div>
-              </div>
-              <button
-                  onClick={endRide}
-                  className='w-full mt-3 mb-3 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>
-                  Payment Done
-              </button>
-          </DraggablePanel>
-      </div>
+                            <h3 className='text-lg font-medium'>
+                                Arrival in {riding?.time}, {riding?.distance} Away
+                            </h3>
+                        </div>
+                    </div>
+                    <div className='flex items-center gap-5 p-3'>
+                        <i className="ri-bank-card-2-line"></i>
+                        <div>
+                            <h3 className='text-lg font-medium'>₹{ride?.fare}</h3>
+                            <p className='text-sm -mt-1 text-gray-600'>Cash</p>
+                        </div>
+                    </div>
+                </div>
+                <button
+                    onClick={endRide}
+                    className='w-full mt-3 mb-3 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>
+                    Payment Done
+                </button>
+            </DraggablePanel>
+        </div>
     );
 };
 

@@ -11,6 +11,7 @@ const CaptainLogin = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const { captain, setCaptain } = useContext(CaptainDataContext);
@@ -37,6 +38,7 @@ const CaptainLogin = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const captainData = {
         email: email,
@@ -59,6 +61,8 @@ const CaptainLogin = () => {
       } else {
         toast.error('Something went wrong');
       }
+    } finally {
+      setIsLoading(false);
     }
 
     setEmail('');
@@ -90,7 +94,7 @@ const CaptainLogin = () => {
             type="password"
             placeholder='password'
           />
-          <button className='border-rounded my-5 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Login</button>
+          <button disabled={isLoading} className='border-rounded my-5 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg disabled:opacity-50'>{isLoading ? 'Logging in...' : 'Login'}</button>
         </form>
         <p className='text-center'>New here? <Link to='/captains/signup' className='text-blue-600'>Create new Account</Link></p>
       </div>

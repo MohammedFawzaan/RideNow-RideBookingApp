@@ -13,6 +13,7 @@ const containerStyle = {
 
 const RouteMap = ({ pickup, destination, onDriverLocationUpdate }) => {
     const [currentPosition, setCurrentPosition] = useState(null);
+    const [mapError, setMapError] = useState(false);
     const [directions, setDirections] = useState(null);
     const [pickupCoords, setPickupCoords] = useState(null);
     const [destinationCoords, setDestinationCoords] = useState(null);
@@ -98,11 +99,16 @@ const RouteMap = ({ pickup, destination, onDriverLocationUpdate }) => {
     }, [pickup, destination, onDriverLocationUpdate, scriptLoaded]);
 
     return (
-        <LoadScript 
+        <LoadScript
             googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             onLoad={() => setScriptLoaded(true)}
+            onError={() => setMapError(true)}
         >
-            {pickupCoords ? (
+            {mapError ? (
+                <div className="h-full w-full flex items-center justify-center bg-gray-100 text-red-600 font-semibold p-4 text-center">
+                    Failed to load Google Maps. Please check your network connection or API Key.
+                </div>
+            ) : pickupCoords ? (
                 <GoogleMap
                     mapContainerStyle={containerStyle}
                     center={pickupCoords}
@@ -115,8 +121,8 @@ const RouteMap = ({ pickup, destination, onDriverLocationUpdate }) => {
                     {directions && <DirectionsRenderer directions={directions} />}
                 </GoogleMap>
             ) : (
-                <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                    <p>Loading Map...</p>
+                <div className="h-full w-full flex items-center justify-center bg-gray-100 font-medium text-gray-600">
+                    Loading Map...
                 </div>
             )}
         </LoadScript>

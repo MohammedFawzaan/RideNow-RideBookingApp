@@ -20,6 +20,8 @@ import { CaptainDataContext } from './context/CaptainContext'
 import { UserDataContext } from './context/UserContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import NotFound from './pages/NotFound'
+import NetworkStatus from './components/NetworkStatus'
 
 const App = () => {
   const ans = useContext(UserDataContext);
@@ -30,6 +32,7 @@ const App = () => {
 
   return (
     <div className='container'>
+      <NetworkStatus />
       <Routes>
         <Route path="/" element={<Start />} />
         <Route path="/home" element={
@@ -65,6 +68,7 @@ const App = () => {
             <CaptainLogout />
           </CaptainProtectedWrapper>
         } />
+        <Route path='*' element={<NotFound />} />
       </Routes>
 
       <ToastContainer
@@ -81,7 +85,7 @@ const App = () => {
           marginTop: '1rem',
         }}
       />
-    </div>
+    </div >
   )
 }
 

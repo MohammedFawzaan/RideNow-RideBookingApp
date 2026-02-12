@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PickupNavigation from '../components/PickupNavigation';
 import { useGSAP } from '@gsap/react';
 import axios from 'axios';
@@ -9,9 +9,18 @@ import DraggablePanel from '../components/DraggablePanel';
 
 const CaptainPickup = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const rideData = location.state?.ride;
 
+  useEffect(() => {
+    if (!rideData) {
+      navigate('/captain-home');
+    }
+  }, [rideData, navigate]);
+
   const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = React.useState(false);
+
+  if (!rideData) return null;
 
   const [driverDistance, setDriverDistance] = useState(null);
 

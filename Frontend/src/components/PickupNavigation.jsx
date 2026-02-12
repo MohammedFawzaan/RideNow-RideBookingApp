@@ -14,6 +14,7 @@ const containerStyle = {
 
 const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
     const [captainLocation, setCaptainLocation] = useState(null);
+    const [mapError, setMapError] = useState(false);
     const [directions, setDirections] = useState(null);
     const [pickupCoords, setPickupCoords] = useState(null);
     const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -94,8 +95,13 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
         <LoadScript
             googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             onLoad={() => setScriptLoaded(true)}
+            onError={() => setMapError(true)}
         >
-            {pickupCoords ? (
+            {mapError ? (
+                <div className="h-full w-full flex items-center justify-center bg-gray-100 text-red-600 font-semibold p-4 text-center">
+                    Failed to load Google Maps. Please check your network connection or API Key.
+                </div>
+            ) : pickupCoords ? (
                 <GoogleMap
                     mapContainerStyle={containerStyle}
                     center={pickupCoords}
@@ -106,8 +112,8 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
                     {directions && <DirectionsRenderer directions={directions} />}
                 </GoogleMap>
             ) : (
-                <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                    <p>Loading Map...</p>
+                <div className="h-full w-full flex items-center justify-center bg-gray-100 font-medium text-gray-600">
+                    Loading Map...
                 </div>
             )}
         </LoadScript>

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import gsap from 'gsap';
 import RideNowIcon from '../assets/RideNowIcon.png';
 import { useGSAP } from '@gsap/react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import FinishRide from '../components/FinishRide';
 import RouteMap from '../components/RouteMap';
@@ -13,7 +13,16 @@ const CaptainRiding = () => {
   const [riding, setRiding] = useState(null);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const rideData = location.state?.ride;
+
+  React.useEffect(() => {
+    if (!rideData) {
+      navigate('/captain-home');
+    }
+  }, [rideData, navigate]);
+
+  if (!rideData) return null;
 
   // This is called every few seconds from RouteMap
   const handleDriverLocationUpdate = async (captainLocation) => {

@@ -19,6 +19,14 @@ const Pickup = () => {
 
   const [waitingForDriver, setWaitingForDriver] = React.useState(false);
 
+  React.useEffect(() => {
+    if (!ride) {
+      navigate('/home');
+    }
+  }, [ride, navigate]);
+
+  if (!ride) return null;
+
   const pickup = ride.pickup;
 
   React.useEffect(() => {

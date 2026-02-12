@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CaptainDataContext } from '../context/CaptainContext';
+import Loader from '../components/Loader';
 
 const CaptainProtectedWrapper = ({ children }) => {
     const { captain, setCaptain } = React.useContext(CaptainDataContext);
@@ -16,11 +17,11 @@ const CaptainProtectedWrapper = ({ children }) => {
             navigate('/captains/login');
         }
         axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile`, {
-            headers:{
+            headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then(response => {
-            if(response.status === 200) {
+            if (response.status === 200) {
                 setCaptain(response.data);
                 setIsLoading(false);
             }
@@ -33,9 +34,7 @@ const CaptainProtectedWrapper = ({ children }) => {
 
     if (isLoading) {
         return (
-            <div className='text-xl font-semibold m-auto text-center'>
-                Loading...
-            </div>
+            <Loader />
         )
     }
 

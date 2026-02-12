@@ -10,6 +10,7 @@ const UserSignup = () => {
   const [lastname, setLastname] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const navigate = useNavigate();
   const { user, setUser } = React.useContext(UserDataContext);
@@ -43,6 +44,7 @@ const UserSignup = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const newUser = {
         fullname: {
@@ -65,6 +67,8 @@ const UserSignup = () => {
       }
     } catch (err) {
       toast.error('Registration failed');
+    } finally {
+      setIsLoading(false);
     }
 
     setFistname('');
@@ -115,7 +119,7 @@ const UserSignup = () => {
             type="password"
             placeholder='password'
           />
-          <button className='border-rounded bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Create Account</button>
+          <button disabled={isLoading} className='border-rounded bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg disabled:opacity-50'>{isLoading ? 'Creating Account...' : 'Create Account'}</button>
         </form>
         <button
           onClick={() => {

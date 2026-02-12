@@ -1,13 +1,11 @@
 import { toast } from 'react-toastify';
+import Loader from './Loader';
 
 const ConfirmRide = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    props.setConfirmRidePanel(false);
-    props.setVehicleFound(true);
     props.createRide();
-    toast.success('Searching for nearby captains...');
   }
 
   return (
@@ -20,7 +18,15 @@ const ConfirmRide = (props) => {
       </div>
       <div className='w-full mt-5'>
         <div>
-          <button onClick={(e) => onSubmit(e)} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Confirm</button>
+          {props.isLoading ? (
+            <div className="w-full mt-5 flex justify-center">
+              <Loader message="Confirming..." />
+            </div>
+          ) : (
+            <button onClick={(e) => onSubmit(e)} className='w-full mt-5 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>
+              Confirm
+            </button>
+          )}
         </div>
         <div className='flex items-center gap-5 p-3 border-b-2'>
           <i className="ri-map-pin-line"></i>

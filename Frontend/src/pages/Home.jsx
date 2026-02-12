@@ -39,6 +39,7 @@ const Home = () => {
   const { socket } = React.useContext(SocketContext);
 
   const [ride, setRide] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -96,17 +97,44 @@ const Home = () => {
     setFare(response.data);
   }
 
+  const [activeTrip, setActiveTrip] = React.useState(null);
+
   const createRide = async () => {
-    const token = localStorage.getItem('token');
-    console.log(pickup, destination, vehicleType);
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/rides/create`, {
-      pickup,
-      destination,
-      vehicleType,
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create`, {
+        pickup,
+        destination,
+        vehicleType,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Ride request sent!');
+
+      // Save trip details for the next screen before clearing inputs
+      setActiveTrip({
+        pickup,
+        destination,
+        fare: fare[vehicleType],
+        vehicleType
+      });
+
+      setVehicleFound(true);
+      setConfirmRidePanel(false);
+
+      // Clear inputs
+      setPickup('');
+      setDestination('');
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to create ride');
+      setVehicleFound(false); // Reset state on failure
+      setConfirmRidePanel(true); // Go back to confirm panel
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useGSAP(function () {
@@ -149,34 +177,51 @@ const Home = () => {
           </h5>
           <h4 className='ml-2 text-2xl font-bold'>Find Your Trip</h4>
           <form onSubmit={handleSubmit}>
-            <input
-              onClick={() => { setPanelOpen(true); setActiveField('pickup'); fetchSuggestions(pickup); }}
-              value={pickup}
-              required
-              onChange={(e) => {
-                setPickup(e.target.value);
-                setActiveField('pickup');
-                fetchSuggestions(e.target.value);
-              }}
-              className='bg-[#eee] m-2 px-8 py-2 rounded-lg w-full'
-              type="text"
-              placeholder='add a pickup location'
-              autoComplete="off"
-            />
-            <input
-              onClick={() => { setPanelOpen(true); setActiveField('destination'); fetchSuggestions(destination); }}
-              value={destination}
-              required
-              onChange={(e) => {
-                setDestination(e.target.value);
-                setActiveField('destination');
-                fetchSuggestions(e.target.value);
-              }}
-              className='bg-[#eee] m-2 px-8 py-2 text-base rounded-lg w-full'
-              type="text"
-              placeholder='enter your destination'
-              autoComplete="off"
-            />
+            <div className="line absolute h-16 w-1 top-[45%] left-10 bg-gray-700 rounded-full"></div>
+            <div className='flex items-center gap-5 p-3 rounded-lg w-full mt-5'>
+              <i className="ri-map-pin-user-fill text-xl"></i>
+              <input
+                onClick={() => {
+                  setPanelOpen(true);
+                  setVehiclePanel(false);
+                  setConfirmRidePanel(false);
+                  setActiveField('pickup');
+                  fetchSuggestions(pickup);
+                }}
+                value={pickup}
+                onChange={(e) => {
+                  setPickup(e.target.value);
+                  setActiveField('pickup');
+                  fetchSuggestions(e.target.value);
+                }}
+                className='bg-[#eee] px-2 py-2 text-base rounded-lg w-full outline-none'
+                type="text"
+                placeholder='Add a pickup location'
+                required
+              />
+            </div>
+            <div className='flex items-center gap-5 p-3 rounded-lg w-full'>
+              <i className="ri-map-pin-2-fill text-xl"></i>
+              <input
+                onClick={() => {
+                  setPanelOpen(true);
+                  setVehiclePanel(false);
+                  setConfirmRidePanel(false);
+                  setActiveField('destination');
+                  fetchSuggestions(destination);
+                }}
+                value={destination}
+                onChange={(e) => {
+                  setDestination(e.target.value);
+                  setActiveField('destination');
+                  fetchSuggestions(e.target.value);
+                }}
+                className='bg-[#eee] px-2 py-2 text-base rounded-lg w-full outline-none'
+                type="text"
+                placeholder='Enter your destination'
+                required
+              />
+            </div>
             <button className="mt-2 ml-2 w-full font-semibold bg-black text-white px-5 py-2 rounded-2xl border-none active:bg-green-600 transition">
               Find Trip
             </button>
@@ -213,15 +258,16 @@ const Home = () => {
             vehicleType={vehicleType}
             setConfirmRidePanel={setConfirmRidePanel}
             setVehicleFound={setVehicleFound}
+            isLoading={isLoading}
           />
         </DraggablePanel>
       )}
       {vehicleFound && (
         <DraggablePanel isVisible={vehicleFound}>
           <LookingForDriver
-            pickup={pickup}
+            pickup={activeTrip?.pickup || pickup}
             vehicleImage={vehicleImage}
-            destination={destination}
+            destination={activeTrip?.destination || destination}
             fare={fare}
             vehicleType={vehicleType}
             setVehicleFound={setVehicleFound}

@@ -15,6 +15,7 @@ const CaptainSignup = () => {
   const [vehiclePlate, setVehiclePlate] = React.useState('');
   const [vehicleCapacity, setVehicleCapacity] = React.useState('');
   const [vehicleType, setVehicleType] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const navigate = useNavigate();
   const { captain, setCaptain } = useContext(CaptainDataContext);
@@ -43,6 +44,7 @@ const CaptainSignup = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const newCaptain = {
         fullname: {
@@ -71,6 +73,8 @@ const CaptainSignup = () => {
       }
     } catch (err) {
       toast.error('Registration failed');
+    } finally {
+      setIsLoading(false);
     }
 
     setFirstname('');
@@ -167,7 +171,7 @@ const CaptainSignup = () => {
             type="text"
             placeholder='vehicle number'
           />
-          <button className='border-rounded my-5 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Create Your Account</button>
+          <button disabled={isLoading} className='border-rounded my-5 bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg disabled:opacity-50'>{isLoading ? 'Creating Account...' : 'Create Your Account'}</button>
         </form>
         <p className='text-center m'>Already have an Account? <Link to='/captains/login' className='text-blue-600'>Login here</Link></p>
       </div>

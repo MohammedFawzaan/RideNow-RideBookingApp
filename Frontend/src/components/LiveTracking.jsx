@@ -8,6 +8,7 @@ const containerStyle = {
 
 const LiveTracking = () => {
   const [currentPosition, setCurrentPosition] = useState(null);
+  const [mapError, setMapError] = useState(false);
   const mapRef = useRef(null);
 
   // Load initial location + enable watch mode
@@ -66,8 +67,15 @@ const LiveTracking = () => {
 
   return (
     <div style={{ width: "100%", height: "100%", position: "relative" }}>
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        {currentPosition ? (
+      <LoadScript
+        googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+        onError={() => setMapError(true)}
+      >
+        {mapError ? (
+          <div className="flex items-center justify-center h-full w-full bg-gray-100 text-red-600 font-semibold p-4 text-center">
+            Failed to load Google Maps. Please check your network connection or API Key.
+          </div>
+        ) : currentPosition ? (
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={currentPosition}
@@ -77,7 +85,9 @@ const LiveTracking = () => {
             <Marker position={currentPosition} />
           </GoogleMap>
         ) : (
-          <p>Fetching your location…</p>
+          <div className="flex items-center justify-center h-full w-full bg-gray-100 text-gray-600 font-medium">
+            Fetching your location...
+          </div>
         )}
       </LoadScript>
 

@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 const UserLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
     const { user, setUser } = React.useContext(UserDataContext);
@@ -35,6 +36,7 @@ const UserLogin = () => {
             toast.error('Password must be at least 6 characters long');
             return;
         }
+        setIsLoading(true);
         try {
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData);
 
@@ -65,6 +67,8 @@ const UserLogin = () => {
             } else {
                 toast.error('Something went wrong. Please try again.');
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -92,7 +96,7 @@ const UserLogin = () => {
                         type="password"
                         placeholder='password'
                     />
-                    <button className='border-rounded bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg'>Login</button>
+                    <button disabled={isLoading} className='border-rounded bg-[#111] text-white font-semibold px-4 py-2 w-full text-lg disabled:opacity-50'>{isLoading ? 'Logging in...' : 'Login'}</button>
                 </form>
                 <button
                     onClick={() => {
