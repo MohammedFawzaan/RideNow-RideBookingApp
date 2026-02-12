@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body, query } = require('express-validator');
 const { createRide, getFare, confirmRide, startRide, endRide, cancelRide } = require('../controllers/ride.controller');
-const { authUser } = require('../middlewares/auth.middleware');
-const { authCaptain } = require('../middlewares/auth.middleware');
+const { authUser, authCaptain, authAny } = require('../middlewares/auth.middleware');
 
 // Route to create a ride
 router.post('/create',
@@ -15,7 +14,7 @@ router.post('/create',
 );
 
 // Route to get fare estimate
-router.get('/get-fare', 
+router.get('/get-fare',
     authUser,
     query('pickup').isString().isLength({ min: 3 }).withMessage('Invalid pickup location'),
     query('destination').isString().isLength({ min: 3 }).withMessage('Invalid dropoff location'),
@@ -23,7 +22,7 @@ router.get('/get-fare',
 );
 
 // Route to confirm a ride
-router.post('/confirm', 
+router.post('/confirm',
     authCaptain,
     body('rideId').isMongoId().withMessage('Invalid ride ID'),
     confirmRide
@@ -46,6 +45,7 @@ router.post('/end-ride',
 
 // Route to cancel a ride
 router.post('/ride-cancel',
+    authAny,
     body('rideId').isMongoId().withMessage('Invalid ride ID'),
     cancelRide
 );

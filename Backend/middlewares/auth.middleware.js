@@ -68,23 +68,31 @@ module.exports.authAny = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const searchId = decoded.id || decoded._id;
+
+        if (!searchId) {
+            console.error("AuthAny: Token does not contain id or _id");
+            return res.status(401).json({ message: 'Unauthorized: Invalid Token Payload' });
+        }
 
         // Try to find user
-        const user = await userModel.findById(decoded.id);
+        const user = await userModel.findById(searchId);
         if (user) {
             req.user = user;
             return next();
         }
 
         // Try to find captain
-        const captain = await captainModel.findById(decoded._id);
+        const captain = await captainModel.findById(searchId);
         if (captain) {
             req.captain = captain;
             return next();
         }
 
+        console.warn(`AuthAny: No user or captain found for ID: ${searchId}`);
         return res.status(401).json({ message: 'Unauthorized: Invalid User or Captain' });
     } catch (err) {
+        console.error("AuthAny Error:", err.message);
         return res.status(401).json({ message: 'Unauthorized: Token Verification Failed' });
     }
 };

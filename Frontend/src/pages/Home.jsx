@@ -47,17 +47,29 @@ const Home = () => {
     socket.emit("join", { userType: "user", userId: user._id });
   }, [user]);
 
-  socket.on('ride-confirmed', (ride) => {
-    setVehicleFound(false);
-    setRide(ride);
-    navigate('/pickup', { state: { ride, vehicleImage } });
-  });
+  React.useEffect(() => {
+    const handleRideConfirmed = (ride) => {
+      console.log("Ride confirmed event received:", ride);
+      setVehicleFound(false);
+      setRide(ride);
+      navigate('/pickup', { state: { ride, vehicleImage } });
+    };
 
-  socket.on('ride-cancelled', () => {
-    setVehicleFound(false);
-    setRide(null);
-    toast.info("Ride cancelled");
-  });
+    const handleRideCancelled = () => {
+      console.log("Ride cancelled event received.");
+      setVehicleFound(false);
+      setRide(null);
+      toast.info("Ride cancelled");
+    };
+
+    socket.on('ride-confirmed', handleRideConfirmed);
+    socket.on('ride-cancelled', handleRideCancelled);
+
+    return () => {
+      socket.off('ride-confirmed', handleRideConfirmed);
+      socket.off('ride-cancelled', handleRideCancelled);
+    };
+  }, [socket, vehicleImage, navigate]);
 
   const fetchSuggestions = async (input) => {
     if (!input || input.length < 3) {

@@ -86,10 +86,19 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
                 const liveLocation = { lat: latitude, lng: longitude };
                 setCaptainLocation(liveLocation);
 
-                // Sending driver live location to handleDriverLocationUpdate() in pickup component.
-                onDriverLocationUpdate && onDriverLocationUpdate(liveLocation);
+                const now = Date.now();
+                if (now - lastRouteUpdate.current > 4000) {
+                    // Update the last update timestamp
+                    lastRouteUpdate.current = now;
 
-                updateRoute(liveLocation);
+                    // Sending driver live location to handleDriverLocationUpdate() in pickup component.
+                    if (onDriverLocationUpdate) {
+                        onDriverLocationUpdate(liveLocation);
+                    }
+
+                    // Also update the map route
+                    updateRoute(liveLocation);
+                }
             },
             (error) => {
                 console.error('Geolocation error:', error);

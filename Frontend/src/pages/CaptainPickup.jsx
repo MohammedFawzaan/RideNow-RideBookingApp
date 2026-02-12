@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp';
 import DraggablePanel from '../components/DraggablePanel';
 import { SocketContext } from '../context/SocketContext';
+import { toast } from 'react-toastify';
 
 const CaptainPickup = () => {
   const location = useLocation();

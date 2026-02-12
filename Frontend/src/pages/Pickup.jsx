@@ -21,31 +21,11 @@ const Pickup = () => {
   const [captainLiveLocation, setCaptainLiveLocation] = React.useState(null);
 
   React.useEffect(() => {
-    if (!ride) {
-      navigate('/home');
-      return;
-    }
-
-    // Join the ride room to receive live updates
-    socket.emit('join-ride', { rideId: ride._id, userType: 'user' });
-
-    // Listen for live location updates from the captain
-    socket.on('live-tracking', (data) => {
-      setCaptainLiveLocation(data.location);
-      handleDriverLocationUpdate(data.location); // Fetch distance/time
-    });
-
-  }, [ride, navigate]);
-
-  if (!ride) return null;
-
-  const pickup = ride.pickup;
-
-  React.useEffect(() => {
     setWaitingForDriver(true);
   }, []);
 
   const handleDriverLocationUpdate = async (driverLocation) => {
+    if (!driverLocation || !ride?.pickup) return;
     try {
       const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-distance-time`, {
         params: { origin: `${driverLocation.lat},${driverLocation.lng}`, destination: ride.pickup },
@@ -56,14 +36,42 @@ const Pickup = () => {
     }
   };
 
-  socket.on('ride-started', (ride) => {
-    navigate('/riding', { state: { ride } });
-  });
+  React.useEffect(() => {
+    if (!ride) {
+      navigate('/home');
+      return;
+    }
 
-  socket.on('ride-cancelled', () => {
-    toast.info("Ride cancelled by captain");
-    navigate('/home');
-  });
+    socket.emit('join-ride', { rideId: ride._id, userType: 'user' });
+
+    const handleLiveTracking = (data) => {
+      setCaptainLiveLocation(data.location);
+      handleDriverLocationUpdate(data.location);
+    };
+
+    const handleRideStarted = (ride) => {
+      navigate('/riding', { state: { ride } });
+    };
+
+    const handleRideCancelled = () => {
+      toast.info("Ride cancelled by captain");
+      navigate('/home');
+    };
+
+    socket.on('live-tracking', handleLiveTracking);
+    socket.on('ride-started', handleRideStarted);
+    socket.on('ride-cancelled', handleRideCancelled);
+
+    return () => {
+      socket.off('live-tracking', handleLiveTracking);
+      socket.off('ride-started', handleRideStarted);
+      socket.off('ride-cancelled', handleRideCancelled);
+    };
+  }, [ride, navigate, socket]);
+
+  if (!ride) return null;
+
+  const pickup = ride.pickup;
 
   const cancelRide = async () => {
     try {

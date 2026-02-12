@@ -52,7 +52,7 @@ const RidePopUp = (props) => {
                 </button>
                 <button
                     disabled={props.isLoading}
-                    onClick={() => { props.setRidePopUpPanel(false) }}
+                    onClick={() => { props.ignoreRide(); }}
                     className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg disabled:bg-red-300'>
                     Ignore
                 </button>

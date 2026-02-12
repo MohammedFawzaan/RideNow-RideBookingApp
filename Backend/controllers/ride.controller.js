@@ -167,21 +167,50 @@ module.exports.cancelRide = async (req, res) => {
     }
     // Getting the ride ID from the request body.
     const { rideId } = req.body;
+    console.log(`Received Cancel Request for rideId: ${rideId}`);
     try {
-        // To get the ride details and cancel the ride, we are sending rideId and user to cancelRide service.
-        const ride = await rideService.cancelRide({ rideId, user: req.user });
+        // Cancel the ride using ride service.
+        const ride = await rideService.cancelRide({ rideId });
+        console.log(`Ride ${rideId} successfully cancelled in DB.`);
         if (!ride) {
             return res.status(404).json({ error: 'Ride not found' });
         }
 
-        // Sending the ride details to the user.
-        sendMessageToSocketId(ride.user.socketId, {
+        // 1. BROADCAST to the ride room (Reliable for both User and Assigned Captain who are in the room)
+        sendMessageToSocketId(ride._id.toString(), {
             event: 'ride-cancelled',
             data: ride
         });
 
-        // Notify the captain if one is assigned
-        if (ride.captain) {
+        // 2. ALSO notify User specifically in case they aren't in the room (e.g. from Home page)
+        if (ride.user && ride.user.socketId) {
+            sendMessageToSocketId(ride.user.socketId, {
+                event: 'ride-cancelled',
+                data: ride
+            });
+        }
+
+        // 3. SPECIAL CASE: If no captain was assigned yet, notify nearby captains to clear popups
+        if (!ride.captain) {
+            try {
+                const pickupCoordinates = await mapService.getAddressCoordinates(ride.pickup);
+                const captainsInRadius = await mapService.getCaptainsInTheRadius(
+                    pickupCoordinates.ltd,
+                    pickupCoordinates.lng,
+                    10
+                );
+                captainsInRadius.forEach(captain => {
+                    sendMessageToSocketId(captain.socketId, {
+                        event: 'ride-cancelled',
+                        data: ride
+                    });
+                });
+            } catch (err) {
+                console.error("Error notifying nearby captains of cancellation:", err);
+            }
+        }
+        // 4. ALSO notify Assigned Captain specifically if one exists (fallback if room broadcast fails)
+        else if (ride.captain && ride.captain.socketId) {
             sendMessageToSocketId(ride.captain.socketId, {
                 event: 'ride-cancelled',
                 data: ride

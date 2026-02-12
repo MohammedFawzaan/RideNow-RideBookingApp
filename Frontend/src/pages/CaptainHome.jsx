@@ -109,6 +109,11 @@ const CaptainHome = () => {
     }
   }
 
+  async function ignoreRide() {
+    setRidePopUpPanel(false);
+    setRide(null);
+  }
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gray-100">
 
@@ -146,6 +151,7 @@ const CaptainHome = () => {
             ride={ride}
             setRidePopUpPanel={setRidePopUpPanel}
             confirmRide={confirmRide}
+            ignoreRide={ignoreRide}
             isLoading={isLoading}
           />
         </DraggablePanel>
