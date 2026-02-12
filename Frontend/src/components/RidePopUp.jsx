@@ -44,8 +44,18 @@ const RidePopUp = (props) => {
                 </div>
             </div>
             <div className='flex items-center gap-2'>
-                <button onClick={(e) => { handleAccept(e); }} className='w-full  text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>Accept</button>
-                <button onClick={() => { props.setRidePopUpPanel(false) }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg'>Ignore</button>
+                <button
+                    disabled={props.isLoading}
+                    onClick={(e) => { handleAccept(e); }}
+                    className='w-full  text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg disabled:bg-green-300'>
+                    {props.isLoading ? 'Accepting...' : 'Accept'}
+                </button>
+                <button
+                    disabled={props.isLoading}
+                    onClick={() => { props.setRidePopUpPanel(false) }}
+                    className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg disabled:bg-red-300'>
+                    Ignore
+                </button>
             </div>
         </div>
     )

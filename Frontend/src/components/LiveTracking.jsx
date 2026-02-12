@@ -96,11 +96,11 @@ const LiveTracking = () => {
         onClick={recenterToUser}
         style={{
           position: "absolute",
-          bottom: "30px",
+          top: "120px",
           right: "20px",
           padding: "10px 14px",
-          background: "#000",
-          color: "#fff",
+          background: "#fff",
+          color: "#000",
           borderRadius: "8px",
           border: "none",
           cursor: "pointer",

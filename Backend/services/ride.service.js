@@ -49,7 +49,7 @@ function getOtp(num) {
 
 // Function to create a new ride.
 module.exports.createRide = async ({ user, pickup, destination, vehicleType }) => {
-    if(!user || !pickup || !destination || !vehicleType) {
+    if (!user || !pickup || !destination || !vehicleType) {
         throw new Error('User, pickup, destination, and vehicle type are required');
     }
     // Getting fare amount based on distance and time.
@@ -105,7 +105,7 @@ module.exports.startRide = async ({ rideId, otp, captain }) => {
     }
 
     // Updating the ride status to 'ongoing'.
-    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'ongoing'});
+    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'ongoing' });
 
     return ride;
 }
@@ -142,7 +142,9 @@ module.exports.cancelRide = async ({ rideId }) => {
         throw new Error('Ride not found');
     }
     // Updating the ride status to 'cancelled'.
-    await rideModel.findByIdAndUpdate(rideId, { status: 'cancelled' });
-    
-    return ride;
+    const cancelledRide = await rideModel.findByIdAndUpdate(rideId, { status: 'cancelled' }, { new: true })
+        .populate('user')
+        .populate('captain');
+
+    return cancelledRide;
 }

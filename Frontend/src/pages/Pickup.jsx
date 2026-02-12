@@ -53,6 +53,22 @@ const Pickup = () => {
     navigate('/riding', { state: { ride } });
   });
 
+  const cancelRide = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/ride-cancel`, {
+        rideId: ride._id
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Ride cancelled');
+      navigate('/home');
+    } catch (error) {
+      toast.error('Failed to cancel ride');
+      console.error(error);
+    }
+  }
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
       <div className="h-[90%] w-full rounded-3xl overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.15)] border border-gray-200 mt-4">
@@ -67,6 +83,7 @@ const Pickup = () => {
           vehicleImage={vehicleImage}
           driverDistance={driverDistance}
           setWaitingForDriver={setWaitingForDriver}
+          cancelRide={cancelRide}
         />
       </DraggablePanel>
     </div>

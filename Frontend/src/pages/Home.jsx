@@ -85,16 +85,24 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPanelOpen(false);
-    setVehiclePanel(true);
-    const token = localStorage.getItem('token');
-    const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
-      {
-        params: { pickup, destination },
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    );
-    setFare(response.data);
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+        {
+          params: { pickup, destination },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setFare(response.data);
+      setVehiclePanel(true);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || 'Unable to find route');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const [activeTrip, setActiveTrip] = React.useState(null);
@@ -103,7 +111,7 @@ const Home = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/rides/create`, {
         pickup,
         destination,
@@ -111,6 +119,8 @@ const Home = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      setRide(response.data); // Capture the created ride details
       toast.success('Ride request sent!');
 
       // Save trip details for the next screen before clearing inputs
@@ -132,6 +142,28 @@ const Home = () => {
       toast.error(error.response?.data?.message || 'Failed to create ride');
       setVehicleFound(false); // Reset state on failure
       setConfirmRidePanel(true); // Go back to confirm panel
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const cancelRide = async () => {
+    if (!ride) return;
+    setIsLoading(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/ride-cancel`, {
+        rideId: ride._id
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Ride cancelled');
+      setVehicleFound(false);
+      setRide(null);
+    } catch (error) {
+      toast.error('Failed to cancel ride');
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -199,6 +231,29 @@ const Home = () => {
                 placeholder='Add a pickup location'
                 required
               />
+              <i
+                onClick={async () => {
+                  setPickup('Fetching location...');
+                  navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`);
+                      if (response.data.status === 'OK' && response.data.results.length > 0) {
+                        setPickup(response.data.results[0].formatted_address);
+                      } else {
+                        setPickup('');
+                        toast.error('Could not find address');
+                      }
+                    } catch (error) {
+                      console.error(error);
+                      setPickup('');
+                      toast.error('Error fetching location');
+                    }
+                  });
+                }}
+                className="ri-crosshair-2-fill text-xl cursor-pointer hover:text-black transition-colors"
+                title="Use Current Location"
+              ></i>
             </div>
             <div className='flex items-center gap-5 p-3 rounded-lg w-full'>
               <i className="ri-map-pin-2-fill text-xl"></i>
@@ -222,8 +277,10 @@ const Home = () => {
                 required
               />
             </div>
-            <button className="mt-2 ml-2 w-full font-semibold bg-black text-white px-5 py-2 rounded-2xl border-none active:bg-green-600 transition">
-              Find Trip
+            <button
+              disabled={isLoading}
+              className="mt-2 ml-2 w-full font-semibold bg-black text-white px-5 py-2 rounded-2xl border-none active:bg-green-600 transition disabled:opacity-50">
+              {isLoading ? 'Finding...' : 'Find Trip'}
             </button>
           </form>
         </div>
@@ -265,6 +322,8 @@ const Home = () => {
       {vehicleFound && (
         <DraggablePanel isVisible={vehicleFound}>
           <LookingForDriver
+            createRide={createRide}
+            cancelRide={cancelRide}
             pickup={activeTrip?.pickup || pickup}
             vehicleImage={vehicleImage}
             destination={activeTrip?.destination || destination}
@@ -272,6 +331,7 @@ const Home = () => {
             vehicleType={vehicleType}
             setVehicleFound={setVehicleFound}
             setConfirmRidePanel={setConfirmRidePanel}
+            isLoading={isLoading}
           />
         </DraggablePanel>
       )}

@@ -151,11 +151,21 @@ module.exports.cancelRide = async (req, res) => {
         if (!ride) {
             return res.status(404).json({ error: 'Ride not found' });
         }
+
         // Sending the ride details to the user.
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-cancelled',
             data: ride
         });
+
+        // Notify the captain if one is assigned
+        if (ride.captain) {
+            sendMessageToSocketId(ride.captain.socketId, {
+                event: 'ride-cancelled',
+                data: ride
+            });
+        }
+
         return res.status(200).json(ride);
     } catch (error) {
         return res.status(500).json({ message: error.message });

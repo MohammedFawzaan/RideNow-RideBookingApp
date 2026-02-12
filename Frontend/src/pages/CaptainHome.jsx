@@ -16,6 +16,7 @@ import DraggablePanel from '../components/DraggablePanel'
 const CaptainHome = () => {
 
   const [ride, setRide] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [ridePopUpPanel, setRidePopUpPanel] = React.useState(false);
 
   const { socket } = React.useContext(SocketContext);
@@ -50,6 +51,7 @@ const CaptainHome = () => {
   });
 
   async function confirmRide() {
+    setIsLoading(true);
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
         rideId: ride._id,
@@ -73,6 +75,8 @@ const CaptainHome = () => {
         toast.error("Something went wrong while accepting the ride.");
         console.error(error);
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -113,6 +117,7 @@ const CaptainHome = () => {
             ride={ride}
             setRidePopUpPanel={setRidePopUpPanel}
             confirmRide={confirmRide}
+            isLoading={isLoading}
           />
         </DraggablePanel>
       )}

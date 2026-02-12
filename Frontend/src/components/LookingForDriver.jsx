@@ -32,6 +32,14 @@ const LookingForDriver = (props) => {
                     </div>
                 </div>
             </div>
+            <button
+                disabled={props.isLoading}
+                onClick={() => {
+                    props.cancelRide();
+                }}
+                className='w-full mt-5 bg-red-600 text-white font-semibold p-2 rounded-lg disabled:bg-red-300'>
+                {props.isLoading ? 'Cancelling...' : 'Cancel Request'}
+            </button>
         </div>
     )
 }

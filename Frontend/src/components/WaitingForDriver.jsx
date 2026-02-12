@@ -69,7 +69,13 @@ const WaitingForDriver = (props) => {
             <p className="text-sm -mt-1 text-gray-600">Cash</p>
           </div>
         </div>
-        <button onClick={() => onCancel()} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
+        <button onClick={() => {
+          if (props.cancelRide) {
+            props.cancelRide();
+          } else {
+            navigate('/home');
+          }
+        }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
       </div>
     </div>
   )
