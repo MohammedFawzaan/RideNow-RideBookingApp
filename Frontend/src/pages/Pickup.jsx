@@ -18,11 +18,23 @@ const Pickup = () => {
   const [driverDistance, setDriverDistance] = React.useState(null);
 
   const [waitingForDriver, setWaitingForDriver] = React.useState(false);
+  const [captainLiveLocation, setCaptainLiveLocation] = React.useState(null);
 
   React.useEffect(() => {
     if (!ride) {
       navigate('/home');
+      return;
     }
+
+    // Join the ride room to receive live updates
+    socket.emit('join-ride', { rideId: ride._id, userType: 'user' });
+
+    // Listen for live location updates from the captain
+    socket.on('live-tracking', (data) => {
+      setCaptainLiveLocation(data.location);
+      handleDriverLocationUpdate(data.location); // Fetch distance/time
+    });
+
   }, [ride, navigate]);
 
   if (!ride) return null;
@@ -32,11 +44,6 @@ const Pickup = () => {
   React.useEffect(() => {
     setWaitingForDriver(true);
   }, []);
-
-  React.useEffect(() => {
-    if (ride)
-      toast.success('A captain accepted your ride! 🎉');
-  }, [ride]);
 
   const handleDriverLocationUpdate = async (driverLocation) => {
     try {
@@ -51,6 +58,11 @@ const Pickup = () => {
 
   socket.on('ride-started', (ride) => {
     navigate('/riding', { state: { ride } });
+  });
+
+  socket.on('ride-cancelled', () => {
+    toast.info("Ride cancelled by captain");
+    navigate('/home');
   });
 
   const cancelRide = async () => {
@@ -74,6 +86,7 @@ const Pickup = () => {
       <div className="h-[90%] w-full rounded-3xl overflow-hidden shadow-[0_8px_20px_rgba(0,0,0,0.15)] border border-gray-200 mt-4">
         <PickupNavigation
           pickupLocation={pickup}
+          captainLiveLocation={captainLiveLocation}
           onDriverLocationUpdate={handleDriverLocationUpdate}
         />
       </div>

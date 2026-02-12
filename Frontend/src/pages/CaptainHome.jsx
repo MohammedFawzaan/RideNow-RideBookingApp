@@ -45,10 +45,39 @@ const CaptainHome = () => {
     updateLocation();
   }, []);
 
-  socket.on('new-ride', (data) => {
-    setRide(data);
-    setRidePopUpPanel(true);
-  });
+  React.useEffect(() => {
+    const handleNewRide = (data) => {
+      setRide(data);
+      setRidePopUpPanel(true);
+    };
+
+    const handleRideCancelled = () => {
+      setRide(null);
+      setRidePopUpPanel(false);
+      toast.info("Ride cancelled by passenger");
+    };
+
+    const handleRideTaken = (data) => {
+      setRide(currentRide => {
+        if (currentRide && currentRide._id === data.rideId) {
+          setRidePopUpPanel(false);
+          toast.info("Ride accepted by another captain");
+          return null;
+        }
+        return currentRide;
+      });
+    };
+
+    socket.on('new-ride', handleNewRide);
+    socket.on('ride-cancelled', handleRideCancelled);
+    socket.on('ride-taken', handleRideTaken);
+
+    return () => {
+      socket.off('new-ride', handleNewRide);
+      socket.off('ride-cancelled', handleRideCancelled);
+      socket.off('ride-taken', handleRideTaken);
+    };
+  }, [socket]);
 
   async function confirmRide() {
     setIsLoading(true);

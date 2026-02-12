@@ -26,7 +26,7 @@ const CaptainProtectedWrapper = ({ children }) => {
                 setIsLoading(false);
             }
         }).catch(error => {
-            console.log(error);
+            console.error(error);
             localStorage.removeItem('token');
             navigate('/captains/login');
         });

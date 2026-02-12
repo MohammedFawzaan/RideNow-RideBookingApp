@@ -53,6 +53,12 @@ const Home = () => {
     navigate('/pickup', { state: { ride, vehicleImage } });
   });
 
+  socket.on('ride-cancelled', () => {
+    setVehicleFound(false);
+    setRide(null);
+    toast.info("Ride cancelled");
+  });
+
   const fetchSuggestions = async (input) => {
     if (!input || input.length < 3) {
       setSuggestions([]);

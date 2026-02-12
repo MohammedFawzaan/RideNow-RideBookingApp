@@ -85,6 +85,28 @@ module.exports.confirmRide = async (req, res) => {
             event: 'ride-confirmed',
             data: ride
         });
+
+        // NOTIFY OTHER CAPTAINS TO CLEAR THE POPUP
+        try {
+            const pickupCoordinates = await mapService.getAddressCoordinates(ride.pickup);
+            const captainsInRadius = await mapService.getCaptainsInTheRadius(
+                pickupCoordinates.ltd,
+                pickupCoordinates.lng,
+                10 // same radius as createRide
+            );
+
+            captainsInRadius.forEach(captain => {
+                if (captain._id.toString() !== req.captain._id.toString()) {
+                    sendMessageToSocketId(captain.socketId, {
+                        event: 'ride-taken',
+                        data: { rideId: ride._id }
+                    });
+                }
+            });
+        } catch (err) {
+            console.error("Error notifying other captains:", err);
+        }
+
         return res.status(200).json(ride);
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });

@@ -13,13 +13,13 @@ const UserLogout = () => {
         Authorization: `Bearer ${token}`
       }
     }).then((res) => {
-      if(res.status === 200) {
+      if (res.status === 200) {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         navigate('/users/login');
       }
-    }).catch(err => {
-      console.log(err)
+    }).catch((err) => {
+      // console.error(err);
     });
   }, []);
 

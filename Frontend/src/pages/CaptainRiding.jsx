@@ -1,12 +1,12 @@
-import React, { useState, useRef } from 'react';
-import gsap from 'gsap';
-import RideNowIcon from '../assets/RideNowIcon.png';
-import { useGSAP } from '@gsap/react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import FinishRide from '../components/FinishRide';
 import RouteMap from '../components/RouteMap';
 import DraggablePanel from '../components/DraggablePanel';
+import { SocketContext } from '../context/SocketContext';
+
+import { toast } from 'react-toastify';
 
 const CaptainRiding = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
@@ -16,17 +16,39 @@ const CaptainRiding = () => {
   const navigate = useNavigate();
   const rideData = location.state?.ride;
 
+  const { socket } = React.useContext(SocketContext);
+
   React.useEffect(() => {
     if (!rideData) {
       navigate('/captain-home');
+      return;
     }
-  }, [rideData, navigate]);
+
+    socket.emit('join-ride', { rideId: rideData._id, userType: 'captain' });
+
+    const handleRideCancelled = () => {
+        toast.info("Ride cancelled by passenger");
+        navigate('/captain-home');
+    };
+
+    socket.on('ride-cancelled', handleRideCancelled);
+
+    return () => {
+        socket.off('ride-cancelled', handleRideCancelled);
+    };
+  }, [rideData, navigate, socket]);
 
   if (!rideData) return null;
 
   // This is called every few seconds from RouteMap
   const handleDriverLocationUpdate = async (captainLocation) => {
     if (!captainLocation || !rideData?.destination) return;
+
+    // Send location to the ride room for the user to see
+    socket.emit('update-ride-location', {
+      rideId: rideData._id,
+      location: captainLocation
+    });
 
     try {
       const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-distance-time`, {

@@ -12,7 +12,7 @@ const containerStyle = {
     height: '100vh',
 };
 
-const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
+const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocationUpdate }) => {
     const [captainLocation, setCaptainLocation] = useState(null);
     const [mapError, setMapError] = useState(false);
     const [directions, setDirections] = useState(null);
@@ -45,8 +45,40 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
         }
     }, [pickupLocation, scriptLoaded]);
 
+    const updateRoute = (liveLocation) => {
+        // Debounce route calculation
+        const now = Date.now();
+        if (pickupCoords && now - lastRouteUpdate.current > 4000) {
+            lastRouteUpdate.current = now;
+            const directionsService = new window.google.maps.DirectionsService();
+            directionsService.route(
+                {
+                    origin: liveLocation,
+                    destination: pickupCoords,
+                    travelMode: window.google.maps.TravelMode.DRIVING,
+                },
+                (result, status) => {
+                    if (status === 'OK') {
+                        setDirections(result);
+                    } else {
+                        console.error('Directions request failed:', status);
+                    }
+                }
+            );
+        }
+    }
+
+    // Effect for Socket-based updates (User View)
     useEffect(() => {
-        if (!scriptLoaded) return;
+        if (captainLiveLocation) {
+            setCaptainLocation(captainLiveLocation);
+            updateRoute(captainLiveLocation);
+        }
+    }, [captainLiveLocation, pickupCoords]);
+
+    // Effect for GPS-based updates (Captain View)
+    useEffect(() => {
+        if (!scriptLoaded || captainLiveLocation) return; // Skip if we have live socket data
 
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
@@ -57,26 +89,7 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
                 // Sending driver live location to handleDriverLocationUpdate() in pickup component.
                 onDriverLocationUpdate && onDriverLocationUpdate(liveLocation);
 
-                // Debounce route calculation
-                const now = Date.now();
-                if (pickupCoords && now - lastRouteUpdate.current > 4000) {
-                    lastRouteUpdate.current = now;
-                    const directionsService = new window.google.maps.DirectionsService();
-                    directionsService.route(
-                        {
-                            origin: liveLocation,
-                            destination: pickupCoords,
-                            travelMode: window.google.maps.TravelMode.DRIVING,
-                        },
-                        (result, status) => {
-                            if (status === 'OK') {
-                                setDirections(result);
-                            } else {
-                                console.error('Directions request failed:', status);
-                            }
-                        }
-                    );
-                }
+                updateRoute(liveLocation);
             },
             (error) => {
                 console.error('Geolocation error:', error);
@@ -84,12 +97,12 @@ const PickupNavigation = ({ pickupLocation, onDriverLocationUpdate }) => {
             {
                 enableHighAccuracy: true,
                 maximumAge: 0,
-                timeout: 30000 // Increased timeout to 30 seconds
+                timeout: 30000
             }
         );
 
         return () => navigator.geolocation.clearWatch(watchId);
-    }, [pickupCoords, onDriverLocationUpdate, scriptLoaded]);
+    }, [pickupCoords, onDriverLocationUpdate, scriptLoaded, captainLiveLocation]);
 
     return (
         <LoadScript

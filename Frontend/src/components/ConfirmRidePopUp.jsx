@@ -3,27 +3,49 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import userImage from '../assets/userImage.png'
 import { toast } from 'react-toastify'
+import ConfirmAlert from './ConfirmAlert'
 
 const ConfirmRidePopUp = (props) => {
 
     const [otp, setOtp] = useState('');
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
-            params: {
-                rideId: props.ride._id,
-                otp: otp
-            },
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+                params: {
+                    rideId: props.ride._id,
+                    otp: otp
+                },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            if (response.status === 200) {
+                props.setConfirmRidePopUpPanel(false);
+                toast.success('Ride Started');
+                navigate('/captain-riding', { state: { ride: props.ride } });
             }
-        })
-        if (response.status === 200) {
-            props.setConfirmRidePopUpPanel(false);
-            toast.success('Ride Started');
-            navigate('/captain-riding', { state: { ride: props.ride } });
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Failed to start ride");
+        }
+    }
+
+    const handleCancelRide = async () => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/ride-cancel`, {
+                rideId: props.ride._id
+            });
+            if (response.status === 200) {
+                props.setConfirmRidePopUpPanel(false);
+                toast.success('Ride Cancelled');
+                navigate('/captain-home');
+            }
+        } catch (error) {
+            toast.error("Failed to cancel ride");
+            console.error(error);
         }
     }
 
@@ -31,7 +53,6 @@ const ConfirmRidePopUp = (props) => {
         <div>
             <div className='flex items-center justify-between'>
                 <h3 className='text-xl font-semibold my-2'>Confirm Ride To Start</h3>
-                {/* <i onClick={() => { props.setRidePopUpPanel(false)} } className="text-3xl ri-arrow-down-wide-fill"></i> */}
             </div>
             <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-400'>
                 <div className='flex items-center gap-3'>
@@ -71,7 +92,23 @@ const ConfirmRidePopUp = (props) => {
                         <p className='text-xs text-gray-600'>Cash</p>
                     </div>
                 </div>
-                <button onClick={() => { navigate('/captain-home'); }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
+
+                <button
+                    onClick={() => setIsAlertOpen(true)}
+                    className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>
+                    Cancel Ride
+                </button>
+
+                <ConfirmAlert
+                    isOpen={isAlertOpen}
+                    onClose={() => setIsAlertOpen(false)}
+                    onConfirm={handleCancelRide}
+                    title="Cancel Ride"
+                    message="Are you sure you want to cancel this ride?"
+                    confirmText="Yes, Cancel"
+                    cancelText="No, Keep It"
+                    isCritical={true}
+                />
             </div>
         </div>
     )

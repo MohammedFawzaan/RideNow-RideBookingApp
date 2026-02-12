@@ -5,6 +5,7 @@ import captainImage from '../assets/captainImage.webp';
 import { SocketContext } from '../context/SocketContext';
 import RouteMap from '../components/RouteMap';
 import DraggablePanel from '../components/DraggablePanel';
+import ConfirmAlert from '../components/ConfirmAlert';
 
 const Riding = () => {
     const location = useLocation();
@@ -12,6 +13,7 @@ const Riding = () => {
     const navigate = useNavigate();
     const { socket } = React.useContext(SocketContext);
     const [riding, setRiding] = useState(null);
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
 
     React.useEffect(() => {
         if (!ride) {
@@ -77,8 +79,18 @@ const Riding = () => {
                         </div>
                     </div>
                 </div>
+                <ConfirmAlert
+                    isOpen={isAlertOpen}
+                    onClose={() => setIsAlertOpen(false)}
+                    onConfirm={endRide}
+                    title="Confirm Payment"
+                    message="Have you completed the payment for this ride?"
+                    confirmText="Yes, Paid"
+                    cancelText="Not Yet"
+                    isCritical={false}
+                />
                 <button
-                    onClick={endRide}
+                    onClick={() => setIsAlertOpen(true)}
                     className='w-full mt-3 mb-3 text-white bg-green-400 active:bg-green-600 font-semibold p-2 rounded-lg'>
                     Payment Done
                 </button>

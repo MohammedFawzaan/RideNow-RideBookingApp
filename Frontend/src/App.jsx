@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import React, { useContext } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Start from './pages/Start'
@@ -22,54 +22,54 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import NotFound from './pages/NotFound'
 import NetworkStatus from './components/NetworkStatus'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const App = () => {
   const ans = useContext(UserDataContext);
-  // console.log(ans.user);
-
   const ans1 = useContext(CaptainDataContext);
-  // console.log(ans1.captain);
 
   return (
     <div className='container'>
       <NetworkStatus />
-      <Routes>
-        <Route path="/" element={<Start />} />
-        <Route path="/home" element={
-          <UserProtectedWrapper>
-            <Home />
-          </UserProtectedWrapper>
-        } />
-        <Route path='/captain-home' element={
-          <CaptainProtectedWrapper>
-            <CaptainHome />
-          </CaptainProtectedWrapper>
-        } />
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<Start />} />
+          <Route path="/home" element={
+            <UserProtectedWrapper>
+              <Home />
+            </UserProtectedWrapper>
+          } />
+          <Route path='/captain-home' element={
+            <CaptainProtectedWrapper>
+              <CaptainHome />
+            </CaptainProtectedWrapper>
+          } />
 
-        <Route path='/riding' element={<Riding />} />
-        <Route path='/pickup' element={<Pickup />} />
-        <Route path='/captain-riding' element={<CaptainRiding />} />
-        <Route path='/captain-pickup' element={<CaptainPickup />} />
+          <Route path='/riding' element={<Riding />} />
+          <Route path='/pickup' element={<Pickup />} />
+          <Route path='/captain-riding' element={<CaptainRiding />} />
+          <Route path='/captain-pickup' element={<CaptainPickup />} />
 
-        <Route path="/users/login" element={<UserLogin />} />
-        <Route path="/users/signup" element={<UserSignup />} />
-        <Route path="/captains/login" element={<CaptainLogin />} />
-        <Route path="/captains/signup" element={<CaptainSignup />} />
-        <Route path="/google-success" element={<GoogleSuccess />} />
+          <Route path="/users/login" element={<UserLogin />} />
+          <Route path="/users/signup" element={<UserSignup />} />
+          <Route path="/captains/login" element={<CaptainLogin />} />
+          <Route path="/captains/signup" element={<CaptainSignup />} />
+          <Route path="/google-success" element={<GoogleSuccess />} />
 
-        <Route path='/users/logout' element={
-          <UserProtectedWrapper>
-            <UserLogout />
-          </UserProtectedWrapper>
-        } />
+          <Route path='/users/logout' element={
+            <UserProtectedWrapper>
+              <UserLogout />
+            </UserProtectedWrapper>
+          } />
 
-        <Route path='/captains/logout' element={
-          <CaptainProtectedWrapper>
-            <CaptainLogout />
-          </CaptainProtectedWrapper>
-        } />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
+          <Route path='/captains/logout' element={
+            <CaptainProtectedWrapper>
+              <CaptainLogout />
+            </CaptainProtectedWrapper>
+          } />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </ErrorBoundary>
 
       <ToastContainer
         position="top-center"

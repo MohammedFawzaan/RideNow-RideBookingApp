@@ -14,7 +14,7 @@ const LiveTracking = () => {
   // Load initial location + enable watch mode
   useEffect(() => {
     if (!navigator.geolocation) {
-      console.log("Geolocation not supported");
+      console.error("Geolocation not supported");
       return;
     }
 
@@ -26,7 +26,7 @@ const LiveTracking = () => {
           lng: pos.coords.longitude,
         });
       },
-      (err) => console.log("Error initial:", err),
+      (err) => console.error("Error initial:", err),
       {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -42,7 +42,7 @@ const LiveTracking = () => {
           lng: pos.coords.longitude,
         });
       },
-      (err) => console.log("Error watch:", err),
+      (err) => console.error("Error initial:", err),
       {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -70,6 +70,7 @@ const LiveTracking = () => {
       <LoadScript
         googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
         onError={() => setMapError(true)}
+        loadingElement={<div className="h-full w-full bg-gray-100"></div>}
       >
         {mapError ? (
           <div className="flex items-center justify-center h-full w-full bg-gray-100 text-red-600 font-semibold p-4 text-center">
@@ -85,8 +86,9 @@ const LiveTracking = () => {
             <Marker position={currentPosition} />
           </GoogleMap>
         ) : (
-          <div className="flex items-center justify-center h-full w-full bg-gray-100 text-gray-600 font-medium">
-            Fetching your location...
+          <div className="flex items-center justify-center h-full w-full bg-gray-100">
+            {/* Simple spinner or blank */}
+            <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
           </div>
         )}
       </LoadScript>

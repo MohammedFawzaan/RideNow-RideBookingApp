@@ -1,8 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import ConfirmAlert from './ConfirmAlert';
+import { useState } from 'react';
 
 const WaitingForDriver = (props) => {
   const navigate = useNavigate();
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const onCancel = () => {
     navigate('/home');
@@ -71,11 +74,24 @@ const WaitingForDriver = (props) => {
         </div>
         <button onClick={() => {
           if (props.cancelRide) {
-            props.cancelRide();
+            setIsAlertOpen(true);
           } else {
             navigate('/home');
           }
         }} className='w-full text-white bg-red-400 active:bg-red-600 font-semibold p-2 rounded-lg text-sm'>Cancel</button>
+
+        <ConfirmAlert
+          isOpen={isAlertOpen}
+          onClose={() => setIsAlertOpen(false)}
+          onConfirm={() => {
+            props.cancelRide();
+          }}
+          title="Cancel Ride"
+          message="Are you sure you want to cancel this ride? The captain may be on the way."
+          confirmText="Yes, Cancel"
+          cancelText="No, Wait"
+          isCritical={true}
+        />
       </div>
     </div>
   )

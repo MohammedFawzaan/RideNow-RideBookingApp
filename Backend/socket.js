@@ -33,15 +33,30 @@ function initializeSocket(server) {
 
         socket.on('update-location-captain', async (data) => {
             const { userId, location } = data;
+
             if (!location || !location.ltd || !location.lng) {
                 return socket.emit('error', { message: 'Invalid location data' });
             }
-            await captainModel.findByIdAndUpdate(userId,{ 
-                location : {
+
+            await captainModel.findByIdAndUpdate(userId, {
+                location: {
                     ltd: location.ltd,
                     lng: location.lng
                 }
             });
+        });
+
+        socket.on('join-ride', (data) => {
+            const { rideId, userType } = data;
+            console.log(`User ${userType} joined ride ${rideId}`);
+            socket.join(rideId);
+        });
+
+        socket.on('update-ride-location', (data) => {
+            const { rideId, location } = data;
+            if (rideId && location) {
+                io.to(rideId).emit('live-tracking', { location });
+            }
         });
 
         socket.on('disconnect', () => {

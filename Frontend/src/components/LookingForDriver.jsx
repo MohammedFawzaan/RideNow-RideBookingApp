@@ -1,6 +1,8 @@
-import React from 'react'
+import ConfirmAlert from './ConfirmAlert';
+import { useState } from 'react';
 
 const LookingForDriver = (props) => {
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
     return (
         <div>
             <div className='flex items-center justify-between'>
@@ -32,11 +34,21 @@ const LookingForDriver = (props) => {
                     </div>
                 </div>
             </div>
-            <button
-                disabled={props.isLoading}
-                onClick={() => {
+            <ConfirmAlert
+                isOpen={isAlertOpen}
+                onClose={() => setIsAlertOpen(false)}
+                onConfirm={() => {
                     props.cancelRide();
                 }}
+                title="Cancel Request"
+                message="Are you sure you want to cancel your ride request?"
+                confirmText="Yes, Cancel"
+                cancelText="No, Keep it"
+                isCritical={true}
+            />
+            <button
+                disabled={props.isLoading}
+                onClick={() => setIsAlertOpen(true)}
                 className='w-full mt-5 bg-red-600 text-white font-semibold p-2 rounded-lg disabled:bg-red-300'>
                 {props.isLoading ? 'Cancelling...' : 'Cancel Request'}
             </button>
