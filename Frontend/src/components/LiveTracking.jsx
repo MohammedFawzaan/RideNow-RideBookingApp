@@ -19,12 +19,8 @@ const LiveTracking = () => {
   // Fetch nearby captains from the backend
   const fetchNearbyCaptains = async (lat, lng) => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-nearby-captains`, {
         params: { ltd: lat, lng: lng, radius: 2 }, // 2km radius
-        headers: { Authorization: `Bearer ${token}` }
       });
       setNearbyCaptains(response.data);
     } catch (err) {

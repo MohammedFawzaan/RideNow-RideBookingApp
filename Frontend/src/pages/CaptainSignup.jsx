@@ -21,13 +21,10 @@ const CaptainSignup = () => {
   const { captain, setCaptain } = useContext(CaptainDataContext);
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    if (token) {
-      if (role === 'user') navigate('/home');
-      if (role === 'captain') navigate('/captain-home');
+    if (captain.token) {
+      navigate('/captain-home');
     }
-  }, []);
+  }, [captain, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,9 +62,11 @@ const CaptainSignup = () => {
 
       if (response.status === 201) {
         const data = await response.data;
-        setCaptain(data.captain);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
+        setCaptain({
+          ...data.captain,
+          token: "cookie",
+          role: "captain"
+        });
         toast.success('Account created successfully');
         navigate('/captain-home');
       }

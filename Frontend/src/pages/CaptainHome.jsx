@@ -43,6 +43,19 @@ const CaptainHome = () => {
 
     const locationInterval = setInterval(updateLocation, 10000);
     updateLocation();
+
+    // Handle re-connection
+    const handleConnect = () => {
+      console.log("Socket re-connected, re-joining...");
+      socket.emit("join", { userType: "captain", userId: captain._id });
+    };
+
+    socket.on('connect', handleConnect);
+
+    return () => {
+      clearInterval(locationInterval);
+      socket.off('connect', handleConnect);
+    };
   }, []);
 
   React.useEffect(() => {
@@ -86,9 +99,6 @@ const CaptainHome = () => {
         rideId: ride._id,
         captainId: captain._id,
       }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
       });
 
       toast.success("Ride Accepted");

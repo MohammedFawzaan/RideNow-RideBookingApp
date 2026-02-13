@@ -75,11 +75,8 @@ const Pickup = () => {
 
   const cancelRide = async () => {
     try {
-      const token = localStorage.getItem('token');
       await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/ride-cancel`, {
         rideId: ride._id
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Ride cancelled');
       navigate('/home');

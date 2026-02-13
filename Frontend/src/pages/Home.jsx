@@ -44,8 +44,21 @@ const Home = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    // Initial join
     socket.emit("join", { userType: "user", userId: user._id });
-  }, [user]);
+
+    // Handle re-connection
+    const handleConnect = () => {
+      console.log("Socket re-connected, re-joining...");
+      socket.emit("join", { userType: "user", userId: user._id });
+    };
+
+    socket.on('connect', handleConnect);
+
+    return () => {
+      socket.off('connect', handleConnect);
+    };
+  }, [user, socket]);
 
   React.useEffect(() => {
     const handleRideConfirmed = (ride) => {
@@ -55,11 +68,16 @@ const Home = () => {
       navigate('/pickup', { state: { ride, vehicleImage } });
     };
 
-    const handleRideCancelled = () => {
-      console.log("Ride cancelled event received.");
+    const handleRideCancelled = (data) => {
+      console.log("Ride cancelled event received:", data);
       setVehicleFound(false);
       setRide(null);
-      toast.info("Ride cancelled");
+
+      if (data && data.reason === 'timeout') {
+        toast.error("No Riders Nearby");
+      } else {
+        toast.info("Ride cancelled");
+      }
     };
 
     socket.on('ride-confirmed', handleRideConfirmed);
@@ -77,12 +95,10 @@ const Home = () => {
       return;
     }
     try {
-      const token = localStorage.getItem('token');
       const res = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
         {
-          params: { input },
-          headers: { Authorization: `Bearer ${token}` }
+          params: { input }
         }
       );
       setSuggestions(res.data);
@@ -105,12 +121,10 @@ const Home = () => {
     setPanelOpen(false);
     setIsLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
         {
-          params: { pickup, destination },
-          headers: { Authorization: `Bearer ${token}` }
+          params: { pickup, destination }
         }
       );
       setFare(response.data);
@@ -128,14 +142,12 @@ const Home = () => {
   const createRide = async () => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/rides/create`, {
         pickup,
         destination,
         vehicleType,
       }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       setRide(response.data); // Capture the created ride details
@@ -170,11 +182,9 @@ const Home = () => {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
       await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/ride-cancel`, {
         rideId: ride._id
       }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Ride cancelled');
       setVehicleFound(false);
@@ -255,7 +265,7 @@ const Home = () => {
                   navigator.geolocation.getCurrentPosition(async (position) => {
                     const { latitude, longitude } = position.coords;
                     try {
-                      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`);
+                      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`, { withCredentials: false });
                       if (response.data.status === 'OK' && response.data.results.length > 0) {
                         setPickup(response.data.results[0].formatted_address);
                       } else {

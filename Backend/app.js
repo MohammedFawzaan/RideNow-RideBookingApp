@@ -26,7 +26,10 @@ const rideRoutes = require('./routes/ride.routes');
 const userModel = require('./models/user.model');
 
 // Middleware for the application
-app.use(cors({ origin: `${process.env.FRONTEND_URL}` }));
+app.use(cors({
+    origin: `${process.env.FRONTEND_URL}`,
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

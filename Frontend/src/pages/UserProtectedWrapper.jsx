@@ -6,33 +6,40 @@ import { UserDataContext } from '../context/UserContext';
 import Loader from '../components/Loader';
 
 const UserProtectedWrapper = ({ children }) => {
-  const { user, setUser } = React.useContext(UserDataContext);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  const token = localStorage.getItem('token');
+  const { user, isLoading } = React.useContext(UserDataContext);
+  const [rideCheckLoading, setRideCheckLoading] = React.useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!token) {
-      navigate('/users/login');
-    }
-    axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setUser(response.data);
-        setIsLoading(false);
-      }
-    }).catch(err => {
-      console.log(err);
-      localStorage.removeItem('token');
-      navigate('/users/login');
-    });
-  }, [token]);
+    if (isLoading) return;
 
-  if (isLoading) {
+    if (!user.token) {
+      navigate('/users/login');
+      return;
+    }
+
+    // Check for active ride
+    axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-current-ride`)
+      .then(rideRes => {
+        const ride = rideRes.data;
+        if (ride) {
+          if (ride.status === 'accepted') {
+            navigate('/pickup', { state: { ride } });
+          } else if (ride.status === 'ongoing') {
+            navigate('/riding', { state: { ride } });
+          }
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching current ride:", err);
+      })
+      .finally(() => {
+        setRideCheckLoading(false);
+      });
+
+  }, [isLoading, user, navigate]);
+
+  if (isLoading || rideCheckLoading) {
     return (
       <Loader />
     )

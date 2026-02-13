@@ -9,10 +9,6 @@ const FinishRide = (props) => {
   async function endRide() {
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
       rideId: props.ride._id
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
     })
     if (response.status === 200) {
       navigate('/captain-home')
@@ -30,7 +26,7 @@ const FinishRide = (props) => {
       <div className='flex items-center justify-between rounded-lg p-3 bg-yellow-300'>
         <div className='flex items-center justify-center gap-3'>
           <img className='h-10 w-10 rounded-full object-cover' src={userImage} alt="person-image" />
-          <h2 className='text-base font-semibold'>{props.ride?.user.fullname.firstname+' '+props.ride?.user.fullname.lastname}</h2>
+          <h2 className='text-base font-semibold'>{props.ride?.user.fullname.firstname + ' ' + props.ride?.user.fullname.lastname}</h2>
         </div>
         <h5 className='text-lg font-semibold'>Reached</h5>
       </div>

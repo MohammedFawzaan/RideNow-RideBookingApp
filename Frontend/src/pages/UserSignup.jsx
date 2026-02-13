@@ -16,13 +16,10 @@ const UserSignup = () => {
   const { user, setUser } = React.useContext(UserDataContext);
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    if (token) {
-      if (role === 'user') navigate('/home');
-      if (role === 'captain') navigate('/captain-home');
+    if (user.token) {
+      navigate('/home');
     }
-  }, []);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,9 +56,11 @@ const UserSignup = () => {
 
       if (response.status === 201) {
         const data = await response.data;
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
+        setUser({
+          ...data.user,
+          token: "cookie",
+          role: "user"
+        });
         toast.success('Account created successfully');
         navigate('/home');
       }
