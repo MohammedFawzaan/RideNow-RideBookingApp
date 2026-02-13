@@ -211,7 +211,7 @@ const Home = () => {
       <div className='h-[70vh] m-5 rounded-3xl overflow-hidden shadow-2xl relative z-0'>
         <LiveTracker />
       </div>
-      <div className='p-3 absolute top-10 flex items-center justify-center w-screen gap-4 z-10 pointer-events-none'>
+      <div className='p-3 absolute top-10 flex items-center justify-center w-full gap-4 z-10 pointer-events-none'>
         <img onClick={() => navigate('/home')} className='flex w-36 bg-white rounded-lg cursor-pointer pointer-events-auto' src={RideNowIcon} alt="ride-logo" />
         <Link onClick={() => toast.success('You are Logged Out')} to='/users/logout' className=' h-10 w-10 bg-white flex items-center justify-center rounded-full pointer-events-auto'>
           <i className="ri-logout-box-r-line"></i>

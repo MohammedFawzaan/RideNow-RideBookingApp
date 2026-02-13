@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideHub - Application Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #2563eb;
+            --text-color: #334155;
+            --heading-color: #0f172a;
+            --bg-color: #f8fafc;
+            --container-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--container-bg);
+            padding: 60px 80px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3 {
+            color: var(--heading-color);
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            color: #1e293b;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: #334155;
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        li strong {
+            color: var(--heading-color);
+            font-weight: 600;
+        }
+
+        /* Utility */
+        .no-print {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .btn-print {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #1d4ed8;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 40px;
+                max-width: 100%;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: black;
+            }
+
+            h2 {
+                page-break-after: avoid;
+            }
+
+            ul,
+            p {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>RideHub Application</h1>
+            <div class="subtitle">System Overview & Functional Documentation</div>
+        </header>
+
+        <section>
+            <h2>1. System Overview</h2>
+            <p>RideHub is a modern, web-based transportation platform designed to facilitate on-demand connections
+                between passengers seeking transportation and independent drivers (referred to as Captains). The
+                application provides a comprehensive interface for booking, tracking, and managing rides in real-time,
+                ensuring a structured, transparent, and accountable service flow.</p>
+        </section>
+
+        <section>
+            <h2>2. User Roles</h2>
+            <p>The platform distinguishes two primary user roles, each with specific interfaces and functionalities:</p>
+            <ul>
+                <li><strong>Passenger:</strong> The end-user who requests transportation services via the client
+                    interface.</li>
+                <li><strong>Captain:</strong> The service provider (driver) who accepts and fulfills ride requests via
+                    the driver dashboard.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Core Functionalities</h2>
+
+            <h3>3.1. Account Management</h3>
+            <ul>
+                <li><strong>Registration:</strong> Both Passengers and Captains must register to use the platform.
+                    Passengers provide basic personal identity information, while Captains submit vehicle details
+                    (license plate number, capacity, and type) for service categorization.</li>
+                <li><strong>Authentication:</strong> Secure access is provided via standard email/password credentials
+                    or through Google Single Sign-On (SSO).</li>
+            </ul>
+
+            <h3>3.2. Booking Workflow (Passenger)</h3>
+            <ul>
+                <li><strong>Location Selection:</strong> Users utilize an integrated mapping interface to specify
+                    precise pickup and drop-off coordinates. The system supports address search and auto-completion.
+                </li>
+                <li><strong>Fare Estimation:</strong> Before a booking is confirmed, the system calculates and displays
+                    an upfront fare. This calculation is based on the distance between points and the specific vehicle
+                    category selected.</li>
+                <li><strong>Vehicle Categories:</strong> Passengers can select from available vehicle types:
+                    <ul>
+                        <li><strong>Moto:</strong> Single-passenger motorbike service for rapid transit.</li>
+                        <li><strong>Auto:</strong> Three-wheeled vehicle service for small groups/short distances.</li>
+                        <li><strong>Car:</strong> Standard sedan service for maximum comfort.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3.3. Ride Management (Captain)</h3>
+            <ul>
+                <li><strong>Request Dashboard:</strong> Captains have access to a real-time dashboard that displays
+                    incoming ride requests instantly.</li>
+                <li><strong>Trip Details:</strong> Each request presents critical information, including the distance to
+                    the pickup point, the total trip distance, and the estimated earning amount.</li>
+                <li><strong>Acceptance Logic:</strong> Captains retain full autonomy to accept or decline ride requests
+                    based on their availability.</li>
+            </ul>
+
+            <h3>3.4. Ride Execution & Security</h3>
+            <ul>
+                <li><strong>One-Time Password (OTP) Verification:</strong> To prevent fraud and ensure passenger safety,
+                    the system generates a unique 4-digit OTP for the passenger upon booking. The ride cannot officially
+                    commence until the Passenger provides this code to the Captain, and the Captain successfully enters
+                    it into their application.</li>
+                <li><strong>Real-Time Tracking:</strong> From the moment a captain accepts a ride, the passenger can
+                    track the vehicle's location on the map in real-time.</li>
+                <li><strong>Navigation Assistance:</strong> The application provides visual route guidance to help
+                    Captains navigate efficiently to the pickup location and from there to the final destination.</li>
+            </ul>
+
+            <h3>3.5. Payment and Completion</h3>
+            <ul>
+                <li><strong>Trip Termination:</strong> Upon reaching the destination, the Captain marks the ride as
+                    complete within the application.</li>
+                <li><strong>Payment Settlement:</strong> The system generates a final fare summary. Currently, the
+                    platform supports cash settlement between the Passenger and the Captain.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Operational Flow</h2>
+            <ol>
+                <li><strong>Request:</strong> Passenger enters location details, views fare estimates, and confirms a
+                    booking.</li>
+                <li><strong>Dispatch:</strong> The system broadcasts the request to available Captains in the vicinity.
+                </li>
+                <li><strong>Acceptance:</strong> A Captain accepts the request and proceeds to the coordinates.</li>
+                <li><strong>Verification:</strong> Captain arrives; Passenger shares the OTP; Captain validates the OTP
+                    to start the timer.</li>
+                <li><strong>Transit:</strong> The ride is in progress with live tracking enabled.</li>
+                <li><strong>Conclusion:</strong> Captain completes the ride; fare is collected.</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            &copy; 2026 RideHub Application. Internal Documentation.
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

@@ -29,7 +29,7 @@ const App = () => {
   const ans1 = useContext(CaptainDataContext);
 
   return (
-    <div className='container'>
+    <div className='w-full h-screen'>
       <NetworkStatus />
       <ErrorBoundary>
         <Routes>
@@ -73,18 +73,12 @@ const App = () => {
 
       <ToastContainer
         position="top-center"
-        autoClose={2500}
+        autoClose={500}
         hideProgressBar={true}
         closeOnClick
         limit={1}
         draggable
         theme="colored"
-        style={{
-          width: 'auto',
-          minWidth: '180px',
-          maxWidth: '250px',
-          marginTop: '1rem',
-        }}
       />
     </div >
   )

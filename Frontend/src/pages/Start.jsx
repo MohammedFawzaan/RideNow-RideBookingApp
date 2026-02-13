@@ -22,7 +22,7 @@ const Start = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen w-screen">
+        <div className="flex flex-col h-screen w-full">
             {/* Top 80% */}
             <div className="h-[80%] relative flex flex-col justify-between items-center">
                 <img
