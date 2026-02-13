@@ -9,10 +9,22 @@ import PickupNavigation from "../components/PickupNavigation"
 import { SocketContext } from "../context/SocketContext"
 import DraggablePanel from "../components/DraggablePanel"
 
+import CarImage from '../assets/CarImage.jpg'
+import MotoImage from '../assets/MotoImage.webp'
+import AutoImage from '../assets/AutoImage.webp'
+
 const Pickup = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { ride, vehicleImage } = location.state || {};
+  const { ride, vehicleImage: stateVehicleImage } = location.state || {};
+
+  // Resolve vehicle image if missing from state (e.g., on reload)
+  const vehicleImageMap = {
+    car: CarImage,
+    moto: MotoImage,
+    auto: AutoImage,
+  };
+  const vehicleImage = stateVehicleImage || (ride?.vehicleType ? vehicleImageMap[ride.vehicleType] : null);
   const { socket } = React.useContext(SocketContext);
 
   const [driverDistance, setDriverDistance] = React.useState(null);

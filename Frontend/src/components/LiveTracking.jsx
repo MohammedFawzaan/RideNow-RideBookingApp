@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import axios from "axios";
 
 const containerStyle = {
@@ -7,13 +7,17 @@ const containerStyle = {
   height: "100%",
 };
 
-// URL for a car icon to represent nearby captains
 const carIconUrl = "https://cdn-icons-png.flaticon.com/512/1048/1048313.png";
+const libraries = ['places'];
 
 const LiveTracking = () => {
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
   const [currentPosition, setCurrentPosition] = useState(null);
   const [nearbyCaptains, setNearbyCaptains] = useState([]);
-  const [mapError, setMapError] = useState(false);
   const mapRef = useRef(null);
 
   // Fetch nearby captains from the backend
@@ -84,57 +88,63 @@ const LiveTracking = () => {
     mapRef.current = map;
   };
 
+  if (loadError) {
+    return (
+      <div className="flex items-center justify-center h-full w-full bg-gray-100 text-red-600 font-semibold p-4 text-center">
+        Failed to load Google Maps. Please check your network connection or API Key.
+      </div>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-full w-full bg-gray-100">
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: "100%", height: "100%", position: "relative" }}>
-      <LoadScript
-        googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-        onError={() => setMapError(true)}
-        loadingElement={<div className="h-full w-full bg-gray-100"></div>}
-      >
-        {mapError ? (
-          <div className="flex items-center justify-center h-full w-full bg-gray-100 text-red-600 font-semibold p-4 text-center">
-            Failed to load Google Maps. Please check your network connection or API Key.
-          </div>
-        ) : currentPosition ? (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={currentPosition}
-            zoom={16}
-            onLoad={onLoad}
-            options={{
-              disableDefaultUI: true,
-              zoomControl: true,
+      {currentPosition ? (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={currentPosition}
+          zoom={16}
+          onLoad={onLoad}
+          options={{
+            disableDefaultUI: true,
+            zoomControl: true,
+          }}
+        >
+          {/* User Location Marker */}
+          <Marker
+            position={currentPosition}
+            icon={{
+              url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+              scaledSize: new window.google.maps.Size(40, 40)
             }}
-          >
-            {/* User Location Marker */}
-            <Marker
-              position={currentPosition}
-              icon={{
-                url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-                scaledSize: new window.google.maps.Size(40, 40)
-              }}
-            />
+          />
 
-            {/* Nearby Captain Markers */}
-            {nearbyCaptains.map((captain) => (
-              <Marker
-                key={captain._id}
-                position={{ lat: captain.location.ltd, lng: captain.location.lng }}
-                icon={{
-                  url: carIconUrl,
-                  scaledSize: new window.google.maps.Size(30, 30),
-                  anchor: new window.google.maps.Point(15, 15)
-                }}
-                title={captain.fullname.firstname}
-              />
-            ))}
-          </GoogleMap>
-        ) : (
-          <div className="flex items-center justify-center h-full w-full bg-gray-100">
-            <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
-          </div>
-        )}
-      </LoadScript>
+          {/* Nearby Captain Markers */}
+          {nearbyCaptains.map((captain) => (
+            <Marker
+              key={captain._id}
+              position={{ lat: captain.location.ltd, lng: captain.location.lng }}
+              icon={{
+                url: carIconUrl,
+                scaledSize: new window.google.maps.Size(30, 30),
+                anchor: new window.google.maps.Point(15, 15)
+              }}
+              title={captain.fullname.firstname}
+            />
+          ))}
+        </GoogleMap>
+      ) : (
+        <div className="flex items-center justify-center h-full w-full bg-gray-100">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
+        </div>
+      )}
 
       {/* Recenter Button */}
       <button

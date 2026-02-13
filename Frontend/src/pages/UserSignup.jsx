@@ -56,15 +56,12 @@ const UserSignup = () => {
 
       if (response.status === 201) {
         const data = await response.data;
-<<<<<<< HEAD
         setUser({
           ...data.user,
           token: "cookie",
           role: "user"
         });
-=======
-        setUser(data.user);
->>>>>>> 0079f1a2653a70962042edd1eeb074cf7cee5705
+
         toast.success('Account created successfully');
         navigate('/home');
       }

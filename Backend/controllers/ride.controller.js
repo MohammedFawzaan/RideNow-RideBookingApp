@@ -79,6 +79,7 @@ module.exports.getCurrentRide = async (req, res) => {
         }
 
         const ride = await rideModel.findOne(query)
+            .select('+otp')
             .populate('user')
             .populate('captain')
             .sort({ createdAt: -1 }); // Get the most recent one just in case

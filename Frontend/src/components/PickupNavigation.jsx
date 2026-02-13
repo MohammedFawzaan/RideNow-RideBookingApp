@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-    LoadScript,
+    useJsApiLoader,
     GoogleMap,
     Marker,
     DirectionsRenderer,
@@ -12,12 +12,17 @@ const containerStyle = {
     height: '100vh',
 };
 
+const libraries = ['places'];
+
 const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocationUpdate }) => {
+    const { isLoaded, loadError } = useJsApiLoader({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        libraries,
+    });
+
     const [captainLocation, setCaptainLocation] = useState(null);
-    const [mapError, setMapError] = useState(false);
     const [directions, setDirections] = useState(null);
     const [pickupCoords, setPickupCoords] = useState(null);
-    const [scriptLoaded, setScriptLoaded] = useState(false);
     const mapRef = useRef(null);
     const lastRouteUpdate = useRef(0);
 
@@ -28,7 +33,7 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
 
     // Geocode pickupLocation
     useEffect(() => {
-        if (!scriptLoaded || !pickupLocation) return;
+        if (!isLoaded || !pickupLocation) return;
 
         if (typeof pickupLocation === 'string') {
             const geocoder = new window.google.maps.Geocoder();
@@ -43,7 +48,7 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
         } else {
             setPickupCoords(pickupLocation);
         }
-    }, [pickupLocation, scriptLoaded]);
+    }, [pickupLocation, isLoaded]);
 
     // Unified handler for location updates (from GPS or Socket)
     const handleLocationUpdate = (liveLocation) => {
@@ -88,7 +93,7 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
 
     // Effect for GPS-based updates (Captain View)
     useEffect(() => {
-        if (!scriptLoaded || captainLiveLocation) return;
+        if (!isLoaded || captainLiveLocation) return;
 
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
@@ -100,7 +105,7 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
         );
 
         return () => navigator.geolocation.clearWatch(watchId);
-    }, [pickupCoords, onDriverLocationUpdate, scriptLoaded, captainLiveLocation]);
+    }, [pickupCoords, onDriverLocationUpdate, isLoaded, captainLiveLocation]);
 
     // Crucial: Re-trigger route calculation once coordinates are geocoded
     useEffect(() => {
@@ -109,32 +114,38 @@ const PickupNavigation = ({ pickupLocation, captainLiveLocation, onDriverLocatio
         }
     }, [pickupCoords, captainLocation]);
 
+    if (loadError) {
+        return (
+            <div className="h-full w-full flex items-center justify-center bg-gray-100 text-red-600 font-semibold p-4 text-center">
+                Failed to load Google Maps. Please check your network connection or API Key.
+            </div>
+        );
+    }
+
+    if (!isLoaded) {
+        return (
+            <div className="h-full w-full flex items-center justify-center bg-gray-100 font-medium text-gray-600">
+                Loading Map...
+            </div>
+        );
+    }
+
     return (
-        <LoadScript
-            googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-            onLoad={() => setScriptLoaded(true)}
-            onError={() => setMapError(true)}
-        >
-            {mapError ? (
-                <div className="h-full w-full flex items-center justify-center bg-gray-100 text-red-600 font-semibold p-4 text-center">
-                    Failed to load Google Maps. Please check your network connection or API Key.
-                </div>
-            ) : pickupCoords ? (
-                <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={pickupCoords}
-                    zoom={14}
-                    onLoad={handleMapLoad}>
-                    {captainLocation && <Marker position={captainLocation} label="C" />}
-                    {pickupCoords && <Marker position={pickupCoords} label="P" />}
-                    {directions && <DirectionsRenderer directions={directions} />}
-                </GoogleMap>
-            ) : (
-                <div className="h-full w-full flex items-center justify-center bg-gray-100 font-medium text-gray-600">
-                    Loading Map...
-                </div>
-            )}
-        </LoadScript>
+        pickupCoords ? (
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={pickupCoords}
+                zoom={14}
+                onLoad={handleMapLoad}>
+                {captainLocation && <Marker position={captainLocation} label="C" />}
+                {pickupCoords && <Marker position={pickupCoords} label="P" />}
+                {directions && <DirectionsRenderer directions={directions} />}
+            </GoogleMap>
+        ) : (
+            <div className="h-full w-full flex items-center justify-center bg-gray-100 font-medium text-gray-600">
+                Loading Map...
+            </div>
+        )
     );
 };
 

@@ -20,6 +20,10 @@ module.exports.authUser = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); // verify token
         const user = await userModel.findById(decoded.id); // find user by id
 
+        if (!user) {
+            return res.status(401).json({ message: 'Unauthorized, User Not Found' });
+        }
+
         req.user = user; // set user in request
 
         return next(); // call next middleware
@@ -44,6 +48,10 @@ module.exports.authCaptain = async (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); // verify token
         const captain = await captainModel.findById(decoded._id); // find captain by id
+
+        if (!captain) {
+            return res.status(401).json({ message: 'Unauthorized, Captain Not Found' });
+        }
 
         req.captain = captain; // set captain in request
 
