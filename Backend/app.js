@@ -5,6 +5,12 @@ const express = require('express');
 const app = express(); // create express app
 const connectToDB = require('./db/db'); // to connect database
 const cookieParser = require('cookie-parser'); // cookie parser for cookies
+const morgan = require('morgan'); // logger
+
+const helmet = require('helmet'); // secure headers
+
+app.use(morgan('dev')); // use morgan logger
+app.use(helmet()); // use helmet for security headers
 
 const passport = require('passport'); // passport for authentication
 const session = require('express-session'); // session for user session management
@@ -20,14 +26,14 @@ const rideRoutes = require('./routes/ride.routes');
 const userModel = require('./models/user.model');
 
 // Middleware for the application
-app.use(cors());
+app.use(cors({ origin: `${process.env.FRONTEND_URL}` }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Creating session
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'secret',
+    secret: `${process.env.SESSION_SECRET}`,
     resave: false,
     saveUninitialized: true,
 }));
@@ -40,7 +46,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3000/users/auth/google/callback'
+    callbackURL: `${process.env.GOOGLE_CLIENT_CALLBACK}`
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         let user = await userModel.findOne({ googleId: profile.id });

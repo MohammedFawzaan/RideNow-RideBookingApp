@@ -8,21 +8,21 @@ const blacklistTokenModel = require('../models/blacklistToken.model');
 module.exports.registerUser = async (req, res, next) => {
     // checking for errors in validaton
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     // accessing details from request body
-    const {fullname, password, email} = req.body;
+    const { fullname, password, email } = req.body;
 
     // checking if user already exists
     const isUserAlreadyExists = await userModel.findOne({ email });
-    if(isUserAlreadyExists) {
+    if (isUserAlreadyExists) {
         return res.status(400).json({ message: 'User already exists' });
     }
 
     const hashedPassword = await userModel.hashPassword(password);
-    
+
     // creating new user using userService.createUser()by passing arg - details
     const user = await userService.createUser({
         firstname: fullname.firstname,
@@ -33,28 +33,36 @@ module.exports.registerUser = async (req, res, next) => {
 
     // generating token
     const token = user.generateAuthToken();
-    res.status(201).json({ token, user, role:'user' }); // sending response
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 day
+    });
+
+    res.status(201).json({ token, user, role: 'user' }); // sending response
 }
 
 // controller for loginUser.
 module.exports.loginUser = async (req, res, next) => {
     // checking for errors in validaton
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    
-    const {email, password} = req.body; // accessing details from request body
+
+    const { email, password } = req.body; // accessing details from request body
 
     // finding user by email
-    const user = await userModel.findOne({ email }).select('+password'); 
-    if(!user) {
+    const user = await userModel.findOne({ email }).select('+password');
+    if (!user) {
         return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // comparing password
     const isMatch = await user.comparePassword(password);
-    if(!isMatch) {
+    if (!isMatch) {
         return res.status(401).json({ message: 'Invalid email or password' });
     }
 
@@ -67,7 +75,7 @@ module.exports.loginUser = async (req, res, next) => {
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 day
     }); // setting cookie
 
-    res.status(200).json({ token, user, role:'user' });
+    res.status(200).json({ token, user, role: 'user' });
 }
 
 // controller for getUserProfile.
@@ -103,6 +111,5 @@ module.exports.googleAuthCallback = async (req, res) => {
         sameSite: 'Lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
-    // Send token to frontend through query
-    res.redirect(`http://localhost:5173/google-success?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}`);
 };

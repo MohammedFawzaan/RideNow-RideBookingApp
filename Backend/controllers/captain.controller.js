@@ -29,7 +29,15 @@ module.exports.registerCaptain = async (req, res) => {
     });
 
     const token = captain.generateAuthToken();
-    res.status(201).json({ token, captain, role:'captain'});
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 day
+    });
+
+    res.status(201).json({ token, captain, role: 'captain' });
 }
 
 module.exports.loginCaptian = async (req, res, next) => {
@@ -51,8 +59,15 @@ module.exports.loginCaptian = async (req, res, next) => {
     }
 
     const token = captain.generateAuthToken();
-    res.cookie('token', token, { httpOnly: true, secure: true });
-    res.status(200).json({ token, captain, role:'captain' });
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 day
+    });
+
+    res.status(200).json({ token, captain, role: 'captain' });
 }
 
 module.exports.getCaptain = async (req, res) => {

@@ -16,6 +16,19 @@ module.exports.createRide = async (req, res) => {
         return res.status(400).json({ error: 'User, pickup, destination, and vehicle type are required' });
     }
     try {
+        // Check if user already has an active ride
+        const existingRide = await rideModel.findOne({
+            user: req.user._id,
+            status: { $in: ['pending', 'accepted', 'ongoing'] }
+        });
+
+        if (existingRide) {
+            return res.status(400).json({
+                error: 'You already have an active ride',
+                ride: existingRide
+            });
+        }
+
         // Creating a new ride using the ride service.
         const ride = await rideService.createRide({
             user: req.user._id,
@@ -47,6 +60,34 @@ module.exports.createRide = async (req, res) => {
                 data: rideWithUser
             });
         });
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// Get the current active ride for user or captain
+module.exports.getCurrentRide = async (req, res) => {
+    try {
+        let query = { status: { $in: ['pending', 'accepted', 'ongoing'] } };
+
+        if (req.user) {
+            query.user = req.user._id;
+        } else if (req.captain) {
+            query.captain = req.captain._id;
+        } else {
+            return res.status(400).json({ error: 'User or Captain authentication required' });
+        }
+
+        const ride = await rideModel.findOne(query)
+            .populate('user')
+            .populate('captain')
+            .sort({ createdAt: -1 }); // Get the most recent one just in case
+
+        if (!ride) {
+            return res.status(200).json(null);
+        }
+
+        return res.status(200).json(ride);
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });
     }
