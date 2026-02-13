@@ -17,13 +17,10 @@ const CaptainLogin = () => {
   const { captain, setCaptain } = useContext(CaptainDataContext);
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    if (token) {
-      if (role === 'user') navigate('/home');
-      if (role === 'captain') navigate('/captain-home');
+    if (captain.token) {
+      navigate('/captain-home');
     }
-  }, []);
+  }, [captain, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,8 +47,6 @@ const CaptainLogin = () => {
       if (response.status === 200) {
         const data = await response.data;
         setCaptain(data.captain);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
         toast.success('Login successful');
         navigate('/captain-home');
       }

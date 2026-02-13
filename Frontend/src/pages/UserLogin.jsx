@@ -14,13 +14,10 @@ const UserLogin = () => {
     const { user, setUser } = React.useContext(UserDataContext);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role');
-        if (token) {
-            if (role === 'user') navigate('/home');
-            if (role === 'captain') navigate('/captain-home');
+        if (user.token) {
+            navigate('/home');
         }
-    }, []);
+    }, [user, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -45,8 +42,6 @@ const UserLogin = () => {
                 const role = data.role;
 
                 setUser(data.user);
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('role', role);
                 toast.success('Login successful!');
 
                 // Clear inputs and navigate

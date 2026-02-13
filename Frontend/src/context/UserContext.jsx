@@ -13,26 +13,39 @@ const UserContext = ({ children }) => {
         role: null,
     });
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role');
-        if (token) {
+        const fetchProfile = async () => {
             try {
-                setUser((prev) => ({
-                    ...prev,
-                    token: token,
-                    role: role,
-                }));
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`);
+                if (response.status === 200) {
+                    setUser({
+                        ...response.data,
+                        token: "cookie",
+                        role: 'user'
+                    });
+                }
             } catch (err) {
-                console.error('Invalid token');
-                localStorage.removeItem('token');
-                localStorage.removeItem('role');
+                console.log('No active user session');
+                setUser({
+                    email: '',
+                    fullname: {
+                        firstname: '',
+                        lastname: '',
+                    },
+                    token: null,
+                    role: null,
+                });
+            } finally {
+                setIsLoading(false);
             }
-        }
+        };
+        fetchProfile();
     }, []);
 
     return (
-        <UserDataContext.Provider value={{ user, setUser }}>
+        <UserDataContext.Provider value={{ user, setUser, isLoading }}>
             {children}
         </UserDataContext.Provider>
     );

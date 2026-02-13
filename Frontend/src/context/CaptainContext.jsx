@@ -13,27 +13,40 @@ const CaptainContext = ({ children }) => {
     role: null
   });
 
+  const [isLoading, setIsLoading] = React.useState(true);
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    if (token) {
+    const fetchProfile = async () => {
       try {
-        setCaptain((prev) => ({
-          ...prev,
-          token: token,
-          role: role,
-        }));
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile`);
+        if (response.status === 200) {
+          setCaptain({
+            ...response.data,
+            token: "cookie",
+            role: 'captain'
+          });
+        }
       } catch (err) {
-        console.error('Invalid token');
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
+        console.log('No active captain session');
+        setCaptain({
+          email: '',
+          fullname: {
+            firstname: '',
+            lastname: ''
+          },
+          token: null,
+          role: null
+        });
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+    fetchProfile();
   }, []);
 
   return (
     <div>
-      <CaptainDataContext.Provider value={{ captain, setCaptain }}>
+      <CaptainDataContext.Provider value={{ captain, setCaptain, isLoading }}>
         {children}
       </CaptainDataContext.Provider>
     </div>

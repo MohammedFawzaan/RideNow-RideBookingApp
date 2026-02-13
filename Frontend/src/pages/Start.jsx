@@ -11,10 +11,9 @@ const Start = () => {
     const navigate = useNavigate();
 
     const handleContinue = () => {
-        if (user.token && user.role === 'user') {
+        if (user.token) {
             navigate('/home');
-        }
-        else if (captain.token && captain.role === 'captain') {
+        } else if (captain.token) {
             navigate('/captain-home');
         } else {
             navigate('/users/login');
